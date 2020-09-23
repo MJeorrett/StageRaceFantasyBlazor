@@ -1,0 +1,34 @@
+@hostname = https://localhost
+@port = 5001
+@host = {{hostname}}:{{port}}
+
+###
+
+GET {{host}}/api/riders
+
+###
+
+POST {{host}}/api/riders
+Content-Type: application/json
+
+{
+  "firstName": "Lennard",
+  "lastName": "Kamna"
+}
+
+###
+
+DELETE {{host}}/api/riders/4
+
+###
+
+GET {{host}}/api/races
+
+###
+
+POST {{host}}/api/races
+Content-Type: application/json
+
+{
+  "name": "Tour de France"
+}
