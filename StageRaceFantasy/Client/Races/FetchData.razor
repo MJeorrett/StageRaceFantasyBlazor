@@ -10,23 +10,20 @@
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var race in races)
-            {
-                <tr>
-                    <td>@race.Id</td>
-                    <td>@race.Name</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <MatTable
+              Items="@races"
+              FilterByColumnName="Name"
+              ShowPaging="false"
+              Striped="true">
+        <MatTableHeader>
+            <th>Id</th>
+            <th>Name</th>
+        </MatTableHeader>
+        <MatTableRow>
+            <td>@context.Id</td>
+            <td>@context.Name</td>
+        </MatTableRow>
+    </MatTable>
 }
 
 @code {
