@@ -1,0 +1,39 @@
+﻿@page "/races"
+@using StageRaceFantasy.Shared.Models
+@inject HttpClient Http
+
+<h1>Race</h1>
+
+@if (races == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var race in races)
+            {
+                <tr>
+                    <td>@race.Id</td>
+                    <td>@race.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Race[] races;
+
+    protected override async Task OnInitializedAsync()
+    {
+        races = await Http.GetFromJsonAsync<Race[]>("api/races");
+    }
+}
