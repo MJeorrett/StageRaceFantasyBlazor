@@ -3,16 +3,24 @@
 @inject HttpClient Http
 
 <h1>Riders</h1>
+<div>
+    <MatButton Link="riders/create">Create New</MatButton>
+</div>
 
 @if (riders == null)
 {
     <p><em>Loading...</em></p>
+}
+else if (riders.Length == 0)
+{
+    <p>No riders found.</p>
 }
 else
 {
     <MatTable Items="@riders"
               FilterByColumnName="LastName"
               ShowPaging="false"
+              PageSize="int.MaxValue"
               Striped="true">
         <MatTableHeader>
             <th>Id</th>

@@ -1,0 +1,20 @@
+﻿@using StageRaceFantasy.Shared.Models
+
+<EditForm Model="@rider" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+    <p>
+        <MatTextField Label="First Name" @bind-Value="@rider.FirstName" FullWidth="true" ValidationDisabled="true" />
+    </p>
+    <p>
+        <MatTextField Label="Last Name" @bind-Value="@rider.LastName" FullWidth="true" ValidationDisabled="true"/>
+    </p>
+    <div>
+        <MatButton Type="submit">@ButtonText</MatButton>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter] public Rider rider { get; set; }
+    [Parameter] public string ButtonText { get; set; } = "Save";
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+}
