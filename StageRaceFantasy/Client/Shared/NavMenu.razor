@@ -1,37 +1,15 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">StageRaceFantasy</a>
-    <button class="navbar-toggler" @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-</div>
-
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="riders">
-                Riders
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="races">
-                Races
-            </NavLink>
-        </li>
-    </ul>
-</div>
-
-@code {
-    private bool collapseNavMenu = true;
-
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-}
+﻿<MatAppBarContainer>
+    <MatAppBar Fixed="true">
+        <MatAppBarRow>
+            <MatAppBarSection>
+                <MatAppBarSection>
+                    <MatAppBarTitle>Stage Race Fantasy</MatAppBarTitle>
+                </MatAppBarSection>
+                <MatAppBarSection>
+                    <MatButton Unelevated="true" Link="riders">Riders</MatButton>
+                    <MatButton Unelevated="true" Link="races">Races</MatButton>
+                </MatAppBarSection>
+            </MatAppBarSection>
+        </MatAppBarRow>
+    </MatAppBar>
+</MatAppBarContainer>

@@ -10,25 +10,21 @@
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var race in riders)
-            {
-            <tr>
-                <td>@race.Id</td>
-                <td>@race.FirstName</td>
-                <td>@race.LastName</td>
-            </tr>
-            }
-        </tbody>
-    </table>
+    <MatTable Items="@riders"
+              FilterByColumnName="LastName"
+              ShowPaging="false"
+              Striped="true">
+        <MatTableHeader>
+            <th>Id</th>
+            <th>FirstName</th>
+            <th>LastName</th>
+        </MatTableHeader>
+        <MatTableRow>
+            <td>@context.Id</td>
+            <td>@context.FirstName</td>
+            <td>@context.LastName</td>
+        </MatTableRow>
+    </MatTable>
 }
 
 @code {
