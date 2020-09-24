@@ -27,9 +27,9 @@ namespace StageRaceFantasy.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GetRiderRaceEntryDto>>> GetRiderRaceEntries(int raceId)
         {
-            var race = await _context.Races.FindAsync(raceId);
+            var raceExists = await _context.Races.AnyAsync(x => x.Id == raceId);
 
-            if (race == null)
+            if (!raceExists)
             {
                 return NotFound();
             }
@@ -50,14 +50,8 @@ namespace StageRaceFantasy.Server.Controllers
             var enteredRiderRaceEntries = _mapper.Map<List<GetRiderRaceEntryDto>>(riderRaceEntries);
             enteredRiderRaceEntries.ForEach(x => x.IsEntered = true);
 
-            var notEnteredRiderRaceEntries = notEnteredRiders
-                .Select(x => new GetRiderRaceEntryDto
-                {
-                    Rider = x,
-                    Race = _mapper.Map<GetRiderRaceEntryRaceDto>(race),
-                    IsEntered = false,
-                    BibNumber = -1,
-                });
+            var notEnteredRiderRaceEntries = _mapper.Map<List<GetRiderRaceEntryDto>>(notEnteredRiders);
+            notEnteredRiderRaceEntries.ForEach(x => x.RaceId = raceId);
 
             return enteredRiderRaceEntries
                 .Concat(notEnteredRiderRaceEntries)
@@ -91,21 +85,16 @@ namespace StageRaceFantasy.Server.Controllers
 
             return new GetRiderRaceEntryDto
             {
-                Rider = rider,
-                Race = _mapper.Map<GetRiderRaceEntryRaceDto>(race),
-                IsEntered = false,
-                BibNumber = -1,
+                RaceId = raceId,
+                RiderId = rider.Id,
+                RiderFirstName = rider.FirstName,
+                RiderLastName = rider.LastName,
             };
         }
 
         [HttpPut("{riderId}")]
         public async Task<IActionResult> PutRiderRaceEntry(int raceId, int riderId, UpdateRiderRaceEntryDto riderRaceEntryDto)
         {
-            if (raceId != riderRaceEntryDto.RaceId || riderId != riderRaceEntryDto.RiderId)
-            {
-                return BadRequest();
-            }
-
             var riderRaceEntry = await _context.RiderRaceEntries.FindAsync(raceId, riderId);
 
             if (riderRaceEntry == null)
@@ -114,6 +103,7 @@ namespace StageRaceFantasy.Server.Controllers
             }
 
             riderRaceEntry.BibNumber = riderRaceEntryDto.BibNumber;
+
             await _context.SaveChangesAsync();
             
             return NoContent();

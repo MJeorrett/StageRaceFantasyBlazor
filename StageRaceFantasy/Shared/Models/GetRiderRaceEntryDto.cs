@@ -2,15 +2,11 @@
 {
     public class GetRiderRaceEntryDto
     {
-        public Rider Rider { get; set; }
-        public GetRiderRaceEntryRaceDto Race { get; set; }
+        public int RaceId { get; set; }
+        public int RiderId { get; set; }
+        public string RiderFirstName { get; set; }
+        public string RiderLastName { get; set; }
         public bool IsEntered { get; set; }
-        public int BibNumber { get; set; }
-    }
-
-    public class GetRiderRaceEntryRaceDto
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
+        public int BibNumber { get; set; } = -1;
     }
 }

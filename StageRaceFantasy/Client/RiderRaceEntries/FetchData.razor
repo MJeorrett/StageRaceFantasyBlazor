@@ -1,0 +1,64 @@
+﻿@page "/races/{raceId:int}/entries"
+
+@using StageRaceFantasy.Shared.Models
+
+@inject HttpClient httpClient
+@inject IJSRuntime js
+
+<h1>Race Entries</h1>
+
+@if (raceEntries == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (raceEntries.Length == 0)
+{
+    <p>No riders found.</p>
+}
+else
+{
+    <MatTable Items="@raceEntries"
+              FilterByColumnName="LastName"
+              ShowPaging="false"
+              PageSize="int.MaxValue"
+              Striped="true">
+        <MatTableHeader>
+            <th>Id</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Bib Number</th>
+            <th></th>
+        </MatTableHeader>
+        <MatTableRow>
+            <td>@context.RiderId</td>
+            <td>@context.RiderFirstName</td>
+            <td>@context.RiderLastName</td>
+            <td>@context.BibNumber</td>
+            <td>
+                <MatIconButton @onclick="@(() => DeleteRider(context.RiderId))" Icon="delete" Style="color: red" />
+            </td>
+        </MatTableRow>
+    </MatTable>
+}
+
+@code {
+    [Parameter] public int raceId { get; set; }
+
+    private GetRiderRaceEntryDto[] raceEntries;
+
+    protected override async Task OnInitializedAsync()
+    {
+        raceEntries = await httpClient.GetFromJsonAsync<GetRiderRaceEntryDto[]>($"api/races/{raceId}/entries");
+    }
+
+    async Task DeleteRider(int riderId)
+    {
+        var raceEntry = raceEntries.First(x => x.RiderId == riderId);
+
+        if (await js.InvokeAsync<bool>("confirm", $"Do you want to delete rider {raceEntry.RiderFirstName} {raceEntry.RiderLastName}?"))
+        {
+            await httpClient.DeleteAsync($"api/races/{raceId}/entries/{riderId}");
+            await OnInitializedAsync();
+        }
+    }
+}
