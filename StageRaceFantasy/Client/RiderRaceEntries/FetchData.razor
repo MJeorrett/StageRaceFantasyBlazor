@@ -7,12 +7,12 @@
 
 @if (race == null || raceEntries == null)
 {
-    <p><em>Loading...</em></p>
+    <MatBody1 Style="font-weight: bolder"><em>Loading...</em></MatBody1>
 }
 else
 {
-    <h1>@race.Name</h1>
-    <h3>Race Entries</h3>
+    <MatHeadline2>@race.Name</MatHeadline2>
+    <MatHeadline4>Race Entries</MatHeadline4>
 
     if (raceEntries.Length == 0)
     {

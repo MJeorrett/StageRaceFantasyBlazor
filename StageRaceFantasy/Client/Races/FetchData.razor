@@ -2,11 +2,11 @@
 @using StageRaceFantasy.Shared.Models
 @inject HttpClient Http
 
-<h1>Races</h1>
+<MatHeadline2>Races</MatHeadline2>
 
 @if (races == null)
 {
-    <p><em>Loading...</em></p>
+    <MatBody1 Style="font-weight: bolder"><em>Loading...</em></MatBody1>
 }
 else
 {

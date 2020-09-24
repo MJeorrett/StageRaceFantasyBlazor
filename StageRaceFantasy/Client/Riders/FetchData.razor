@@ -5,26 +5,26 @@
 @inject HttpClient httpClient
 @inject IJSRuntime js
 
-<h1>Riders</h1>
+<MatHeadline2>Riders</MatHeadline2>
 <div>
     <MatButton Link="riders/create">Create New</MatButton>
 </div>
 
 @if (riders == null)
 {
-    <p><em>Loading...</em></p>
+    <MatBody1 Style="font-weight: bolder"><em>Loading...</em></MatBody1>
 }
 else if (riders.Length == 0)
 {
-    <p>No riders found.</p>
+    <MatBody1 Style="font-weight: bolder"><em>No Riders Found.</em></MatBody1>
 }
 else
 {
     <MatTable Items="@riders"
-                FilterByColumnName="LastName"
-                ShowPaging="false"
-                PageSize="int.MaxValue"
-                Striped="true">
+              FilterByColumnName="LastName"
+              ShowPaging="false"
+              PageSize="int.MaxValue"
+              Striped="true">
         <MatTableHeader>
             <th>Id</th>
             <th>First Name</th>
