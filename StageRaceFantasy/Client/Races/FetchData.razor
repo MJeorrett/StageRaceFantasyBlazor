@@ -3,15 +3,21 @@
 @inject HttpClient Http
 
 <MatHeadline2>Races</MatHeadline2>
+<div>
+    <MatButton Link="races/create">Create New</MatButton>
+</div>
 
 @if (races == null)
 {
     <MatBody1 Style="font-weight: bolder"><em>Loading...</em></MatBody1>
 }
+else if (races.Length == 0)
+{
+    <MatBody1 Style="font-weight: bolder"><em>No Races Found.</em></MatBody1>
+}
 else
 {
-    <MatTable
-              Items="@races"
+    <MatTable Items="@races"
               FilterByColumnName="Name"
               ShowPaging="false"
               Striped="true">
