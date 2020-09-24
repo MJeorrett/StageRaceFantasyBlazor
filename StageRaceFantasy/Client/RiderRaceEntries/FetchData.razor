@@ -5,51 +5,57 @@
 @inject HttpClient httpClient
 @inject IJSRuntime js
 
-<h1>Race Entries</h1>
-
-@if (raceEntries == null)
+@if (race == null || raceEntries == null)
 {
     <p><em>Loading...</em></p>
 }
-else if (raceEntries.Length == 0)
-{
-    <p>No riders found.</p>
-}
 else
 {
-    <MatTable Items="@raceEntries"
-              FilterByColumnName="LastName"
-              ShowPaging="false"
-              PageSize="int.MaxValue"
-              Striped="true">
-        <MatTableHeader>
-            <th>Id</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Bib Number</th>
-            <th></th>
-        </MatTableHeader>
-        <MatTableRow>
-            <td>@context.RiderId</td>
-            <td>@context.RiderFirstName</td>
-            <td>@context.RiderLastName</td>
-            <td>
-                <MatTextField Value="@context.BibNumber" ValueChanged="@((int newBibNumber) => context.BibNumber = newBibNumber)" OnFocusOut=@(() => UpdateRaceEntry(context.RiderId))></MatTextField>
-            </td>
-            <td>
-                <MatCheckbox Value="@context.IsEntered" ValueChanged="@((bool newIsEntered) => newIsEntered ? EnterRider(context.RiderId) : WithdrawRider(context.RiderId))" />
-            </td>
-        </MatTableRow>
-    </MatTable>
+    <h1>@race.Name</h1>
+    <h3>Race Entries</h3>
+
+    if (raceEntries.Length == 0)
+    {
+        <p>No riders found.</p>
+    }
+    else
+    {
+        <MatTable Items="@raceEntries"
+                  FilterByColumnName="RiderLastName"
+                  ShowPaging="false"
+                  PageSize="int.MaxValue"
+                  Striped="true">
+            <MatTableHeader>
+                <th>Id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Bib Number</th>
+                <th></th>
+            </MatTableHeader>
+            <MatTableRow>
+                <td>@context.RiderId</td>
+                <td>@context.RiderFirstName</td>
+                <td>@context.RiderLastName</td>
+                <td>
+                    <MatTextField Value="@context.BibNumber" ValueChanged="@((int newBibNumber) => context.BibNumber = newBibNumber)" OnFocusOut=@(() => UpdateRaceEntry(context.RiderId))></MatTextField>
+                </td>
+                <td>
+                    <MatCheckbox Value="@context.IsEntered" ValueChanged="@((bool newIsEntered) => newIsEntered ? EnterRider(context.RiderId) : WithdrawRider(context.RiderId))" />
+                </td>
+            </MatTableRow>
+        </MatTable>
+    }
 }
 
 @code {
     [Parameter] public int raceId { get; set; }
 
+    private Race race;
     private GetRiderRaceEntryDto[] raceEntries;
 
     protected override async Task OnInitializedAsync()
     {
+        race = await httpClient.GetFromJsonAsync<Race>($"api/races/{raceId}");
         raceEntries = await httpClient.GetFromJsonAsync<GetRiderRaceEntryDto[]>($"api/races/{raceId}/entries");
     }
 
