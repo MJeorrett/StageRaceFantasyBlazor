@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StageRaceFantasy.Server.Commands.RiderRaceEntries
+namespace StageRaceFantasy.Server.Commands
 {
     public class CreateRiderRaceEntryHandler : IApplicationCommandHandler<CreateRiderRaceEntryCommand, GetRiderRaceEntryDto>
     {

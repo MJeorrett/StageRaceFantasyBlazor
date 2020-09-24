@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StageRaceFantasy.Server.Queries.RiderRaceEntries
+namespace StageRaceFantasy.Server.Queries
 {
     public class GetAllRiderRaceEntriesHandler : IApplicationQueryHandler<GetAllRiderRaceEntriesQuery, List<GetRiderRaceEntryDto>>
     {

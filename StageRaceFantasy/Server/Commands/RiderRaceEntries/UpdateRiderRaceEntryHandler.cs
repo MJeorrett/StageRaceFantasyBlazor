@@ -3,7 +3,7 @@ using StageRaceFantasy.Server.Db;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StageRaceFantasy.Server.Commands.RiderRaceEntries
+namespace StageRaceFantasy.Server.Commands
 {
     public class UpdateRiderRaceEntryHandler : IApplicationCommandHandler<UpdateRiderRaceEntryCommand>
     {

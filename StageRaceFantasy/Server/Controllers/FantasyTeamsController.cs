@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using StageRaceFantasy.Server.Commands;
+using StageRaceFantasy.Server.Controllers.Utils;
 using StageRaceFantasy.Server.Db;
+using StageRaceFantasy.Server.Queries;
 using StageRaceFantasy.Shared.Models;
 
 namespace StageRaceFantasy.Server.Controllers
@@ -13,89 +15,63 @@ namespace StageRaceFantasy.Server.Controllers
     public class FantasyTeamsController : ControllerBase
     {
         private readonly ApplicationDbContext _dbContext;
+        private readonly IMediator _mediator;
 
-        public FantasyTeamsController(ApplicationDbContext context)
+        public FantasyTeamsController(ApplicationDbContext context, IMediator mediator)
         {
             _dbContext = context;
+            _mediator = mediator;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<FantasyTeam>>> GetFantasyTeams()
+        public async Task<ActionResult<List<FantasyTeam>>> GetFantasyTeams()
         {
-            return await _dbContext.FantasyTeams.ToListAsync();
+            var query = new GetAllFantasyTeamsQuery();
+            var result = await _mediator.Send(query);
+
+            return ResponseHelpers.BuildRawContentResponse(this, result);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<FantasyTeam>> GetFantasyTeam(int id)
         {
-            var fantasyTeam = await _dbContext.FantasyTeams.FindAsync(id);
+            var query = new GetFantasyTeamQuery(id);
+            var result = await _mediator.Send(query);
 
-            if (fantasyTeam == null)
-            {
-                return NotFound();
-            }
-
-            return fantasyTeam;
+            return ResponseHelpers.BuildRawContentResponse(this, result);
         }
 
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutFantasyTeam(int id, FantasyTeam fantasyTeam)
+        public async Task<IActionResult> PutFantasyTeam(int id, UpdateFantasyTeamDto updateFantasyTeamDto)
         {
-            if (id != fantasyTeam.Id)
-            {
-                return BadRequest();
-            }
+            var query = new UpdateFantasyTeamCommand(id, updateFantasyTeamDto.Name);
+            var result = await _mediator.Send(query);
 
-            _dbContext.Entry(fantasyTeam).State = EntityState.Modified;
-
-            try
-            {
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!FantasyTeamExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return ResponseHelpers.BuildNoContentResponse(this, result);
         }
 
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<FantasyTeam>> PostFantasyTeam(FantasyTeam fantasyTeam)
+        public async Task<ActionResult<FantasyTeam>> PostFantasyTeam(CreateFantasyTeamDto createFantasyTeamDto)
         {
-            _dbContext.FantasyTeams.Add(fantasyTeam);
-            await _dbContext.SaveChangesAsync();
+            var command = new CreateFantasyTeamCommand(createFantasyTeamDto.Name);
+            var result = await _mediator.Send(command);
 
-            return CreatedAtAction("GetFantasyTeam", new { id = fantasyTeam.Id }, fantasyTeam);
+            return ResponseHelpers.BuildCreatedAtResponse(
+                this,
+                result,
+                nameof(GetFantasyTeam),
+                () => new { id = result.Content.Id });
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFantasyTeam(int id)
         {
-            var fantasyTeam = await _dbContext.FantasyTeams.FindAsync(id);
-            if (fantasyTeam == null)
-            {
-                return NotFound();
-            }
+            var command = new DeleteFantasyTeamCommand(id);
+            var result = await _mediator.Send(command);
 
-            _dbContext.FantasyTeams.Remove(fantasyTeam);
-            await _dbContext.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool FantasyTeamExists(int id)
-        {
-            return _dbContext.FantasyTeams.Any(e => e.Id == id);
+            return ResponseHelpers.BuildNoContentResponse(this, result);
         }
     }
 }

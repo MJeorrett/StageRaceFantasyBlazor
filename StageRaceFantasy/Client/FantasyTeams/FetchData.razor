@@ -1,6 +1,9 @@
 ﻿@page "/fantasy-teams"
+
 @using StageRaceFantasy.Shared.Models
-@inject HttpClient Http
+
+@inject HttpClient httpClient
+@inject IJSRuntime js
 
 <MatHeadline2>Fantasy Teams</MatHeadline2>
 <div>
@@ -20,10 +23,14 @@ else
         <MatTableHeader>
             <th>Id</th>
             <th>Name</th>
+            <th></th>
         </MatTableHeader>
         <MatTableRow>
             <td>@context.Id</td>
             <td>@context.Name</td>
+            <td>
+                <MatIconButton @onclick="@(() => DeleteTeam(context.Id))" Icon="delete" Style="color: red" />
+            </td>
         </MatTableRow>
     </MatTable>
 }
@@ -33,6 +40,17 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        fantasyTeams = await Http.GetFromJsonAsync<FantasyTeam[]>("api/fantasy-teams");
+        fantasyTeams = await httpClient.GetFromJsonAsync<FantasyTeam[]>("api/fantasy-teams");
+    }
+
+    async Task DeleteTeam(int teamId)
+    {
+        var team = fantasyTeams.First(x => x.Id == teamId);
+
+        if (await js.InvokeAsync<bool>("confirm", $"Do you want to delete fantasy team {team.Name}?"))
+        {
+            await httpClient.DeleteAsync($"api/fantasy-teams/{team.Id}");
+            await OnInitializedAsync();
+        }
     }
 }
