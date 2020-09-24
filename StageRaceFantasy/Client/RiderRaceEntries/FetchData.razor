@@ -33,7 +33,9 @@ else
             <td>@context.RiderId</td>
             <td>@context.RiderFirstName</td>
             <td>@context.RiderLastName</td>
-            <td>@context.BibNumber</td>
+            <td>
+                <MatTextField Value="@context.BibNumber" ValueChanged="@((int newBibNumber) => context.BibNumber = newBibNumber)" OnFocusOut=@(() => UpdateRaceEntry(context.RiderId))></MatTextField>
+            </td>
             <td>
                 <MatCheckbox Value="@context.IsEntered" ValueChanged="@((bool newIsEntered) => newIsEntered ? EnterRider(context.RiderId) : WithdrawRider(context.RiderId))" />
             </td>
@@ -72,6 +74,19 @@ else
         raceEntry.IsEntered = false;
 
         await httpClient.DeleteAsync($"api/races/{raceId}/entries/{riderId}");
+        await OnInitializedAsync();
+    }
+
+    async Task UpdateRaceEntry(int riderId)
+    {
+        var raceEntry = raceEntries.First(x => x.RiderId == riderId);
+
+        var updateRaceEntryDto = new UpdateRiderRaceEntryDto()
+        {
+            BibNumber = raceEntry.BibNumber,
+        };
+
+        await httpClient.PutAsJsonAsync($"api/races/{raceId}/entries/{riderId}", updateRaceEntryDto);
         await OnInitializedAsync();
     }
 }
