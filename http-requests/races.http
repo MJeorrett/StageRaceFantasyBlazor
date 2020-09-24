@@ -12,7 +12,7 @@ POST {{host}}/api/races
 Content-Type: application/json
 
 {
-  "name": "La Vuelta Espana 2018"
+  "name": "Giro d'Italia 2020"
 }
 ###
 

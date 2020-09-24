@@ -4,6 +4,7 @@
     {
         public Rider Rider { get; set; }
         public GetRiderRaceEntryRaceDto Race { get; set; }
+        public bool IsEntered { get; set; }
         public int BibNumber { get; set; }
     }
 

@@ -27,18 +27,41 @@ namespace StageRaceFantasy.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GetRiderRaceEntryDto>>> GetRiderRaceEntries(int raceId)
         {
-            if (!RaceExists(raceId))
+            var race = await _context.Races.FindAsync(raceId);
+
+            if (race == null)
             {
                 return NotFound();
             }
 
             var riderRaceEntries = await _context.RiderRaceEntries
+                .AsNoTracking()
                 .Include(x => x.Race)
                 .Include(x => x.Rider)
                 .Where(x => x.RaceId == raceId)
                 .ToListAsync();
 
-            return _mapper.Map<List<GetRiderRaceEntryDto>>(riderRaceEntries);
+            var enteredRiderIds = riderRaceEntries.Select(x => x.RiderId);
+
+            var notEnteredRiders = await _context.Riders
+                .Where(x => !enteredRiderIds.Contains(x.Id))
+                .ToListAsync();
+
+            var enteredRiderRaceEntries = _mapper.Map<List<GetRiderRaceEntryDto>>(riderRaceEntries);
+            enteredRiderRaceEntries.ForEach(x => x.IsEntered = true);
+
+            var notEnteredRiderRaceEntries = notEnteredRiders
+                .Select(x => new GetRiderRaceEntryDto
+                {
+                    Rider = x,
+                    Race = _mapper.Map<GetRiderRaceEntryRaceDto>(race),
+                    IsEntered = false,
+                    BibNumber = -1,
+                });
+
+            return enteredRiderRaceEntries
+                .Concat(notEnteredRiderRaceEntries)
+                .ToList();
         }
 
         [HttpGet("{riderId}")]
@@ -50,12 +73,29 @@ namespace StageRaceFantasy.Server.Controllers
                 .Where(x => x.RaceId == raceId && x.RiderId == riderId)
                 .FirstOrDefaultAsync();
 
-            if (riderRaceEntry == null)
+            if (riderRaceEntry != null)
+            {
+                var riderRaceEntryDto = _mapper.Map<GetRiderRaceEntryDto>(riderRaceEntry);
+                riderRaceEntryDto.IsEntered = true;
+
+                return riderRaceEntryDto;
+            }
+
+            var race = await _context.Races.FindAsync(raceId);
+            var rider = await _context.Riders.FindAsync(riderId);
+
+            if (race == null || rider == null)
             {
                 return NotFound();
             }
 
-            return _mapper.Map<GetRiderRaceEntryDto>(riderRaceEntry);
+            return new GetRiderRaceEntryDto
+            {
+                Rider = rider,
+                Race = _mapper.Map<GetRiderRaceEntryRaceDto>(race),
+                IsEntered = false,
+                BibNumber = -1,
+            };
         }
 
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -117,15 +157,16 @@ namespace StageRaceFantasy.Server.Controllers
                 BibNumber = riderRaceEntryDto.BibNumber,
             };
 
-            var getRierRaceEntryDto = _mapper.Map<GetRiderRaceEntryDto>(riderRaceEntry);
-
             await _context.RiderRaceEntries.AddAsync(riderRaceEntry);
             await _context.SaveChangesAsync();
+
+            var getRiderRaceEntryDto = _mapper.Map<GetRiderRaceEntryDto>(riderRaceEntry);
+            getRiderRaceEntryDto.IsEntered = true;
 
             return CreatedAtAction(
                 "GetRiderRaceEntry",
                 new { raceId = riderRaceEntryDto.RaceId, riderId = riderRaceEntryDto.RiderId },
-                getRierRaceEntryDto);
+                getRiderRaceEntryDto);
         }
 
         [HttpDelete("{riderId}")]
@@ -148,11 +189,6 @@ namespace StageRaceFantasy.Server.Controllers
         {
             return _context.RiderRaceEntries
                 .Any(x =>x.RaceId == raceId && x.RiderId == riderId);
-        }
-
-        private bool RaceExists(int raceId)
-        {
-            return _context.Races.Any(x => x.Id == raceId);
         }
     }
 }
