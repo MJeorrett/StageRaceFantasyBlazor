@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StageRaceFantasy.Server.QueryHandlers
+namespace StageRaceFantasy.Server.QueryHandlers.RiderRaceEntry
 {
     public class GetRiderRaceEntryHandler : IRequestHandler<GetRiderRaceEntryQuery, QueryResult<GetRiderRaceEntryDto>>
     {
@@ -38,7 +38,7 @@ namespace StageRaceFantasy.Server.QueryHandlers
                 var riderRaceEntryDto = _mapper.Map<GetRiderRaceEntryDto>(riderRaceEntry);
                 riderRaceEntryDto.IsEntered = true;
 
-                return new (riderRaceEntryDto);
+                return new(riderRaceEntryDto);
             }
 
             var race = await _dbContext.Races.FindAsync(raceId);
@@ -53,7 +53,7 @@ namespace StageRaceFantasy.Server.QueryHandlers
             }
 
             // TODO: This should be handled int automapper.
-            return new (new GetRiderRaceEntryDto
+            return new(new GetRiderRaceEntryDto
             {
                 RaceId = raceId,
                 RiderId = rider.Id,

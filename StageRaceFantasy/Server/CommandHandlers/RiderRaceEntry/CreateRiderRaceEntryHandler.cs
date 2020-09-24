@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StageRaceFantasy.Server.CommandHandlers
+namespace StageRaceFantasy.Server.CommandHandlers.RiderRaceEntry
 {
     public class CreateRiderRaceEntryHandler : IRequestHandler<CreateRiderRaceEntryCommand, CommandResult<GetRiderRaceEntryDto>>
     {
@@ -59,7 +59,7 @@ namespace StageRaceFantasy.Server.CommandHandlers
             var getRiderRaceEntryDto = _mapper.Map<GetRiderRaceEntryDto>(riderRaceEntry);
             getRiderRaceEntryDto.IsEntered = true;
 
-            return new (getRiderRaceEntryDto);
+            return new(getRiderRaceEntryDto);
         }
 
         private bool RiderRaceEntryExists(int raceId, int riderId)

@@ -5,21 +5,22 @@ using StageRaceFantasy.Server.Db;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StageRaceFantasy.Server.CommandHandlers
+namespace StageRaceFantasy.Server.CommandHandlers.RiderRaceEntry
 {
-    public class DeleteRiderRaceEntryHandler : IRequestHandler<DeleteRiderRaceEntryCommand, CommandResult>
+    public class UpdateRiderRaceEntryHandler : IRequestHandler<UpdateRiderRaceEntryCommand, CommandResult>
     {
         private readonly ApplicationDbContext _dbContext;
 
-        public DeleteRiderRaceEntryHandler(ApplicationDbContext dbContext)
+        public UpdateRiderRaceEntryHandler(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public async Task<CommandResult> Handle(DeleteRiderRaceEntryCommand request, CancellationToken cancellationToken)
+        public async Task<CommandResult> Handle(UpdateRiderRaceEntryCommand request, CancellationToken cancellationToken)
         {
             var raceId = request.RaceId;
             var riderId = request.RiderId;
+            var updateRiderRaceEntryDto = request.UpdateRiderRaceEntryDto;
 
             var riderRaceEntry = await _dbContext.RiderRaceEntries.FindAsync(raceId, riderId);
 
@@ -31,8 +32,9 @@ namespace StageRaceFantasy.Server.CommandHandlers
                 };
             }
 
-            _dbContext.RiderRaceEntries.Remove(riderRaceEntry);
-            await _dbContext.SaveChangesAsync();
+            riderRaceEntry.BibNumber = updateRiderRaceEntryDto.BibNumber;
+
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
             return new();
         }
