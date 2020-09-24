@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StageRaceFantasy.Server.Commands;
-using StageRaceFantasy.Server.Db;
+using StageRaceFantasy.Server.Controllers.Utils;
 using StageRaceFantasy.Server.Queries;
 using StageRaceFantasy.Shared.Models;
 
@@ -14,27 +13,20 @@ namespace StageRaceFantasy.Server.Controllers
     [ApiController]
     public class RiderRaceEntriesController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
-        private readonly IMapper _mapper;
         private readonly IMediator _mediator;
 
-        public RiderRaceEntriesController(
-            ApplicationDbContext context,
-            IMapper mapper,
-            IMediator mediator)
+        public RiderRaceEntriesController(IMediator mediator)
         {
-            _context = context;
-            _mapper = mapper;
             _mediator = mediator;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GetRiderRaceEntryDto>>> GetRiderRaceEntries(int raceId)
+        public async Task<ActionResult<List<GetRiderRaceEntryDto>>> GetRiderRaceEntries(int raceId)
         {
             var query = new GetAllRiderRaceEntriesQuery(raceId);
             var result = await _mediator.Send(query);
 
-            return result.IsNotFound ? NotFound() : result.Content;
+            return ResponseHelpers.BuildRawContentResponse(this, result);
         }
 
         [HttpGet("{riderId}")]
@@ -43,7 +35,7 @@ namespace StageRaceFantasy.Server.Controllers
             var query = new GetRiderRaceEntryQuery(raceId, riderId);
             var result = await _mediator.Send(query);
 
-            return result.IsNotFound ? NotFound() : result.Content;
+            return ResponseHelpers.BuildRawContentResponse(this, result);
         }
 
         [HttpPut("{riderId}")]
@@ -52,10 +44,7 @@ namespace StageRaceFantasy.Server.Controllers
             var command = new UpdateRiderRaceEntryCommand(raceId, riderId, updateRiderRaceEntryDto);
             var result = await _mediator.Send(command);
 
-            // TODO: Extract this into helper method.
-            if (result.IsBadRequest) return BadRequest();
-            else if (result.IsNotFound) return NotFound();
-            else return NoContent();
+            return ResponseHelpers.BuildNoContentResponse(this, result);
         }
 
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -69,12 +58,11 @@ namespace StageRaceFantasy.Server.Controllers
 
             var result = await _mediator.Send(command);
 
-            if (result.IsBadRequest) return BadRequest();
-            else if (result.IsNotFound) return NotFound();
-            else return CreatedAtAction(
-                "GetRiderRaceEntry",
-                new { raceId = result.Content.RaceId, riderId = result.Content.RiderId },
-                result);
+            return ResponseHelpers.BuildCreatedAtResponse(
+                this,
+                result,
+                nameof(GetRiderRaceEntry),
+                () => new { raceId = result.Content.RaceId, riderId = result.Content.RiderId });
         }
 
         [HttpDelete("{riderId}")]
@@ -83,7 +71,7 @@ namespace StageRaceFantasy.Server.Controllers
             var command = new DeleteRiderRaceEntryCommand(raceId, riderId);
             var result = await _mediator.Send(command);
 
-            return result.IsNotFound ? NotFound() : NoContent();
+            return ResponseHelpers.BuildNoContentResponse(this, result);
         }
     }
 }
