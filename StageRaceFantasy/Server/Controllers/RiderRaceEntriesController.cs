@@ -2,9 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StageRaceFantasy.Server.Db;
+using StageRaceFantasy.Server.Queries;
 using StageRaceFantasy.Shared.Models;
 
 namespace StageRaceFantasy.Server.Controllers
@@ -15,49 +17,25 @@ namespace StageRaceFantasy.Server.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IMediator _mediator;
 
         public RiderRaceEntriesController(
             ApplicationDbContext context,
-            IMapper mapper)
+            IMapper mapper,
+            IMediator mediator)
         {
             _context = context;
             _mapper = mapper;
+            _mediator = mediator;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GetRiderRaceEntryDto>>> GetRiderRaceEntries(int raceId)
         {
-            var raceExists = await _context.Races.AnyAsync(x => x.Id == raceId);
+            var query = new GetAllRiderRaceEntriesQuery(raceId);
+            var result = await _mediator.Send(query);
 
-            if (!raceExists)
-            {
-                return NotFound();
-            }
-
-            var riderRaceEntries = await _context.RiderRaceEntries
-                .AsNoTracking()
-                .Include(x => x.Race)
-                .Include(x => x.Rider)
-                .Where(x => x.RaceId == raceId)
-                .OrderBy(x => x.Rider.LastName)
-                .ToListAsync();
-
-            var enteredRiderIds = riderRaceEntries.Select(x => x.RiderId);
-
-            var notEnteredRiders = await _context.Riders
-                .Where(x => !enteredRiderIds.Contains(x.Id))
-                .OrderBy(x => x.LastName)
-                .ToListAsync();
-
-            var enteredRiderRaceEntries = _mapper.Map<List<GetRiderRaceEntryDto>>(riderRaceEntries);
-            enteredRiderRaceEntries.ForEach(x => x.IsEntered = true);
-
-            var notEnteredRiderRaceEntries = _mapper.Map<List<GetRiderRaceEntryDto>>(notEnteredRiders);
-            notEnteredRiderRaceEntries.ForEach(x => x.RaceId = raceId);
-
-            return enteredRiderRaceEntries
-                .Concat(notEnteredRiderRaceEntries)
-                .ToList();
+            return result == null ? NotFound() : result;
         }
 
         [HttpGet("{riderId}")]
