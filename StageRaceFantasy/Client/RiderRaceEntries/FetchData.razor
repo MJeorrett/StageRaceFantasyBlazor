@@ -64,9 +64,8 @@ else
         var raceEntry = raceEntries.First(x => x.RiderId == riderId);
         raceEntry.IsEntered = true;
 
-        var addRaceEntryDto = new AddRiderRaceEntryDto()
+        var addRaceEntryDto = new CreateRiderRaceEntryDto()
         {
-            RaceId = raceId,
             RiderId = riderId,
         };
 

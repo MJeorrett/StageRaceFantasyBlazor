@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using StageRaceFantasy.Server.Commands;
 using StageRaceFantasy.Server.Db;
 using StageRaceFantasy.Server.Queries;
 using StageRaceFantasy.Shared.Models;
@@ -47,61 +47,34 @@ namespace StageRaceFantasy.Server.Controllers
         }
 
         [HttpPut("{riderId}")]
-        public async Task<IActionResult> PutRiderRaceEntry(int raceId, int riderId, UpdateRiderRaceEntryDto riderRaceEntryDto)
+        public async Task<IActionResult> PutRiderRaceEntry(int raceId, int riderId, UpdateRiderRaceEntryDto updateRiderRaceEntryDto)
         {
-            var riderRaceEntry = await _context.RiderRaceEntries.FindAsync(raceId, riderId);
+            var command = new UpdateRiderRaceEntryCommand(raceId, riderId, updateRiderRaceEntryDto);
+            var result = await _mediator.Send(command);
 
-            if (riderRaceEntry == null)
-            {
-                return NotFound();
-            }
-
-            riderRaceEntry.BibNumber = riderRaceEntryDto.BibNumber;
-
-            await _context.SaveChangesAsync();
-            
-            return NoContent();
+            // TODO: Extract this into helper method.
+            if (result.IsBadRequest) return BadRequest();
+            else if (result.IsNotFound) return NotFound();
+            else return NoContent();
         }
 
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<RiderRaceEntry>> PostRiderRaceEntry(int raceId, AddRiderRaceEntryDto riderRaceEntryDto)
+        public async Task<ActionResult<GetRiderRaceEntryDto>> PostRiderRaceEntry(int raceId, CreateRiderRaceEntryDto createRiderRaceEntryDto)
         {
-            if (raceId != riderRaceEntryDto.RaceId)
-            {
-                return BadRequest();
-            }
+            var command = new CreateRiderRaceEntryCommand(
+                raceId,
+                createRiderRaceEntryDto.RiderId,
+                createRiderRaceEntryDto.BibNumber);
 
-            if (RiderRaceEntryExists(raceId, riderRaceEntryDto.RiderId))
-            {
-                return BadRequest();
-            }
+            var result = await _mediator.Send(command);
 
-            var race = await _context.Races.FindAsync(riderRaceEntryDto.RaceId);
-            var rider = await _context.Riders.FindAsync(riderRaceEntryDto.RiderId);
-
-            if (race == null || rider == null)
-            {
-                return NotFound();
-            }
-
-            var riderRaceEntry = new RiderRaceEntry()
-            {
-                Race = race,
-                Rider = rider,
-                BibNumber = riderRaceEntryDto.BibNumber,
-            };
-
-            await _context.RiderRaceEntries.AddAsync(riderRaceEntry);
-            await _context.SaveChangesAsync();
-
-            var getRiderRaceEntryDto = _mapper.Map<GetRiderRaceEntryDto>(riderRaceEntry);
-            getRiderRaceEntryDto.IsEntered = true;
-
-            return CreatedAtAction(
+            if (result.IsBadRequest) return BadRequest();
+            else if (result.IsNotFound) return NotFound();
+            else return CreatedAtAction(
                 "GetRiderRaceEntry",
-                new { raceId = riderRaceEntryDto.RaceId, riderId = riderRaceEntryDto.RiderId },
-                getRiderRaceEntryDto);
+                new { raceId = result.Content.RaceId, riderId = result.Content.RiderId },
+                result);
         }
 
         [HttpDelete("{riderId}")]
@@ -118,12 +91,6 @@ namespace StageRaceFantasy.Server.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool RiderRaceEntryExists(int raceId, int riderId)
-        {
-            return _context.RiderRaceEntries
-                .Any(x =>x.RaceId == raceId && x.RiderId == riderId);
         }
     }
 }

@@ -1,9 +1,8 @@
 ﻿namespace StageRaceFantasy.Shared.Models
 {
-    public class AddRiderRaceEntryDto
+    public class CreateRiderRaceEntryDto
     {
         public int RiderId { get; set; }
-        public int RaceId { get; set; }
         public int BibNumber { get; set; }
     }
 }

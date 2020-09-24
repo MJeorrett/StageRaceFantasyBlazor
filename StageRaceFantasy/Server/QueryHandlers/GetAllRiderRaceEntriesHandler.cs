@@ -10,7 +10,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StageRaceFantasy.Server.Handlers
+namespace StageRaceFantasy.Server.QueryHandlers
 {
     public class GetAllRiderRaceEntriesHandler : IRequestHandler<GetAllRiderRaceEntriesQuery, QueryResult<List<GetRiderRaceEntryDto>>>
     {
@@ -58,7 +58,7 @@ namespace StageRaceFantasy.Server.Handlers
             var notEnteredRiderRaceEntries = _mapper.Map<List<GetRiderRaceEntryDto>>(notEnteredRiders);
             notEnteredRiderRaceEntries.ForEach(x => x.RaceId = raceId);
 
-            return new (enteredRiderRaceEntries
+            return new(enteredRiderRaceEntries
                 .Concat(notEnteredRiderRaceEntries)
                 .ToList());
         }
