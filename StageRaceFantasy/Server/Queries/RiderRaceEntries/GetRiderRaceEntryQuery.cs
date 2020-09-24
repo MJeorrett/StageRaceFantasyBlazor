@@ -1,9 +1,8 @@
-﻿using MediatR;
-using StageRaceFantasy.Shared.Models;
+﻿using StageRaceFantasy.Shared.Models;
 
 namespace StageRaceFantasy.Server.Queries.RiderRaceEntries
 {
-    public record GetRiderRaceEntryQuery(int raceId, int riderId) : IRequest<QueryResult<GetRiderRaceEntryDto>>
+    public record GetRiderRaceEntryQuery(int raceId, int riderId) : IApplicationQuery<GetRiderRaceEntryDto>
     {
     }
 }

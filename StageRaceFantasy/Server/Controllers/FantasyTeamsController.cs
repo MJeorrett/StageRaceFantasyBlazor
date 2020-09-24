@@ -12,23 +12,23 @@ namespace StageRaceFantasy.Server.Controllers
     [ApiController]
     public class FantasyTeamsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _dbContext;
 
         public FantasyTeamsController(ApplicationDbContext context)
         {
-            _context = context;
+            _dbContext = context;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<FantasyTeam>>> GetFantasyTeams()
         {
-            return await _context.FantasyTeams.ToListAsync();
+            return await _dbContext.FantasyTeams.ToListAsync();
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<FantasyTeam>> GetFantasyTeam(int id)
         {
-            var fantasyTeam = await _context.FantasyTeams.FindAsync(id);
+            var fantasyTeam = await _dbContext.FantasyTeams.FindAsync(id);
 
             if (fantasyTeam == null)
             {
@@ -47,11 +47,11 @@ namespace StageRaceFantasy.Server.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(fantasyTeam).State = EntityState.Modified;
+            _dbContext.Entry(fantasyTeam).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -72,8 +72,8 @@ namespace StageRaceFantasy.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<FantasyTeam>> PostFantasyTeam(FantasyTeam fantasyTeam)
         {
-            _context.FantasyTeams.Add(fantasyTeam);
-            await _context.SaveChangesAsync();
+            _dbContext.FantasyTeams.Add(fantasyTeam);
+            await _dbContext.SaveChangesAsync();
 
             return CreatedAtAction("GetFantasyTeam", new { id = fantasyTeam.Id }, fantasyTeam);
         }
@@ -81,21 +81,21 @@ namespace StageRaceFantasy.Server.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFantasyTeam(int id)
         {
-            var fantasyTeam = await _context.FantasyTeams.FindAsync(id);
+            var fantasyTeam = await _dbContext.FantasyTeams.FindAsync(id);
             if (fantasyTeam == null)
             {
                 return NotFound();
             }
 
-            _context.FantasyTeams.Remove(fantasyTeam);
-            await _context.SaveChangesAsync();
+            _dbContext.FantasyTeams.Remove(fantasyTeam);
+            await _dbContext.SaveChangesAsync();
 
             return NoContent();
         }
 
         private bool FantasyTeamExists(int id)
         {
-            return _context.FantasyTeams.Any(e => e.Id == id);
+            return _dbContext.FantasyTeams.Any(e => e.Id == id);
         }
     }
 }

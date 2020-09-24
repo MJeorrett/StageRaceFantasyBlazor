@@ -1,13 +1,9 @@
 ﻿using MediatR;
-using StageRaceFantasy.Shared.Models;
 
 namespace StageRaceFantasy.Server.Commands.RiderRaceEntries
 {
-    public record UpdateRiderRaceEntryCommand(
-        int RaceId,
-        int RiderId,
-        UpdateRiderRaceEntryDto UpdateRiderRaceEntryDto
-        ) : IRequest<CommandResult>
+    public record UpdateRiderRaceEntryCommand(int RaceId, int RiderId, int BibNumber)
+        : IRequest<CommandResult>
     {
     }
 }

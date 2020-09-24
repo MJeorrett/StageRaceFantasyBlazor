@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Server.Commands.RiderRaceEntries
 {
-    public class UpdateRiderRaceEntryHandler : IRequestHandler<UpdateRiderRaceEntryCommand, CommandResult>
+    public class UpdateRiderRaceEntryHandler : IApplicationCommandHandler<UpdateRiderRaceEntryCommand>
     {
         private readonly ApplicationDbContext _dbContext;
 
@@ -18,7 +18,6 @@ namespace StageRaceFantasy.Server.Commands.RiderRaceEntries
         {
             var raceId = request.RaceId;
             var riderId = request.RiderId;
-            var updateRiderRaceEntryDto = request.UpdateRiderRaceEntryDto;
 
             var riderRaceEntry = await _dbContext.RiderRaceEntries.FindAsync(raceId, riderId);
 
@@ -30,7 +29,7 @@ namespace StageRaceFantasy.Server.Commands.RiderRaceEntries
                 };
             }
 
-            riderRaceEntry.BibNumber = updateRiderRaceEntryDto.BibNumber;
+            riderRaceEntry.BibNumber = request.BibNumber;
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 

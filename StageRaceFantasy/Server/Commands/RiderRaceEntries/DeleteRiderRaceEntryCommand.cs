@@ -1,11 +1,7 @@
-﻿using MediatR;
-
-namespace StageRaceFantasy.Server.Commands.RiderRaceEntries
+﻿namespace StageRaceFantasy.Server.Commands.RiderRaceEntries
 {
-    public record DeleteRiderRaceEntryCommand(
-        int RaceId,
-        int RiderId)
-        : IRequest<CommandResult>
+    public record DeleteRiderRaceEntryCommand(int RaceId, int RiderId) :
+        IApplicationCommand
     {
     }
 }

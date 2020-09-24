@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using StageRaceFantasy.Server.Db;
 using StageRaceFantasy.Shared.Models;
@@ -11,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Server.Queries.RiderRaceEntries
 {
-    public class GetAllRiderRaceEntriesHandler : IRequestHandler<GetAllRiderRaceEntriesQuery, QueryResult<List<GetRiderRaceEntryDto>>>
+    public class GetAllRiderRaceEntriesHandler : IApplicationQueryHandler<GetAllRiderRaceEntriesQuery, List<GetRiderRaceEntryDto>>
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly IMapper _mapper;

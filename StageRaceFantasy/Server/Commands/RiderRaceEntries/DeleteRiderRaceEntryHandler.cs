@@ -1,11 +1,10 @@
-﻿using MediatR;
-using StageRaceFantasy.Server.Db;
+﻿using StageRaceFantasy.Server.Db;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Server.Commands.RiderRaceEntries
 {
-    public class DeleteRiderRaceEntryHandler : IRequestHandler<DeleteRiderRaceEntryCommand, CommandResult>
+    public class DeleteRiderRaceEntryHandler : IApplicationCommandHandler<DeleteRiderRaceEntryCommand>
     {
         private readonly ApplicationDbContext _dbContext;
 
