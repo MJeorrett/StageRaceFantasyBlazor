@@ -4,14 +4,14 @@
 
 ###
 
-GET {{host}}/api/races/5/entries
+GET {{host}}/api/races/2/entries
 
 ###
 
-POST {{host}}/api/races/3/entries
+POST {{host}}/api/races/2/entries
 Content-Type: application/json
 
 {
-  "RaceId": 3,
-  "RiderId": 1
+  "RaceId": 2,
+  "RiderId": 3
 }

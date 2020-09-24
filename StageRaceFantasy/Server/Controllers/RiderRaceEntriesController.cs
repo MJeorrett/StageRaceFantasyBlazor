@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StageRaceFantasy.Server.Db;
@@ -13,10 +14,14 @@ namespace StageRaceFantasy.Server.Controllers
     public class RiderRaceEntriesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public RiderRaceEntriesController(ApplicationDbContext context)
+        public RiderRaceEntriesController(
+            ApplicationDbContext context,
+            IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -77,23 +82,39 @@ namespace StageRaceFantasy.Server.Controllers
 
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<RiderRaceEntry>> PostRiderRaceEntry(int raceId, RiderRaceEntry riderRaceEntry)
+        public async Task<ActionResult<RiderRaceEntry>> PostRiderRaceEntry(int raceId, AddRiderRaceEntryDto riderRaceEntryDto)
         {
-            if (raceId != riderRaceEntry.RaceId)
+            if (raceId != riderRaceEntryDto.RaceId)
             {
                 return BadRequest();
             }
 
-            if (!RaceExists(raceId))
+            if (RiderRaceEntryExists(raceId, riderRaceEntryDto.RiderId))
+            {
+                return BadRequest();
+            }
+
+            var race = await _context.Races.FindAsync(riderRaceEntryDto.RaceId);
+            var rider = await _context.Riders.FindAsync(riderRaceEntryDto.RiderId);
+
+            if (race == null || rider == null)
             {
                 return NotFound();
             }
 
-            _context.RiderRaceEntries.Add(riderRaceEntry);
+            var riderRaceEntry = new RiderRaceEntry()
+            {
+                Race = race,
+                Rider = rider,
+                BibNumber = riderRaceEntryDto.BibNumber,
+            };
 
+            var getRierRaceEntryDto = _mapper.Map<GetRiderRaceEntryDto>(riderRaceEntry);
+
+            await _context.RiderRaceEntries.AddAsync(riderRaceEntry);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetRiderRaceEntry", new { raceId = riderRaceEntry.RaceId, riderId = riderRaceEntry.RiderId }, riderRaceEntry);
+            return CreatedAtAction("GetRiderRaceEntry", new { raceId = riderRaceEntryDto.RaceId, riderId = riderRaceEntryDto.RiderId }, getRierRaceEntryDto);
         }
 
         [HttpDelete("{riderId}")]
