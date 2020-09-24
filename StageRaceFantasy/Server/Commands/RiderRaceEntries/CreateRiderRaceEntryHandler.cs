@@ -44,7 +44,7 @@ namespace StageRaceFantasy.Server.Commands.RiderRaceEntries
                 };
             }
 
-            var riderRaceEntry = new RiderRaceEntries()
+            var riderRaceEntry = new RiderRaceEntry()
             {
                 Race = race,
                 Rider = rider,

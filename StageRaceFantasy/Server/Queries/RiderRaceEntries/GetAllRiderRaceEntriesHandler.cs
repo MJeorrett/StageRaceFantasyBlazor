@@ -24,7 +24,7 @@ namespace StageRaceFantasy.Server.Queries.RiderRaceEntries
 
         public async Task<QueryResult<List<GetRiderRaceEntryDto>>> Handle(GetAllRiderRaceEntriesQuery request, CancellationToken cancellationToken)
         {
-            var raceId = request.raceId;
+            var raceId = request.RaceId;
 
             var raceExists = await _dbContext.Races.AnyAsync(x => x.Id == raceId);
 
