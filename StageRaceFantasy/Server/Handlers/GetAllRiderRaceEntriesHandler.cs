@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Server.Handlers
 {
-    public class GetAllRiderRaceEntriesHandler : IRequestHandler<GetAllRiderRaceEntriesQuery, List<GetRiderRaceEntryDto>>
+    public class GetAllRiderRaceEntriesHandler : IRequestHandler<GetAllRiderRaceEntriesQuery, QueryResult<List<GetRiderRaceEntryDto>>>
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly IMapper _mapper;
@@ -23,15 +23,18 @@ namespace StageRaceFantasy.Server.Handlers
             _mapper = mapper;
         }
 
-        public async Task<List<GetRiderRaceEntryDto>> Handle(GetAllRiderRaceEntriesQuery request, CancellationToken cancellationToken)
+        public async Task<QueryResult<List<GetRiderRaceEntryDto>>> Handle(GetAllRiderRaceEntriesQuery request, CancellationToken cancellationToken)
         {
-            var raceId = request.RaceId;
+            var raceId = request.raceId;
 
             var raceExists = await _dbContext.Races.AnyAsync(x => x.Id == raceId);
 
             if (!raceExists)
             {
-                return null;
+                return new()
+                {
+                    IsNotFound = true,
+                };
             }
 
             var riderRaceEntries = await _dbContext.RiderRaceEntries
@@ -55,9 +58,9 @@ namespace StageRaceFantasy.Server.Handlers
             var notEnteredRiderRaceEntries = _mapper.Map<List<GetRiderRaceEntryDto>>(notEnteredRiders);
             notEnteredRiderRaceEntries.ForEach(x => x.RaceId = raceId);
 
-            return enteredRiderRaceEntries
+            return new (enteredRiderRaceEntries
                 .Concat(notEnteredRiderRaceEntries)
-                .ToList();
+                .ToList());
         }
     }
 }

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using StageRaceFantasy.Server.Db;
 using StageRaceFantasy.Server.Queries;
 using StageRaceFantasy.Shared.Models;
@@ -35,41 +34,16 @@ namespace StageRaceFantasy.Server.Controllers
             var query = new GetAllRiderRaceEntriesQuery(raceId);
             var result = await _mediator.Send(query);
 
-            return result == null ? NotFound() : result;
+            return result.IsNotFound ? NotFound() : result.Content;
         }
 
         [HttpGet("{riderId}")]
         public async Task<ActionResult<GetRiderRaceEntryDto>> GetRiderRaceEntry(int raceId, int riderId)
         {
-            var riderRaceEntry = await _context.RiderRaceEntries
-                .Include(x => x.Race)
-                .Include(x => x.Rider)
-                .Where(x => x.RaceId == raceId && x.RiderId == riderId)
-                .FirstOrDefaultAsync();
+            var query = new GetRiderRaceEntryQuery(raceId, riderId);
+            var result = await _mediator.Send(query);
 
-            if (riderRaceEntry != null)
-            {
-                var riderRaceEntryDto = _mapper.Map<GetRiderRaceEntryDto>(riderRaceEntry);
-                riderRaceEntryDto.IsEntered = true;
-
-                return riderRaceEntryDto;
-            }
-
-            var race = await _context.Races.FindAsync(raceId);
-            var rider = await _context.Riders.FindAsync(riderId);
-
-            if (race == null || rider == null)
-            {
-                return NotFound();
-            }
-
-            return new GetRiderRaceEntryDto
-            {
-                RaceId = raceId,
-                RiderId = rider.Id,
-                RiderFirstName = rider.FirstName,
-                RiderLastName = rider.LastName,
-            };
+            return result.IsNotFound ? NotFound() : result.Content;
         }
 
         [HttpPut("{riderId}")]
