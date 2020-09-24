@@ -35,7 +35,7 @@ else
             <td>@context.RiderLastName</td>
             <td>@context.BibNumber</td>
             <td>
-                <MatIconButton @onclick="@(() => DeleteRider(context.RiderId))" Icon="delete" Style="color: red" />
+                <MatCheckbox Value="@context.IsEntered" ValueChanged="@((bool newIsEntered) => newIsEntered ? EnterRider(context.RiderId) : WithdrawRider(context.RiderId))" />
             </td>
         </MatTableRow>
     </MatTable>
@@ -51,14 +51,27 @@ else
         raceEntries = await httpClient.GetFromJsonAsync<GetRiderRaceEntryDto[]>($"api/races/{raceId}/entries");
     }
 
-    async Task DeleteRider(int riderId)
+    async Task EnterRider(int riderId)
     {
         var raceEntry = raceEntries.First(x => x.RiderId == riderId);
+        raceEntry.IsEntered = true;
 
-        if (await js.InvokeAsync<bool>("confirm", $"Do you want to delete rider {raceEntry.RiderFirstName} {raceEntry.RiderLastName}?"))
+        var addRaceEntryDto = new AddRiderRaceEntryDto()
         {
-            await httpClient.DeleteAsync($"api/races/{raceId}/entries/{riderId}");
-            await OnInitializedAsync();
-        }
+            RaceId = raceId,
+            RiderId = riderId,
+        };
+
+        await httpClient.PostAsJsonAsync($"api/races/{raceId}/entries", addRaceEntryDto);
+        await OnInitializedAsync();
+    }
+
+    async Task WithdrawRider(int riderId)
+    {
+        var raceEntry = raceEntries.First(x => x.RiderId == riderId);
+        raceEntry.IsEntered = false;
+
+        await httpClient.DeleteAsync($"api/races/{raceId}/entries/{riderId}");
+        await OnInitializedAsync();
     }
 }

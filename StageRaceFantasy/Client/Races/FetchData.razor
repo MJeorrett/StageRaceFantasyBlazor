@@ -18,10 +18,12 @@ else
         <MatTableHeader>
             <th>Id</th>
             <th>Name</th>
+            <th></th>
         </MatTableHeader>
         <MatTableRow>
             <td>@context.Id</td>
             <td>@context.Name</td>
+            <td><MatButton Link=@($"races/{context.Id}/entries")>Entries</MatButton></td>
         </MatTableRow>
     </MatTable>
 }
