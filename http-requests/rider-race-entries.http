@@ -8,6 +8,10 @@ GET {{host}}/api/races/2/entries
 
 ###
 
+GET {{host}}/api/races/2/entries/2
+
+###
+
 POST {{host}}/api/races/2/entries
 Content-Type: application/json
 

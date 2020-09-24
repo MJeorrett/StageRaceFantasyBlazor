@@ -25,29 +25,37 @@ namespace StageRaceFantasy.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<RiderRaceEntry>>> GetRiderRaceEntries(int raceId)
+        public async Task<ActionResult<IEnumerable<GetRiderRaceEntryDto>>> GetRiderRaceEntries(int raceId)
         {
             if (!RaceExists(raceId))
             {
                 return NotFound();
             }
 
-            return await _context.RiderRaceEntries
+            var riderRaceEntries = await _context.RiderRaceEntries
+                .Include(x => x.Race)
+                .Include(x => x.Rider)
                 .Where(x => x.RaceId == raceId)
                 .ToListAsync();
+
+            return _mapper.Map<List<GetRiderRaceEntryDto>>(riderRaceEntries);
         }
 
         [HttpGet("{riderId}")]
-        public async Task<ActionResult<RiderRaceEntry>> GetRiderRaceEntry(int raceId, int riderId)
+        public async Task<ActionResult<GetRiderRaceEntryDto>> GetRiderRaceEntry(int raceId, int riderId)
         {
-            var riderRaceEntry = await FindRiderRaceEntry(raceId, riderId);
+            var riderRaceEntry = await _context.RiderRaceEntries
+                .Include(x => x.Race)
+                .Include(x => x.Rider)
+                .Where(x => x.RaceId == raceId && x.RiderId == riderId)
+                .FirstOrDefaultAsync();
 
             if (riderRaceEntry == null)
             {
                 return NotFound();
             }
 
-            return riderRaceEntry;
+            return _mapper.Map<GetRiderRaceEntryDto>(riderRaceEntry);
         }
 
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -114,13 +122,16 @@ namespace StageRaceFantasy.Server.Controllers
             await _context.RiderRaceEntries.AddAsync(riderRaceEntry);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetRiderRaceEntry", new { raceId = riderRaceEntryDto.RaceId, riderId = riderRaceEntryDto.RiderId }, getRierRaceEntryDto);
+            return CreatedAtAction(
+                "GetRiderRaceEntry",
+                new { raceId = riderRaceEntryDto.RaceId, riderId = riderRaceEntryDto.RiderId },
+                getRierRaceEntryDto);
         }
 
         [HttpDelete("{riderId}")]
         public async Task<IActionResult> DeleteRiderRaceEntry(int raceId, int riderId)
         {
-            var riderRaceEntry = await FindRiderRaceEntry(raceId, riderId);
+            var riderRaceEntry = await _context.RiderRaceEntries.FindAsync(raceId, riderId);
 
             if (riderRaceEntry == null)
             {
@@ -133,14 +144,10 @@ namespace StageRaceFantasy.Server.Controllers
             return NoContent();
         }
 
-        private async Task<RiderRaceEntry> FindRiderRaceEntry(int raceId, int riderId)
-        {
-            return await _context.RiderRaceEntries.FindAsync(raceId, riderId);
-        }
-
         private bool RiderRaceEntryExists(int raceId, int riderId)
         {
-            return _context.RiderRaceEntries.Any(x => x.RaceId == raceId && x.RiderId == riderId);
+            return _context.RiderRaceEntries
+                .Any(x =>x.RaceId == raceId && x.RiderId == riderId);
         }
 
         private bool RaceExists(int raceId)
