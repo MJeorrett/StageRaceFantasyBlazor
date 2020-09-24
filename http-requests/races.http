@@ -1,0 +1,19 @@
+@hostname = https://localhost
+@port = 5001
+@host = {{hostname}}:{{port}}
+
+###
+
+GET {{host}}/api/races
+
+###
+
+POST {{host}}/api/races
+Content-Type: application/json
+
+{
+  "name": "La Vuelta Espana 2018"
+}
+###
+
+DELETE {{host}}/api/races/1

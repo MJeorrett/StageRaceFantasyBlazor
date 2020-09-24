@@ -2,7 +2,6 @@
 {
     public class RiderRaceEntry
     {
-        public int Id { get; set; }
         public int RiderId { get; set; }
         public Rider Rider { get; set; }
         public int RaceId { get; set; }

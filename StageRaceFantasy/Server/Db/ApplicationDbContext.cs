@@ -9,6 +9,12 @@ namespace StageRaceFantasy.Server.Db
             base(options)
         { }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<RiderRaceEntry>()
+                .HasKey(x => new { x.RaceId, x.RiderId });
+        }
+
         public DbSet<Rider> Riders { get; set; }
         public DbSet<Race> Races { get; set; }
         public DbSet<RiderRaceEntry> RiderRaceEntries { get; set; }
