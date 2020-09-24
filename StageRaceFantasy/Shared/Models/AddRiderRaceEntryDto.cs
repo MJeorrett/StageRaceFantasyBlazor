@@ -4,6 +4,6 @@
     {
         public int RiderId { get; set; }
         public int RaceId { get; set; }
-        public int BibNumber { get; set; } = -1;
+        public int BibNumber { get; set; }
     }
 }

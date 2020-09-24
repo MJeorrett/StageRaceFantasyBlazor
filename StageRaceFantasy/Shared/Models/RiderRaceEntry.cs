@@ -6,6 +6,6 @@
         public Rider Rider { get; set; }
         public int RaceId { get; set; }
         public Race Race { get; set; }
-        public int BibNumber { get; set; } = -1;
+        public int BibNumber { get; set; }
     }
 }
