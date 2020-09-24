@@ -80,17 +80,10 @@ namespace StageRaceFantasy.Server.Controllers
         [HttpDelete("{riderId}")]
         public async Task<IActionResult> DeleteRiderRaceEntry(int raceId, int riderId)
         {
-            var riderRaceEntry = await _context.RiderRaceEntries.FindAsync(raceId, riderId);
+            var command = new DeleteRiderRaceEntryCommand(raceId, riderId);
+            var result = await _mediator.Send(command);
 
-            if (riderRaceEntry == null)
-            {
-                return NotFound();
-            }
-
-            _context.RiderRaceEntries.Remove(riderRaceEntry);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return result.IsNotFound ? NotFound() : NoContent();
         }
     }
 }
