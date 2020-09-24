@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using StageRaceFantasy.Server.Commands;
+using StageRaceFantasy.Server.Commands.RiderRaceEntry;
 using StageRaceFantasy.Server.Db;
 using StageRaceFantasy.Shared.Models;
 using System.Linq;

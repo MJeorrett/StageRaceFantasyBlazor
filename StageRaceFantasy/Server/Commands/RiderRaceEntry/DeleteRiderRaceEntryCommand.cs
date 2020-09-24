@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace StageRaceFantasy.Server.Commands
+namespace StageRaceFantasy.Server.Commands.RiderRaceEntry
 {
     public record DeleteRiderRaceEntryCommand(
         int RaceId,

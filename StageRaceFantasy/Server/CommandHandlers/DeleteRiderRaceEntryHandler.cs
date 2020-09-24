@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using StageRaceFantasy.Server.Commands;
+using StageRaceFantasy.Server.Commands.RiderRaceEntry;
 using StageRaceFantasy.Server.Db;
 using System.Threading;
 using System.Threading.Tasks;
