@@ -7,6 +7,6 @@
         public string RiderFirstName { get; set; }
         public string RiderLastName { get; set; }
         public bool IsEntered { get; set; }
-        public int BibNumber { get; set; } = -1;
+        public int BibNumber { get; set; }
     }
 }
