@@ -2,7 +2,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using StageRaceFantasy.Server.Db;
-using StageRaceFantasy.Server.Queries;
 using StageRaceFantasy.Shared.Models;
 using System;
 using System.Collections.Generic;
@@ -10,7 +9,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StageRaceFantasy.Server.QueryHandlers.RiderRaceEntry
+namespace StageRaceFantasy.Server.Queries.RiderRaceEntries
 {
     public class GetAllRiderRaceEntriesHandler : IRequestHandler<GetAllRiderRaceEntriesQuery, QueryResult<List<GetRiderRaceEntryDto>>>
     {

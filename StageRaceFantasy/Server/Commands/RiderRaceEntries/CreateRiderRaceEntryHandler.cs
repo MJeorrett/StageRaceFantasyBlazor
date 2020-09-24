@@ -1,14 +1,12 @@
 ﻿using AutoMapper;
 using MediatR;
-using StageRaceFantasy.Server.Commands;
-using StageRaceFantasy.Server.Commands.RiderRaceEntry;
 using StageRaceFantasy.Server.Db;
 using StageRaceFantasy.Shared.Models;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StageRaceFantasy.Server.CommandHandlers.RiderRaceEntry
+namespace StageRaceFantasy.Server.Commands.RiderRaceEntries
 {
     public class CreateRiderRaceEntryHandler : IRequestHandler<CreateRiderRaceEntryCommand, CommandResult<GetRiderRaceEntryDto>>
     {
@@ -46,7 +44,7 @@ namespace StageRaceFantasy.Server.CommandHandlers.RiderRaceEntry
                 };
             }
 
-            var riderRaceEntry = new RiderRaceEntry()
+            var riderRaceEntry = new RiderRaceEntries()
             {
                 Race = race,
                 Rider = rider,

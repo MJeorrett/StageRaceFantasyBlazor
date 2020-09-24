@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using StageRaceFantasy.Shared.Models;
 
-namespace StageRaceFantasy.Server.Commands.RiderRaceEntry
+namespace StageRaceFantasy.Server.Commands.RiderRaceEntries
 {
     public record CreateRiderRaceEntryCommand(
         int RaceId,
