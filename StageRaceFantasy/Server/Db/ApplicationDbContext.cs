@@ -18,5 +18,6 @@ namespace StageRaceFantasy.Server.Db
         public DbSet<Rider> Riders { get; set; }
         public DbSet<Race> Races { get; set; }
         public DbSet<RiderRaceEntry> RiderRaceEntries { get; set; }
+        public DbSet<FantasyTeam> FantasyTeams { get; set; }
     }
 }

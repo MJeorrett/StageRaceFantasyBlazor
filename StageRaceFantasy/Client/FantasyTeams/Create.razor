@@ -1,0 +1,23 @@
+﻿@page "/fantasy-teams/create"
+
+@using StageRaceFantasy.Shared.Models
+
+@inject HttpClient http
+@inject NavigationManager navigationManager
+
+<h3>Create Fantasy Team</h3>
+
+<Form
+      ButtonText="Create Fantasy Team"
+      team="@fantasyTeam"
+      OnValidSubmit="@CreateFantasyTeam" />
+
+@code {
+    FantasyTeam fantasyTeam = new FantasyTeam();
+
+    async Task CreateFantasyTeam()
+    {
+        await http.PostAsJsonAsync("api/fantasy-teams", fantasyTeam);
+        navigationManager.NavigateTo("fantasy-teams");
+    }
+}
