@@ -98,33 +98,24 @@ namespace StageRaceFantasy.Server.Controllers
             };
         }
 
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{riderId}")]
-        public async Task<IActionResult> PutRiderRaceEntry(int raceId, int riderId, RiderRaceEntry riderRaceEntry)
+        public async Task<IActionResult> PutRiderRaceEntry(int raceId, int riderId, UpdateRiderRaceEntryDto riderRaceEntryDto)
         {
-            if (raceId != riderRaceEntry.RaceId || riderId != riderRaceEntry.RiderId)
+            if (raceId != riderRaceEntryDto.RaceId || riderId != riderRaceEntryDto.RiderId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(riderRaceEntry).State = EntityState.Modified;
+            var riderRaceEntry = await _context.RiderRaceEntries.FindAsync(raceId, riderId);
 
-            try
+            if (riderRaceEntry == null)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!RiderRaceEntryExists(raceId, riderId))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
+            riderRaceEntry.BibNumber = riderRaceEntryDto.BibNumber;
+            await _context.SaveChangesAsync();
+            
             return NoContent();
         }
 

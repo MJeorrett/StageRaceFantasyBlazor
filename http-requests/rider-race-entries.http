@@ -8,7 +8,7 @@ GET {{host}}/api/races/4/entries
 
 ###
 
-GET {{host}}/api/races/4/entries/1
+GET {{host}}/api/races/4/entries/3
 
 ###
 
@@ -17,5 +17,21 @@ Content-Type: application/json
 
 {
   "RaceId": 4,
-  "RiderId": 2
+  "RiderId": 3,
+  "BibNumber": 103
 }
+
+###
+
+PUT {{host}}/api/races/4/entries/3
+Content-Type: application/json
+
+{
+  "RaceId": 4,
+  "RiderId": 3,
+  "BibNumber": 14
+}
+
+###
+
+DELETE {{host}}/api/races/4/entries/3
