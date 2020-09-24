@@ -14,6 +14,10 @@
 {
     <MatBody1 Style="font-weight: bolder"><em>Loading...</em></MatBody1>
 }
+else if (fantasyTeams.Length == 0)
+{
+    <MatBody1 Style="font-weight: bolder"><em>No Teams Found.</em></MatBody1>
+}
 else
 {
     <MatTable Items="@fantasyTeams"
