@@ -23,7 +23,9 @@ namespace StageRaceFantasy.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Race>>> GetRaces()
         {
-            return await _context.Races.ToListAsync();
+            return await _context.Races
+                .OrderBy(x => x.Name)
+                .ToListAsync();
         }
 
         // GET: api/Races/5

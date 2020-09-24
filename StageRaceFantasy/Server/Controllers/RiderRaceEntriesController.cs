@@ -39,12 +39,14 @@ namespace StageRaceFantasy.Server.Controllers
                 .Include(x => x.Race)
                 .Include(x => x.Rider)
                 .Where(x => x.RaceId == raceId)
+                .OrderBy(x => x.Rider.LastName)
                 .ToListAsync();
 
             var enteredRiderIds = riderRaceEntries.Select(x => x.RiderId);
 
             var notEnteredRiders = await _context.Riders
                 .Where(x => !enteredRiderIds.Contains(x.Id))
+                .OrderBy(x => x.LastName)
                 .ToListAsync();
 
             var enteredRiderRaceEntries = _mapper.Map<List<GetRiderRaceEntryDto>>(riderRaceEntries);
