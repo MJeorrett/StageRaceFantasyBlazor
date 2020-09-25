@@ -1,0 +1,33 @@
+@hostname = https://localhost
+@port = 5001
+@host = {{hostname}}:{{port}}
+
+###
+
+GET {{host}}/api/fantasy-teams/2/race-entries
+
+###
+
+GET {{host}}/api/fantasy-teams/2/race-entries/2
+
+###
+
+POST {{host}}/api/fantasy-teams/2/race-entries
+Content-Type: application/json
+
+{
+  "RaceId": 2
+}
+
+###
+
+PUT {{host}}/api/fantasy-teams/1/race-entries/1
+Content-Type: application/json
+
+{
+  "RiderIds": [ 15 ]
+}
+
+###
+
+DELETE {{host}}/api/fantasy-teams/1/race-entries/2

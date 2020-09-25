@@ -13,11 +13,15 @@ namespace StageRaceFantasy.Server.Db
         {
             modelBuilder.Entity<RiderRaceEntry>()
                 .HasKey(x => new { x.RaceId, x.RiderId });
+
+            modelBuilder.Entity<FantasyTeamRaceEntry>()
+                .HasKey(x => new { x.FantasyTeamId, x.RaceId });
         }
 
         public DbSet<Rider> Riders { get; set; }
         public DbSet<Race> Races { get; set; }
         public DbSet<RiderRaceEntry> RiderRaceEntries { get; set; }
         public DbSet<FantasyTeam> FantasyTeams { get; set; }
+        public DbSet<FantasyTeamRaceEntry> FantasyTeamRaceEntries { get; set; }
     }
 }

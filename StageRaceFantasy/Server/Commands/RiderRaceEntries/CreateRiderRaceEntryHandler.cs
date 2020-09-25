@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using StageRaceFantasy.Server.Db;
 using StageRaceFantasy.Shared.Models;
 using System.Linq;
@@ -32,10 +33,10 @@ namespace StageRaceFantasy.Server.Commands
                 };
             }
 
-            var race = await _dbContext.Races.FindAsync(raceId);
-            var rider = await _dbContext.Riders.FindAsync(riderId);
+            var raceExists = await _dbContext.Races.AnyAsync(x => x.Id == raceId);
+            var riderExists = await _dbContext.Riders.AnyAsync(x => x.Id == riderId);
 
-            if (race == null || rider == null)
+            if (!raceExists || !riderExists)
             {
                 return new()
                 {
@@ -45,8 +46,8 @@ namespace StageRaceFantasy.Server.Commands
 
             var riderRaceEntry = new RiderRaceEntry()
             {
-                Race = race,
-                Rider = rider,
+                RaceId = raceId,
+                RiderId = riderId,
                 BibNumber = bibNumber,
             };
 

@@ -1,0 +1,19 @@
+@hostname = https://localhost
+@port = 5001
+@host = {{hostname}}:{{port}}
+
+###
+
+GET {{host}}/api/fantasy-teams
+
+###
+
+POST {{host}}/api/fantasy-teams
+Content-Type: application/json
+
+{
+  "name": "Catriona's Wheel Suckers"
+}
+###
+
+DELETE {{host}}/api/fantasy-teams/1

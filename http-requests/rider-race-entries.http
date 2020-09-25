@@ -4,30 +4,29 @@
 
 ###
 
-GET {{host}}/api/races/4/entries
+GET {{host}}/api/races/1/entries
 
 ###
 
-GET {{host}}/api/races/4/entries/4
+GET {{host}}/api/races/1/entries/2
 
 ###
 
-POST {{host}}/api/races/4/entries
+POST {{host}}/api/races/1/entries
 Content-Type: application/json
 
 {
-  "RaceId": 4,
-  "RiderId": 3,
+  "RiderId": 1,
   "BibNumber": 103
 }
 
 ###
 
-PUT {{host}}/api/races/4/entries/2
+PUT {{host}}/api/races/4/entries/1
 Content-Type: application/json
 
 {
-  "BibNumber": 1
+  "BibNumber": 15
 }
 
 ###
