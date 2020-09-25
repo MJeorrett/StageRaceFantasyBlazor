@@ -24,7 +24,7 @@ namespace StageRaceFantasy.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<FantasyTeam>>> GetFantasyTeams()
+        public async Task<ActionResult<List<GetAllFantasyTeamsDto>>> GetFantasyTeams()
         {
             var query = new GetAllFantasyTeamsQuery();
             var result = await _mediator.Send(query);
@@ -33,7 +33,7 @@ namespace StageRaceFantasy.Server.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<FantasyTeam>> GetFantasyTeam(int id)
+        public async Task<ActionResult<GetFantasyTeamDto>> GetFantasyTeam(int id)
         {
             var query = new GetFantasyTeamQuery(id);
             var result = await _mediator.Send(query);

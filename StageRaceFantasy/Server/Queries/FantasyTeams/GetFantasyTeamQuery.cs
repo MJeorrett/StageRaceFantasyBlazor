@@ -2,7 +2,7 @@
 
 namespace StageRaceFantasy.Server.Queries
 {
-    public record GetFantasyTeamQuery(int TeamId) : IApplicationQuery<FantasyTeam>
+    public record GetFantasyTeamQuery(int TeamId) : IApplicationQuery<GetFantasyTeamDto>
     {
     }
 }
