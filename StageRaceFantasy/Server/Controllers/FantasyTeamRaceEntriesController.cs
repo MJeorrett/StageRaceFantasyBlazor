@@ -6,7 +6,6 @@ using StageRaceFantasy.Server.Commands.FanasyTeamRaceEntries;
 using StageRaceFantasy.Server.Controllers.Utils;
 using StageRaceFantasy.Server.Queries.FantasyTeamRaceEntries;
 using StageRaceFantasy.Shared.Models;
-using StageRaceFantasy.Shared.Models.FantasyTeamRaceEntries;
 
 namespace StageRaceFantasy.Server.Controllers
 {

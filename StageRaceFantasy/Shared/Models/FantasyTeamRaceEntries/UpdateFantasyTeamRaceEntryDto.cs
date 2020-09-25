@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace StageRaceFantasy.Shared.Models.FantasyTeamRaceEntries
+namespace StageRaceFantasy.Shared.Models
 {
     public class UpdateFantasyTeamRaceEntryDto
     {

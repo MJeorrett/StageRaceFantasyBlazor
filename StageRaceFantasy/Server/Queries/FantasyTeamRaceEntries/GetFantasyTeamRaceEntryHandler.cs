@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using StageRaceFantasy.Server.Db;
 using StageRaceFantasy.Shared.Models;
 using System.Threading;
@@ -22,7 +23,8 @@ namespace StageRaceFantasy.Server.Queries.FantasyTeamRaceEntries
             var teamId = request.FantasyTeamId;
             var raceId = request.RaceId;
 
-            var entry = await _dbContext.FantasyTeamRaceEntries.FindAsync(teamId, raceId);
+            var entry = await _dbContext.FantasyTeamRaceEntries.
+                FirstOrDefaultAsync(x => x.FantasyTeamId == teamId && x.RaceId == raceId);
 
             if (entry == null)
             {

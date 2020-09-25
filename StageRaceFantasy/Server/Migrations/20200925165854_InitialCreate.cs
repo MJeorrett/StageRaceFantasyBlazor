@@ -33,16 +33,32 @@ namespace StageRaceFantasy.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FantasyTeamRaceEntries",
+                name: "Riders",
                 columns: table => new
                 {
-                    FantasyTeamId = table.Column<int>(type: "int", nullable: false),
-                    RaceId = table.Column<int>(type: "int", nullable: false),
                     Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FantasyTeamRaceEntries", x => new { x.FantasyTeamId, x.RaceId });
+                    table.PrimaryKey("PK_Riders", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FantasyTeamRaceEntries",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FantasyTeamId = table.Column<int>(type: "int", nullable: false),
+                    RaceId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FantasyTeamRaceEntries", x => x.Id);
+                    table.UniqueConstraint("AK_FantasyTeamRaceEntries_FantasyTeamId_RaceId", x => new { x.FantasyTeamId, x.RaceId });
                     table.ForeignKey(
                         name: "FK_FantasyTeamRaceEntries_FantasyTeams_FantasyTeamId",
                         column: x => x.FantasyTeamId,
@@ -55,28 +71,6 @@ namespace StageRaceFantasy.Server.Migrations
                         principalTable: "Races",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Riders",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FantasyTeamRaceEntryFantasyTeamId = table.Column<int>(type: "int", nullable: true),
-                    FantasyTeamRaceEntryRaceId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Riders", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Riders_FantasyTeamRaceEntries_FantasyTeamRaceEntryFantasyTeamId_FantasyTeamRaceEntryRaceId",
-                        columns: x => new { x.FantasyTeamRaceEntryFantasyTeamId, x.FantasyTeamRaceEntryRaceId },
-                        principalTable: "FantasyTeamRaceEntries",
-                        principalColumns: new[] { "FantasyTeamId", "RaceId" },
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -104,32 +98,59 @@ namespace StageRaceFantasy.Server.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "FantasyTeamRaceEntryRider",
+                columns: table => new
+                {
+                    FantasyTeamRaceEntryId = table.Column<int>(type: "int", nullable: false),
+                    RiderId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FantasyTeamRaceEntryRider", x => new { x.FantasyTeamRaceEntryId, x.RiderId });
+                    table.ForeignKey(
+                        name: "FK_FantasyTeamRaceEntryRider_FantasyTeamRaceEntries_FantasyTeamRaceEntryId",
+                        column: x => x.FantasyTeamRaceEntryId,
+                        principalTable: "FantasyTeamRaceEntries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FantasyTeamRaceEntryRider_Riders_RiderId",
+                        column: x => x.RiderId,
+                        principalTable: "Riders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_FantasyTeamRaceEntries_RaceId",
                 table: "FantasyTeamRaceEntries",
                 column: "RaceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RiderRaceEntries_RiderId",
-                table: "RiderRaceEntries",
+                name: "IX_FantasyTeamRaceEntryRider_RiderId",
+                table: "FantasyTeamRaceEntryRider",
                 column: "RiderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Riders_FantasyTeamRaceEntryFantasyTeamId_FantasyTeamRaceEntryRaceId",
-                table: "Riders",
-                columns: new[] { "FantasyTeamRaceEntryFantasyTeamId", "FantasyTeamRaceEntryRaceId" });
+                name: "IX_RiderRaceEntries_RiderId",
+                table: "RiderRaceEntries",
+                column: "RiderId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "FantasyTeamRaceEntryRider");
+
+            migrationBuilder.DropTable(
                 name: "RiderRaceEntries");
 
             migrationBuilder.DropTable(
-                name: "Riders");
+                name: "FantasyTeamRaceEntries");
 
             migrationBuilder.DropTable(
-                name: "FantasyTeamRaceEntries");
+                name: "Riders");
 
             migrationBuilder.DropTable(
                 name: "FantasyTeams");

@@ -1,4 +1,5 @@
-﻿using StageRaceFantasy.Server.Db;
+﻿using Microsoft.EntityFrameworkCore;
+using StageRaceFantasy.Server.Db;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,7 +19,8 @@ namespace StageRaceFantasy.Server.Commands.FanasyTeamRaceEntries
             var teamId = request.FantasyTeamId;
             var raceId = request.RaceId;
 
-            var entry = await _dbContext.FantasyTeamRaceEntries.FindAsync(teamId, raceId);
+            var entry = await _dbContext.FantasyTeamRaceEntries
+                .FirstOrDefaultAsync(x => x.FantasyTeamId == teamId && x.RaceId == raceId);
 
             if (entry == null)
             {

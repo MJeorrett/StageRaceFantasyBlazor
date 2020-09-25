@@ -1,4 +1,4 @@
-﻿namespace StageRaceFantasy.Shared.Models.FantasyTeamRaceEntries
+﻿namespace StageRaceFantasy.Shared.Models
 {
     public class CreateFantasyTeamRaceEntryDto
     {

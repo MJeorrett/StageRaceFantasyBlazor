@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StageRaceFantasy.Server.Db;
+using StageRaceFantasy.Shared.Models;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,7 +22,10 @@ namespace StageRaceFantasy.Server.Commands.FanasyTeamRaceEntries
             var raceId = request.RaceId;
             var riderIds = request.RiderIds; // TODO: Validate distinct.
 
-            var entry = await _dbContext.FantasyTeamRaceEntries.FindAsync(teamId, raceId);
+            // TODO: create repository to handle this.
+            var entry = await _dbContext.FantasyTeamRaceEntries
+                .Include(x => x.FantasyTeamRaceEntryRiders)
+                .FirstOrDefaultAsync(x => x.FantasyTeamId == teamId && x.RaceId == raceId);
 
             if (entry == null)
             {
@@ -43,7 +47,21 @@ namespace StageRaceFantasy.Server.Commands.FanasyTeamRaceEntries
                 };
             }
 
-            entry.Riders = riders;
+            entry.FantasyTeamRaceEntryRiders
+                .RemoveAll(x => !riderIds.Contains(x.RiderId));
+
+            riders
+                .Where(rider => !entry.FantasyTeamRaceEntryRiders.Any(x => x.RiderId == rider.Id))
+                .ToList()
+                .ForEach(rider =>
+                {
+                    entry.FantasyTeamRaceEntryRiders.Add(new FantasyTeamRaceEntryRider()
+                    {
+                        FantasyTeamRaceEntry = entry,
+                        Rider = rider,
+                    });
+                });
+
             await _dbContext.SaveChangesAsync();
 
             return new();

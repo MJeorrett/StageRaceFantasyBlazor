@@ -6,6 +6,6 @@ namespace StageRaceFantasy.Shared.Models
     {
         public int FantasyTeamId { get; set; }
         public int RaceId { get; set; }
-        public List<Rider> RiderSelections { get; set; }
+        public List<int> RiderIds { get; set; }
     }
 }

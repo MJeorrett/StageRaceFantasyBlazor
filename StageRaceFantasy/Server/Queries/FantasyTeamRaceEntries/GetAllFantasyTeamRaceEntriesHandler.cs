@@ -35,7 +35,7 @@ namespace StageRaceFantasy.Server.Queries.FantasyTeamRaceEntries
             }
 
             var raceEntries = await _dbContext.FantasyTeamRaceEntries
-                .Include(x => x.Riders)
+                .Include(x => x.FantasyTeamRaceEntryRiders)
                 .Where(x => x.FantasyTeamId == teamId)
                 .OrderBy(x => x.Race.Name)
                 .ToListAsync();
