@@ -34,6 +34,7 @@ else
             <td>@context.Name</td>
             <td>
                 <MatIconButton @onclick="@(() => DeleteTeam(context.Id))" Icon="delete" Style="color: red" />
+                <MatButton Link="@($"fantasy-teams/{@context.Id}")">View</MatButton>
             </td>
         </MatTableRow>
     </MatTable>

@@ -1,0 +1,39 @@
+﻿@page "/fantasy-teams/{teamId:int}"
+
+@using StageRaceFantasy.Shared.Models
+
+@inject HttpClient httpClient
+
+@if (team == null)
+{
+    <MatBody1 Style="font-weight: bolder"><em>Loading...</em></MatBody1>
+}
+else
+{
+    <MatHeadline2>@team.Name</MatHeadline2>
+
+    <MatHeadline3>Race Entries</MatHeadline3>
+    <MatTable Items="@team.RaceEntries"
+          ShowPaging="false"
+          Striped="true">
+    <MatTableHeader>
+        <th>Id</th>
+        <th>Name</th>
+        <th></th>
+    </MatTableHeader>
+    <MatTableRow>
+        <td>@context.RaceId</td>
+        <td>@context.RaceName</td>
+    </MatTableRow>
+    </MatTable>
+}
+
+@code {
+    [Parameter] public int teamId { get; set; }
+    private GetFantasyTeamDto team { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        team = await httpClient.GetJsonAsync<GetFantasyTeamDto>($"api/fantasy-teams/{teamId}");
+    }
+}
