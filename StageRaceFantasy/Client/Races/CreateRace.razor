@@ -7,15 +7,15 @@
 
 <h3>Create Race</h3>
 
-<Form
+<RaceForm
       ButtonText="Create Race"
       race="@race"
-      OnValidSubmit="@CreateRider" />
+      OnValidSubmit="@Submit" />
 
 @code {
     Race race = new Race();
 
-    async Task CreateRider()
+    async Task Submit()
     {
         await http.PostAsJsonAsync("api/races", race);
         navigationManager.NavigateTo("races");

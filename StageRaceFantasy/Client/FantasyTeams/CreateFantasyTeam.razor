@@ -7,15 +7,15 @@
 
 <h3>Create Fantasy Team</h3>
 
-<Form
+<FantasyTeamForm
       ButtonText="Create Fantasy Team"
       team="@fantasyTeam"
-      OnValidSubmit="@CreateFantasyTeam" />
+      OnValidSubmit="@Submit" />
 
 @code {
     FantasyTeam fantasyTeam = new FantasyTeam();
 
-    async Task CreateFantasyTeam()
+    async Task Submit()
     {
         await http.PostAsJsonAsync("api/fantasy-teams", fantasyTeam);
         navigationManager.NavigateTo("fantasy-teams");

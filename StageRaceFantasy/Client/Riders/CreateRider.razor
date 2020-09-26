@@ -7,15 +7,15 @@
 
 <h3>Create Rider</h3>
 
-<Form
+<RiderForm
       ButtonText="Create Rider"
       rider="@rider"
-      OnValidSubmit="@CreateRider" />
+      OnValidSubmit="@Submit" />
 
 @code {
     Rider rider = new Rider();
 
-    async Task CreateRider()
+    async Task Submit()
     {
         await http.PostAsJsonAsync("api/riders", rider);
         navigationManager.NavigateTo("riders");
