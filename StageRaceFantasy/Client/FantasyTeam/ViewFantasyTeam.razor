@@ -25,7 +25,7 @@ else
                 <MatOption Value="@race.Id">@race.Name</MatOption>
             }
         </MatSelect>
-        <MatButton OnClick="@EnterRace">Enter</MatButton>
+        <MatButton OnClick="@EnterRace" Disabled="@(selectedRaceId == 0)">Enter</MatButton>
     }
 
     if (team.RaceEntries.Count() == 0)
