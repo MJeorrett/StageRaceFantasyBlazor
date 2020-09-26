@@ -21,7 +21,7 @@ namespace StageRaceFantasy.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<GetFantasyTeamRaceEntryDto>>> GetFantasyTeamRaceEntries(int fantasyTeamId)
+        public async Task<ActionResult<List<GetAllFantasyTeamRaceEntriesDto>>> GetFantasyTeamRaceEntries(int fantasyTeamId)
         {
             var query = new GetAllFantasyTeamRaceEntriesQuery(fantasyTeamId);
             var result = await _mediator.Send(query);
@@ -36,15 +36,6 @@ namespace StageRaceFantasy.Server.Controllers
             var result = await _mediator.Send(query);
 
             return ResponseHelpers.BuildRawContentResponse(this, result);
-        }
-
-        [HttpPut("{raceId}")]
-        public async Task<IActionResult> PutFantasyTeamRaceEntry(int fantasyTeamId, int raceId, UpdateFantasyTeamRaceEntryDto updateFantasyTeamRaceEntryDto)
-        {
-            var command = new UpdateFantasyTeamRaceEntryCommand(fantasyTeamId, raceId, updateFantasyTeamRaceEntryDto.RiderIds);
-            var result = await _mediator.Send(command);
-
-            return ResponseHelpers.BuildNoContentResponse(this, result);
         }
 
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -65,6 +56,24 @@ namespace StageRaceFantasy.Server.Controllers
         public async Task<IActionResult> DeleteFantasyTeamRaceEntry(int fantasyTeamId, int raceId)
         {
             var command = new DeleteFantasyTeamRaceEntryCommand(fantasyTeamId, raceId);
+            var result = await _mediator.Send(command);
+
+            return ResponseHelpers.BuildNoContentResponse(this, result);
+        }
+
+        [HttpPost("{raceId}/riders/{riderId}")]
+        public async Task<IActionResult> AddRider(int fantasyTeamId, int raceId, int riderId)
+        {
+            var command = new AddRiderToFantasyTeamRaceEntryCommand(fantasyTeamId, raceId, riderId);
+            var result = await _mediator.Send(command);
+
+            return ResponseHelpers.BuildNoContentResponse(this, result);
+        }
+
+        [HttpDelete("{raceId}/riders/{riderId}")]
+        public async Task<IActionResult> RemoveRider(int fantasyTeamId, int raceId, int riderId)
+        {
+            var command = new RemoveRiderFromFantasyTeamRaceEntryCommand(fantasyTeamId, raceId, riderId);
             var result = await _mediator.Send(command);
 
             return ResponseHelpers.BuildNoContentResponse(this, result);

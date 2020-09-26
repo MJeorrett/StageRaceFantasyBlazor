@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Server.Queries.FantasyTeamRaceEntries
 {
-    public class GetAllFantasyTeamRaceEntriesHandler : IApplicationQueryHandler<GetAllFantasyTeamRaceEntriesQuery, List<GetFantasyTeamRaceEntryDto>>
+    public class GetAllFantasyTeamRaceEntriesHandler : IApplicationQueryHandler<GetAllFantasyTeamRaceEntriesQuery, List<GetAllFantasyTeamRaceEntriesDto>>
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly IMapper _mapper;
@@ -20,7 +20,7 @@ namespace StageRaceFantasy.Server.Queries.FantasyTeamRaceEntries
             _mapper = mapper;
         }
 
-        public async Task<QueryResult<List<GetFantasyTeamRaceEntryDto>>> Handle(GetAllFantasyTeamRaceEntriesQuery request, CancellationToken cancellationToken)
+        public async Task<QueryResult<List<GetAllFantasyTeamRaceEntriesDto>>> Handle(GetAllFantasyTeamRaceEntriesQuery request, CancellationToken cancellationToken)
         {
             var teamId = request.TeamId;
 
@@ -35,12 +35,11 @@ namespace StageRaceFantasy.Server.Queries.FantasyTeamRaceEntries
             }
 
             var raceEntries = await _dbContext.FantasyTeamRaceEntries
-                .Include(x => x.FantasyTeamRaceEntryRiders)
                 .Where(x => x.FantasyTeamId == teamId)
                 .OrderBy(x => x.Race.Name)
                 .ToListAsync();
 
-            return new(_mapper.Map<List<GetFantasyTeamRaceEntryDto>>(raceEntries));
+            return new(_mapper.Map<List<GetAllFantasyTeamRaceEntriesDto>>(raceEntries));
         }
     }
 }

@@ -4,15 +4,15 @@
 
 ###
 
-GET {{host}}/api/fantasy-teams/2/race-entries
+GET {{host}}/api/fantasy-teams/1/race-entries
 
 ###
 
-GET {{host}}/api/fantasy-teams/2/race-entries/2
+GET {{host}}/api/fantasy-teams/1/race-entries/1
 
 ###
 
-POST {{host}}/api/fantasy-teams/2/race-entries
+POST {{host}}/api/fantasy-teams/3/race-entries
 Content-Type: application/json
 
 {
@@ -21,13 +21,8 @@ Content-Type: application/json
 
 ###
 
-PUT {{host}}/api/fantasy-teams/1/race-entries/1
-Content-Type: application/json
-
-{
-  "RiderIds": [ 15 ]
-}
+DELETE {{host}}/api/fantasy-teams/1/race-entries/1/riders/3
 
 ###
 
-DELETE {{host}}/api/fantasy-teams/1/race-entries/2
+POST {{host}}/api/fantasy-teams/1/race-entries/1/riders/5

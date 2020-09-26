@@ -23,8 +23,10 @@ namespace StageRaceFantasy.Server.Queries.FantasyTeamRaceEntries
             var teamId = request.FantasyTeamId;
             var raceId = request.RaceId;
 
-            var entry = await _dbContext.FantasyTeamRaceEntries.
-                FirstOrDefaultAsync(x => x.FantasyTeamId == teamId && x.RaceId == raceId);
+            var entry = await _dbContext.FantasyTeamRaceEntries
+                .Include(x => x.FantasyTeamRaceEntryRiders)
+                    .ThenInclude(x => x.Rider)
+                .FirstOrDefaultAsync(x => x.FantasyTeamId == teamId && x.RaceId == raceId);
 
             if (entry == null)
             {

@@ -8,6 +8,10 @@ GET {{host}}/api/fantasy-teams
 
 ###
 
+GET {{host}}/api/fantasy-teams/1
+
+###
+
 POST {{host}}/api/fantasy-teams
 Content-Type: application/json
 

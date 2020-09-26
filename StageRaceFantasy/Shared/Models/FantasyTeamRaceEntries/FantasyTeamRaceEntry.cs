@@ -14,6 +14,6 @@ namespace StageRaceFantasy.Shared.Models
         public List<FantasyTeamRaceEntryRider> FantasyTeamRaceEntryRiders { get; set; }
 
         [NotMapped]
-        public List<int> RiderIds => FantasyTeamRaceEntryRiders.Select(x => x.RiderId).ToList();
+        public List<Rider> Riders => FantasyTeamRaceEntryRiders.Select(x => x.Rider).ToList();
     }
 }
