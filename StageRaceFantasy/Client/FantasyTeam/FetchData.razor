@@ -12,28 +12,70 @@ else
 {
     <MatHeadline2>@team.Name</MatHeadline2>
 
-    <MatHeadline3>Race Entries</MatHeadline3>
-    <MatTable Items="@team.RaceEntries"
-          ShowPaging="false"
-          Striped="true">
-    <MatTableHeader>
-        <th>Id</th>
-        <th>Name</th>
-        <th></th>
-    </MatTableHeader>
-    <MatTableRow>
-        <td>@context.RaceId</td>
-        <td>@context.RaceName</td>
-    </MatTableRow>
-    </MatTable>
+    if (unenteredRaces.Length == 0)
+    {
+        <MatBody1>You have entered all available races.</MatBody1>
+    }
+    else
+    {
+        <MatHeadline3>Enter Race</MatHeadline3>
+        <MatSelect Label="Select a Race" @bind-Value="@selectedRaceId">
+            @foreach (var race in unenteredRaces)
+            {
+                <MatOption Value="@race.Id">@race.Name</MatOption>
+            }
+        </MatSelect>
+        <MatButton OnClick="@EnterRace">Enter</MatButton>
+    }
+
+    if (team.RaceEntries.Count() == 0)
+    {
+        <MatBody1>You have not entered any races yet.</MatBody1>
+    }
+    else
+    {
+        <MatHeadline3>Entered Race</MatHeadline3>
+        <MatTable Items="@team.RaceEntries"
+              PageSize="int.MaxValue"
+              ShowPaging="false"
+              Striped="true">
+        <MatTableHeader>
+            <th>Id</th>
+            <th>Name</th>
+            <th></th>
+        </MatTableHeader>
+        <MatTableRow>
+            <td>@context.RaceId</td>
+            <td>@context.RaceName</td>
+        </MatTableRow>
+        </MatTable>
+    }
 }
 
 @code {
-    [Parameter] public int teamId { get; set; }
+        [Parameter] public int teamId { get; set; }
     private GetFantasyTeamDto team { get; set; }
+    private Race[] unenteredRaces { get; set; }
+    private int selectedRaceId;
 
     protected override async Task OnInitializedAsync()
     {
         team = await httpClient.GetJsonAsync<GetFantasyTeamDto>($"api/fantasy-teams/{teamId}");
+        var allRaces = await httpClient.GetJsonAsync<Race[]>("api/races");
+
+        selectedRaceId = 0;
+        unenteredRaces = allRaces.Where(race => !team.RaceEntries.Any(x => x.RaceId == race.Id)).ToArray();
+    }
+
+    private async Task EnterRace()
+    {
+        var raceEntry = new CreateFantasyTeamRaceEntryDto()
+        {
+            RaceId = selectedRaceId,
+        };
+
+        await httpClient.PostAsJsonAsync($"api/fantasy-teams/{teamId}/race-entries", raceEntry);
+
+        await OnInitializedAsync();
     }
 }
