@@ -34,7 +34,8 @@ else
     }
     else
     {
-        <MatHeadline3>Entered Race</MatHeadline3>
+        <MatHeadline3>Entered Races</MatHeadline3>
+
         <MatTable Items="@team.RaceEntries"
               PageSize="int.MaxValue"
               ShowPaging="false"
@@ -47,6 +48,9 @@ else
         <MatTableRow>
             <td>@context.RaceId</td>
             <td>@context.RaceName</td>
+            <td>
+                <MatButton Link="@($"/fantasy-teams/{teamId}/race-entries/{context.RaceId}")">View</MatButton>
+            </td>
         </MatTableRow>
         </MatTable>
     }

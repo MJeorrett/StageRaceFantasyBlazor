@@ -10,8 +10,7 @@ namespace StageRaceFantasy.Server.AutoMapperProfiles
             CreateMap<FantasyTeamRaceEntry, GetAllFantasyTeamRaceEntriesDto>();
 
             CreateMap<Rider, GetFantasyTeamRaceEntryDto.Rider>();
-            CreateMap<FantasyTeamRaceEntry, GetFantasyTeamRaceEntryDto>()
-                .ForMember(dest => dest.Riders, opt => opt.MapFrom(ftre => ftre.Riders));
+            CreateMap<FantasyTeamRaceEntry, GetFantasyTeamRaceEntryDto>();
         }
     }
 }

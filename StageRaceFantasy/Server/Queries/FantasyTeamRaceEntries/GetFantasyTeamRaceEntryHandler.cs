@@ -26,6 +26,7 @@ namespace StageRaceFantasy.Server.Queries.FantasyTeamRaceEntries
             var entry = await _dbContext.FantasyTeamRaceEntries
                 .Include(x => x.FantasyTeamRaceEntryRiders)
                     .ThenInclude(x => x.Rider)
+                .Include(x => x.Race)
                 .FirstOrDefaultAsync(x => x.FantasyTeamId == teamId && x.RaceId == raceId);
 
             if (entry == null)
