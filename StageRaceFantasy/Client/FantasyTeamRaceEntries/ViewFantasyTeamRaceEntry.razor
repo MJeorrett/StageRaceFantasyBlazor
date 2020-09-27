@@ -28,23 +28,23 @@ else
                 @context.Index
             </td>
             <td>
-                @if (context.RiderId == 0)
+                @if (context.SelectedRider == null)
                 {
-                    <MatSelect Label="Select a Rider" Value="@context.RiderId" ValueChanged="@((int newRiderId) => AddRider(newRiderId))">
-                        @foreach (var rider in allRiders.Where(rider => rider.RiderId == context.RiderId || !rowDatas.Any(rowData => rider.RiderId == rowData.RiderId)))
-                            {
-                            <MatOption Value="@rider.RiderId">@rider.RiderLastName, @rider.RiderFirstName</MatOption>
+                    <MatSelect Label="Select a Rider" Value="0" ValueChanged="@((int riderId) => AddRider(riderId))">
+                        @foreach (var riderOption in context.RiderOptions)
+                        {
+                            <MatOption Value="@riderOption.Id">@riderOption.Name</MatOption>
                             }
                     </MatSelect>
                 }
                 else
                 {
-                    <p>@context.RiderId</p>
+                    <p>@context.SelectedRider.Name</p>
                 }
             </td>
             <td>
-                @if (context.RiderId != 0) {
-                    <MatIconButton @onclick="@(() => RemoveRider(context.RiderId))" Icon="delete" Style="color: red" />
+                @if (context.SelectedRider != null) {
+                    <MatIconButton @onclick="@(() => RemoveRider(context.SelectedRider.Id))" Icon="delete" Style="color: red" />
                 }
             </td>
         </MatTableRow>
@@ -52,30 +52,36 @@ else
 }
 
 @code {
-    private record RowData(int Index, int RiderId)
-    {
-    }
+    private record RowDataRider(int Id, string Name) { }
+    private record RowData(int Index, RowDataRider SelectedRider, RowDataRider[] RiderOptions) { }
 
     [Parameter] public int teamId { get; set; }
     [Parameter] public int raceId { get; set; }
 
     private GetFantasyTeamRaceEntryDto raceEntry;
-    private GetRiderRaceEntryDto[] allRiders;
     private RowData[] rowDatas;
 
     protected override async Task OnInitializedAsync()
     {
         raceEntry = await httpClient.GetJsonAsync<GetFantasyTeamRaceEntryDto>($"api/fantasy-teams/{teamId}/race-entries/{raceId}");
-        allRiders = await httpClient.GetJsonAsync<GetRiderRaceEntryDto[]>($"api/races/{raceId}/entries");
-        var enteredRiderIds = raceEntry.Riders.Select((x, i) => new RowData(i, x.Id));
+        var allRiders = await httpClient.GetJsonAsync<GetRiderRaceEntryDto[]>($"api/races/{raceId}/entries");
+        var raceEntryRiderIds = raceEntry.Riders.Select(x => x.Id);
+        var availableRiders = allRiders
+            .Where(x => !raceEntryRiderIds.Contains(x.RiderId))
+            .Select(x => new RowDataRider(x.RiderId, $"{x.RiderLastName}, {x.RiderFirstName}"))
+            .ToArray();
+
         var emptyPlaces = new List<RowData>();
 
-        for (int i = enteredRiderIds.Count(); i < 8; i++)
+        for (int i = raceEntry.Riders.Count(); i < 8; i++)
         {
-            emptyPlaces.Add(new RowData(i, 0));
+            emptyPlaces.Add(new RowData(i, null, availableRiders));
         }
 
-        rowDatas = enteredRiderIds.Concat(emptyPlaces).ToArray();
+        rowDatas = raceEntry.Riders
+            .Select((x, i) => new RowData(i, new RowDataRider(x.Id, $"{x.LastName}, {x.FirstName}"), null))
+            .Concat(emptyPlaces)
+            .ToArray();
 
         Console.WriteLine($"Initialised row data: {System.Text.Json.JsonSerializer.Serialize(rowDatas)}");
     }
