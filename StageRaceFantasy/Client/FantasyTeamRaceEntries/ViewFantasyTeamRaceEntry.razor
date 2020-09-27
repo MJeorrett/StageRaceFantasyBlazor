@@ -1,4 +1,4 @@
-﻿@page "/fantasy-teams/{teamId:int}/race-entries/{raceEntryId:int}"
+﻿@page "/fantasy-teams/{teamId:int}/race-entries/{raceId:int}"
 
 @using StageRaceFantasy.Shared.Models
 
@@ -14,32 +14,81 @@ else
 
     <MatHeadline4>Rider Selections</MatHeadline4>
 
-    <MatTable Items="@raceEntry.Riders"
+    <MatTable Items="@rowDatas"
               ShowPaging="false"
               PageSize="int.MaxValue"
               Striped="true">
         <MatTableHeader>
-            <th>Id</th>
-            <th>First Name</th>
-            <th>Last Name</th>
+            <th>Index</th>
+            <th>Rider</th>
             <th></th>
         </MatTableHeader>
         <MatTableRow>
-            <td>@context.Id</td>
-            <td>@context.FirstName</td>
-            <td>@context.LastName</td>
+            <td>
+                @context.Index
+            </td>
+            <td>
+                @if (context.RiderId == 0)
+                {
+                    <MatSelect Label="Select a Rider" Value="@context.RiderId" ValueChanged="@((int newRiderId) => AddRider(newRiderId))">
+                        @foreach (var rider in allRiders.Where(rider => rider.RiderId == context.RiderId || !rowDatas.Any(rowData => rider.RiderId == rowData.RiderId)))
+                            {
+                            <MatOption Value="@rider.RiderId">@rider.RiderLastName, @rider.RiderFirstName</MatOption>
+                            }
+                    </MatSelect>
+                }
+                else
+                {
+                    <p>@context.RiderId</p>
+                }
+            </td>
+            <td>
+                @if (context.RiderId != 0) {
+                    <MatIconButton @onclick="@(() => RemoveRider(context.RiderId))" Icon="delete" Style="color: red" />
+                }
+            </td>
         </MatTableRow>
     </MatTable>
 }
 
 @code {
+    private record RowData(int Index, int RiderId)
+    {
+    }
+
     [Parameter] public int teamId { get; set; }
-    [Parameter] public int raceEntryId { get; set; }
+    [Parameter] public int raceId { get; set; }
 
     private GetFantasyTeamRaceEntryDto raceEntry;
+    private GetRiderRaceEntryDto[] allRiders;
+    private RowData[] rowDatas;
 
     protected override async Task OnInitializedAsync()
     {
-        raceEntry = await httpClient.GetJsonAsync<GetFantasyTeamRaceEntryDto>($"api/fantasy-teams/{teamId}/race-entries/{raceEntryId}");
+        raceEntry = await httpClient.GetJsonAsync<GetFantasyTeamRaceEntryDto>($"api/fantasy-teams/{teamId}/race-entries/{raceId}");
+        allRiders = await httpClient.GetJsonAsync<GetRiderRaceEntryDto[]>($"api/races/{raceId}/entries");
+        var enteredRiderIds = raceEntry.Riders.Select((x, i) => new RowData(i, x.Id));
+        var emptyPlaces = new List<RowData>();
+
+        for (int i = enteredRiderIds.Count(); i < 8; i++)
+        {
+            emptyPlaces.Add(new RowData(i, 0));
+        }
+
+        rowDatas = enteredRiderIds.Concat(emptyPlaces).ToArray();
+
+        Console.WriteLine($"Initialised row data: {System.Text.Json.JsonSerializer.Serialize(rowDatas)}");
+    }
+
+    async Task AddRider(int riderId)
+    {
+        await httpClient.PostAsync($"api/fantasy-teams/{teamId}/race-entries/{raceId}/riders/{riderId}", new StringContent(""));
+        await OnInitializedAsync();
+    }
+
+    async Task RemoveRider(int riderId)
+    {
+        await httpClient.DeleteAsync($"api/fantasy-teams/{teamId}/race-entries/{raceId}/riders/{riderId}");
+        await OnInitializedAsync();
     }
 }
