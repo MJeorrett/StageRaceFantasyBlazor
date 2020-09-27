@@ -8,5 +8,6 @@
         public string RiderLastName { get; set; }
         public bool IsEntered { get; set; }
         public int BibNumber { get; set; }
+        public int StarValue { get; set; }
     }
 }

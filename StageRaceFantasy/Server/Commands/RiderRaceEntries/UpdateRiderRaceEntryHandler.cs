@@ -1,5 +1,4 @@
-﻿using MediatR;
-using StageRaceFantasy.Server.Db;
+﻿using StageRaceFantasy.Server.Db;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -29,7 +28,8 @@ namespace StageRaceFantasy.Server.Commands
                 };
             }
 
-            riderRaceEntry.BibNumber = request.BibNumber;
+            riderRaceEntry.BibNumber = request.dto.BibNumber;
+            riderRaceEntry.StarValue = request.dto.StarValue;
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 

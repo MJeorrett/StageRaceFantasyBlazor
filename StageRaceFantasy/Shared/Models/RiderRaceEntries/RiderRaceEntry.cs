@@ -7,5 +7,6 @@
         public int RaceId { get; set; }
         public Race Race { get; set; }
         public int BibNumber { get; set; }
+        public int StarValue { get; set; }
     }
 }

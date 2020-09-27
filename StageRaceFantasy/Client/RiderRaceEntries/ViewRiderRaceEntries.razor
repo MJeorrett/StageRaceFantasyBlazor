@@ -30,6 +30,7 @@ else
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th>Bib Number</th>
+                <th>Star Value</th>
                 <th></th>
             </MatTableHeader>
             <MatTableRow>
@@ -37,7 +38,16 @@ else
                 <td>@context.RiderFirstName</td>
                 <td>@context.RiderLastName</td>
                 <td>
-                    <MatTextField Value="@context.BibNumber" ValueChanged="@((int newBibNumber) => context.BibNumber = newBibNumber)" OnFocusOut=@(() => UpdateRaceEntry(context.RiderId))></MatTextField>
+                    @if (context.IsEntered)
+                    {
+                        <MatTextField Value="@context.BibNumber" ValueChanged="@((int newBibNumber) => context.BibNumber = newBibNumber)" OnFocusOut=@(() => UpdateRaceEntry(context.RiderId))></MatTextField>
+                    }
+                </td>
+                <td>
+                    @if (context.IsEntered)
+                    {
+                        <MatTextField Value="@context.StarValue" ValueChanged="@((int newStarValue) => context.StarValue = newStarValue)" OnFocusOut=@(() => UpdateRaceEntry(context.RiderId))></MatTextField>
+                    }
                 </td>
                 <td>
                     <MatCheckbox Value="@context.IsEntered" ValueChanged="@((bool newIsEntered) => newIsEntered ? EnterRider(context.RiderId) : WithdrawRider(context.RiderId))" />
@@ -89,6 +99,7 @@ else
         var updateRaceEntryDto = new UpdateRiderRaceEntryDto()
         {
             BibNumber = raceEntry.BibNumber,
+            StarValue = raceEntry.StarValue,
         };
 
         await httpClient.PutAsJsonAsync($"api/races/{raceId}/entries/{riderId}", updateRaceEntryDto);

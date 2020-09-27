@@ -41,7 +41,7 @@ namespace StageRaceFantasy.Server.Controllers
         [HttpPut("{riderId}")]
         public async Task<IActionResult> PutRiderRaceEntry(int raceId, int riderId, UpdateRiderRaceEntryDto updateRiderRaceEntryDto)
         {
-            var command = new UpdateRiderRaceEntryCommand(raceId, riderId, updateRiderRaceEntryDto.BibNumber);
+            var command = new UpdateRiderRaceEntryCommand(raceId, riderId, updateRiderRaceEntryDto);
             var result = await _mediator.Send(command);
 
             return ResponseHelpers.BuildNoContentResponse(this, result);
@@ -53,8 +53,7 @@ namespace StageRaceFantasy.Server.Controllers
         {
             var command = new CreateRiderRaceEntryCommand(
                 raceId,
-                createRiderRaceEntryDto.RiderId,
-                createRiderRaceEntryDto.BibNumber);
+                createRiderRaceEntryDto.RiderId);
 
             var result = await _mediator.Send(command);
 

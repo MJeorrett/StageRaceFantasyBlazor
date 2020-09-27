@@ -23,7 +23,6 @@ namespace StageRaceFantasy.Server.Commands
         {
             var raceId = request.RaceId;
             var riderId = request.RiderId;
-            var bibNumber = request.BibNumber;
 
             if (RiderRaceEntryExists(raceId, riderId))
             {
@@ -48,7 +47,6 @@ namespace StageRaceFantasy.Server.Commands
             {
                 RaceId = raceId,
                 RiderId = riderId,
-                BibNumber = bibNumber,
             };
 
             await _dbContext.RiderRaceEntries.AddAsync(riderRaceEntry);

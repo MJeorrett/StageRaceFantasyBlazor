@@ -2,7 +2,7 @@
 
 namespace StageRaceFantasy.Server.Commands
 {
-    public record CreateRiderRaceEntryCommand(int RaceId, int RiderId, int BibNumber) :
+    public record CreateRiderRaceEntryCommand(int RaceId, int RiderId) :
         IApplicationCommand<GetRiderRaceEntryDto>
     {
     }
