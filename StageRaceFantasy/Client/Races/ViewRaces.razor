@@ -25,12 +25,17 @@ else
         <MatTableHeader>
             <th>Id</th>
             <th>Name</th>
+            <th>Team Size</th>
             <th></th>
         </MatTableHeader>
         <MatTableRow>
             <td>@context.Id</td>
             <td>@context.Name</td>
-            <td><MatButton Link=@($"races/{context.Id}/entries")>Entries</MatButton></td>
+            <td>@context.FantasyTeamSize</td>
+            <td>
+                <MatIconButton Link="@($"races/{context.Id}/edit")" Icon="edit" />
+                <MatButton Link=@($"races/{context.Id}/entries")>Entries</MatButton>
+            </td>
         </MatTableRow>
     </MatTable>
 }

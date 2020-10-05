@@ -37,7 +37,12 @@ namespace StageRaceFantasy.Server.Queries.FantasyTeamRaceEntries
                 };
             }
 
-            return new(_mapper.Map<GetFantasyTeamRaceEntryDto>(entry));
+            var result = _mapper.Map<GetFantasyTeamRaceEntryDto>(entry);
+            
+            var race = await _dbContext.Races.FindAsync(raceId);
+            result.FantasyTeamSize = race.FantasyTeamSize;
+
+            return new(result);
         }
     }
 }

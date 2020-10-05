@@ -14,6 +14,7 @@ namespace StageRaceFantasy.Shared.Models
         public int FantasyTeamId { get; set; }
         public int RaceId { get; set; }
         public string RaceName { get; set; }
+        public int FantasyTeamSize { get; set; }
         public List<Rider> Riders { get; set; }
     }
 }

@@ -4,7 +4,7 @@
 
 @inject HttpClient httpClient
 
-@if (raceEntry == null)
+@if (raceEntry == null || riderSelections == null)
 {
     <Loader />
 }
@@ -14,58 +14,92 @@ else
 
     <MatHeadline4>Rider Selections</MatHeadline4>
 
-    <MatTable Items="@rowDatas"
+    <MatTable Items="@riderSelections"
               ShowPaging="false"
               PageSize="int.MaxValue"
               Striped="true">
         <MatTableHeader>
             <th>Index</th>
-            <th>Rider</th>
+            <th>Id</th>
+            <th>First Name</th>
+            <th>Last Name</th>
             <th></th>
         </MatTableHeader>
         <MatTableRow>
-            <td>@context.Id</td>
-            <td>@context.FirstName</td>
-            <td>@context.LastName</td>
-            <td>
-                <MatIconButton @onclick="@(() => RemoveRider(context.Id))" Icon="delete" Style="color: red" />
-            </td>
+            @if (context.Rider == null)
+                {
+                <td>@context.Index</td>
+                <td></td>
+                <td><i>No Rider Selected</i></td>
+                <td></td>
+                <td></td>
+                }
+                else
+                {
+                <td>@context.Index</td>
+                <td>@context.Rider.Id</td>
+                <td>@context.Rider.FirstName</td>
+                <td>@context.Rider.LastName</td>
+                <td>
+                    <MatIconButton @onclick="@(() => RemoveRider(context.Rider.Id))" Icon="delete" Style="color: red" />
+                </td>
+                }
         </MatTableRow>
     </MatTable>
-    @if(availableRiders.Length == 0)
+
+    @if (availableRiders.Length == 0)
     {
         <MatBody1>You have selected all available riders.</MatBody1>
     }
     else
     {
-        <MatSelect Label="Select a Rider" @bind-Value="@selectedRiderId">
+        @*TODO: Figure out how to get MatSelect working.  Throws error when button clicked at the moment.  Possibly to do with this: https://github.com/SamProf/MatBlazor/issues/651.*@
+        <select Label="Select a Rider" @bind="@selectedRiderId">
             @foreach (var rider in availableRiders)
             {
-                <MatOption Value="@rider.RiderId">@rider.RiderFirstName @rider.RiderLastName</MatOption>
+                <option Value="@rider.RiderId">@rider.RiderLastName, @rider.RiderFirstName</option>
             }
-        </MatSelect>
+        </select>
+        <MatButton OnClick="@AddRider">Add Rider</MatButton>
     }
-    <MatButton OnClick="@AddRider">Add Rider</MatButton>
 }
 
 @code {
-    private record RowDataRider(int Id, string Name) { }
-    private record RowData(int Index, RowDataRider SelectedRider, RowDataRider[] RiderOptions) { }
+
+    record RiderSelectionRow(int Index, GetFantasyTeamRaceEntryDto.Rider Rider)
+    {
+        public RiderSelectionRow(int index)
+            : this(index, null)
+        {
+
+        }
+    }
 
     [Parameter] public int teamId { get; set; }
     [Parameter] public int raceId { get; set; }
 
     private GetFantasyTeamRaceEntryDto raceEntry;
+    private List<RiderSelectionRow> riderSelections;
     private GetRiderRaceEntryDto[] availableRiders;
     private int selectedRiderId;
 
     protected override async Task OnInitializedAsync()
     {
         selectedRiderId = 0;
+        riderSelections = null;
         raceEntry = await httpClient.GetJsonAsync<GetFantasyTeamRaceEntryDto>($"api/fantasy-teams/{teamId}/race-entries/{raceEntryId}");
         var allEnteredRiders = await httpClient.GetJsonAsync<GetRiderRaceEntryDto[]>($"api/races/{raceEntryId}/entries");
 
         availableRiders = allEnteredRiders.Where(x => !raceEntry.Riders.Any(r => r.Id == x.RiderId)).ToArray();
+
+        riderSelections = raceEntry.Riders
+            .Select((x, i) => new RiderSelectionRow(i + 1, x))
+            .ToList();
+
+        for (int i = riderSelections.Count(); i < raceEntry.FantasyTeamSize; i++)
+        {
+            riderSelections.Add(new(i + 1));
+        }
     }
 
     private async Task AddRider()
