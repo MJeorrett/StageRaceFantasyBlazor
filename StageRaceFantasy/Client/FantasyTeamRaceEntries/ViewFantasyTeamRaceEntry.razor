@@ -87,8 +87,8 @@ else
     {
         selectedRiderId = 0;
         riderSelections = null;
-        raceEntry = await httpClient.GetJsonAsync<GetFantasyTeamRaceEntryDto>($"api/fantasy-teams/{teamId}/race-entries/{raceEntryId}");
-        var allEnteredRiders = await httpClient.GetJsonAsync<GetRiderRaceEntryDto[]>($"api/races/{raceEntryId}/entries");
+        raceEntry = await httpClient.GetJsonAsync<GetFantasyTeamRaceEntryDto>($"api/fantasy-teams/{teamId}/race-entries/{raceId}");
+        var allEnteredRiders = await httpClient.GetJsonAsync<GetRiderRaceEntryDto[]>($"api/races/{raceId}/entries");
 
         availableRiders = allEnteredRiders.Where(x => !raceEntry.Riders.Any(r => r.Id == x.RiderId)).ToArray();
 
@@ -104,13 +104,13 @@ else
 
     private async Task AddRider()
     {
-        await httpClient.PostAsync($"api/fantasy-teams/{teamId}/race-entries/{raceEntryId}/riders/{selectedRiderId}", new StringContent(""));
+        await httpClient.PostAsync($"api/fantasy-teams/{teamId}/race-entries/{raceId}/riders/{selectedRiderId}", new StringContent(""));
         await OnInitializedAsync();
     }
 
     private async Task RemoveRider(int riderId)
     {
-        await httpClient.DeleteAsync($"api/fantasy-teams/{teamId}/race-entries/{raceEntryId}/riders/{riderId}");
+        await httpClient.DeleteAsync($"api/fantasy-teams/{teamId}/race-entries/{raceId}/riders/{riderId}");
         await OnInitializedAsync();
     }
 }
