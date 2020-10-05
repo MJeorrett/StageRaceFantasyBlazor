@@ -54,6 +54,8 @@ else
                 </td>
             </MatTableRow>
         </MatTable>
+
+        <MatButton OnClick="@SaveUpdates" Disabled="@disableSave">Save Updates</MatButton>
     }
 }
 
@@ -62,11 +64,14 @@ else
 
     private Race race;
     private GetRiderRaceEntryDto[] raceEntries;
+    private List<int> modifiedRiderIds;
+    private bool disableSave;
 
     protected override async Task OnInitializedAsync()
     {
         race = await httpClient.GetFromJsonAsync<Race>($"api/races/{raceId}");
         raceEntries = await httpClient.GetFromJsonAsync<GetRiderRaceEntryDto[]>($"api/races/{raceId}/entries");
+        modifiedRiderIds = new List<int>();
     }
 
     async Task EnterRider(int riderId)
@@ -89,20 +94,37 @@ else
         raceEntry.IsEntered = false;
 
         await httpClient.DeleteAsync($"api/races/{raceId}/entries/{riderId}");
+        modifiedRiderIds.Remove(riderId);
+
         await OnInitializedAsync();
     }
 
-    async Task UpdateRaceEntry(int riderId)
+    void UpdateRaceEntry(int riderId)
     {
         var raceEntry = raceEntries.First(x => x.RiderId == riderId);
 
-        var updateRaceEntryDto = new UpdateRiderRaceEntryDto()
-        {
-            BibNumber = raceEntry.BibNumber,
-            StarValue = raceEntry.StarValue,
-        };
+        if (modifiedRiderIds.Contains(riderId)) return;
 
-        await httpClient.PutAsJsonAsync($"api/races/{raceId}/entries/{riderId}", updateRaceEntryDto);
-        await OnInitializedAsync();
+        modifiedRiderIds.Add(riderId);
+    }
+
+    async Task SaveUpdates()
+    {
+        disableSave = true;
+
+        foreach (int modifiedRiderId in modifiedRiderIds)
+        {
+            var raceEntry = raceEntries.FirstOrDefault(x => x.RiderId == modifiedRiderId);
+
+            var update = new UpdateRiderRaceEntryDto()
+            {
+                BibNumber = raceEntry.BibNumber,
+                StarValue = raceEntry.StarValue,
+            };
+
+            await httpClient.PutAsJsonAsync($"api/races/{raceId}/entries/{modifiedRiderId}", update);
+        }
+
+        disableSave = false;
     }
 }
