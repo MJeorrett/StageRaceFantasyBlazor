@@ -24,31 +24,28 @@ else
             <th></th>
         </MatTableHeader>
         <MatTableRow>
+            <td>@context.Id</td>
+            <td>@context.FirstName</td>
+            <td>@context.LastName</td>
             <td>
-                @context.Index
-            </td>
-            <td>
-                @if (context.SelectedRider == null)
-                {
-                    <MatSelect Label="Select a Rider" Value="0" ValueChanged="@((int riderId) => AddRider(riderId))">
-                        @foreach (var riderOption in context.RiderOptions)
-                        {
-                            <MatOption Value="@riderOption.Id">@riderOption.Name</MatOption>
-                            }
-                    </MatSelect>
-                }
-                else
-                {
-                    <p>@context.SelectedRider.Name</p>
-                }
-            </td>
-            <td>
-                @if (context.SelectedRider != null) {
-                    <MatIconButton @onclick="@(() => RemoveRider(context.SelectedRider.Id))" Icon="delete" Style="color: red" />
-                }
+                <MatIconButton @onclick="@(() => RemoveRider(context.Id))" Icon="delete" Style="color: red" />
             </td>
         </MatTableRow>
     </MatTable>
+    @if(availableRiders.Length == 0)
+    {
+        <MatBody1>You have selected all available riders.</MatBody1>
+    }
+    else
+    {
+        <MatSelect Label="Select a Rider" @bind-Value="@selectedRiderId">
+            @foreach (var rider in availableRiders)
+            {
+                <MatOption Value="@rider.RiderId">@rider.RiderFirstName @rider.RiderLastName</MatOption>
+            }
+        </MatSelect>
+    }
+    <MatButton OnClick="@AddRider">Add Rider</MatButton>
 }
 
 @code {
@@ -59,42 +56,27 @@ else
     [Parameter] public int raceId { get; set; }
 
     private GetFantasyTeamRaceEntryDto raceEntry;
-    private RowData[] rowDatas;
+    private GetRiderRaceEntryDto[] availableRiders;
+    private int selectedRiderId;
 
     protected override async Task OnInitializedAsync()
     {
-        raceEntry = await httpClient.GetJsonAsync<GetFantasyTeamRaceEntryDto>($"api/fantasy-teams/{teamId}/race-entries/{raceId}");
-        var allRiders = await httpClient.GetJsonAsync<GetRiderRaceEntryDto[]>($"api/races/{raceId}/entries");
-        var raceEntryRiderIds = raceEntry.Riders.Select(x => x.Id);
-        var availableRiders = allRiders
-            .Where(x => !raceEntryRiderIds.Contains(x.RiderId))
-            .Select(x => new RowDataRider(x.RiderId, $"{x.RiderLastName}, {x.RiderFirstName}"))
-            .ToArray();
+        selectedRiderId = 0;
+        raceEntry = await httpClient.GetJsonAsync<GetFantasyTeamRaceEntryDto>($"api/fantasy-teams/{teamId}/race-entries/{raceEntryId}");
+        var allEnteredRiders = await httpClient.GetJsonAsync<GetRiderRaceEntryDto[]>($"api/races/{raceEntryId}/entries");
 
-        var emptyPlaces = new List<RowData>();
-
-        for (int i = raceEntry.Riders.Count(); i < 8; i++)
-        {
-            emptyPlaces.Add(new RowData(i, null, availableRiders));
-        }
-
-        rowDatas = raceEntry.Riders
-            .Select((x, i) => new RowData(i, new RowDataRider(x.Id, $"{x.LastName}, {x.FirstName}"), null))
-            .Concat(emptyPlaces)
-            .ToArray();
-
-        Console.WriteLine($"Initialised row data: {System.Text.Json.JsonSerializer.Serialize(rowDatas)}");
+        availableRiders = allEnteredRiders.Where(x => !raceEntry.Riders.Any(r => r.Id == x.RiderId)).ToArray();
     }
 
-    async Task AddRider(int riderId)
+    private async Task AddRider()
     {
-        await httpClient.PostAsync($"api/fantasy-teams/{teamId}/race-entries/{raceId}/riders/{riderId}", new StringContent(""));
+        await httpClient.PostAsync($"api/fantasy-teams/{teamId}/race-entries/{raceEntryId}/riders/{selectedRiderId}", new StringContent(""));
         await OnInitializedAsync();
     }
 
-    async Task RemoveRider(int riderId)
+    private async Task RemoveRider(int riderId)
     {
-        await httpClient.DeleteAsync($"api/fantasy-teams/{teamId}/race-entries/{raceId}/riders/{riderId}");
+        await httpClient.DeleteAsync($"api/fantasy-teams/{teamId}/race-entries/{raceEntryId}/riders/{riderId}");
         await OnInitializedAsync();
     }
 }
