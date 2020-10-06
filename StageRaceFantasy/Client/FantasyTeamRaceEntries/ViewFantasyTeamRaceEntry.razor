@@ -55,12 +55,13 @@ else
     {
         @*TODO: Figure out how to get MatSelect working.  Throws error when button clicked at the moment.  Possibly to do with this: https://github.com/SamProf/MatBlazor/issues/651.*@
         <select Label="Select a Rider" @bind="@selectedRiderId">
+            <option disabled="true" value="0">-- Please Select --</option>
             @foreach (var rider in availableRiders)
             {
-                <option Value="@rider.RiderId">@rider.RiderLastName, @rider.RiderFirstName</option>
+                <option value="@rider.RiderId">@rider.RiderLastName, @rider.RiderFirstName</option>
             }
         </select>
-        <MatButton OnClick="@AddRider">Add Rider</MatButton>
+        <MatButton OnClick="@AddRider" Disabled="@(selectedRiderId == 0)">Add Rider</MatButton>
     }
 }
 
