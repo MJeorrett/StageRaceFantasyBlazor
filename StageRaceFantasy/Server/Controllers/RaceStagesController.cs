@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StageRaceFantasy.Server.Commands.RaceStages;
@@ -21,7 +22,7 @@ namespace StageRaceFantasy.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<GetRaceStagesDto>> GetRaceStages(int raceId)
+        public async Task<ActionResult<List<GetRaceStageDto>>> GetRaceStages(int raceId)
         {
             var query = new GetRaceStagesQuery(raceId);
             var result = await _mediator.Send(query);

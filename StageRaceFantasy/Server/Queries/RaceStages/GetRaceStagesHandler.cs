@@ -2,12 +2,14 @@
 using Microsoft.EntityFrameworkCore;
 using StageRaceFantasy.Server.Db;
 using StageRaceFantasy.Shared.Models;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Server.Queries.GetRaceStages
 {
-    public class GetRaceStagesHandler : IApplicationQueryHandler<GetRaceStagesQuery, GetRaceStagesDto>
+    public class GetRaceStagesHandler : IApplicationQueryHandler<GetRaceStagesQuery, List<GetRaceStageDto>>
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly IMapper _mapper;
@@ -18,15 +20,13 @@ namespace StageRaceFantasy.Server.Queries.GetRaceStages
             _mapper = mapper;
         }
 
-        public async Task<QueryResult<GetRaceStagesDto>> Handle(GetRaceStagesQuery request, CancellationToken cancellationToken)
+        public async Task<QueryResult<List<GetRaceStageDto>>> Handle(GetRaceStagesQuery request, CancellationToken cancellationToken)
         {
             var raceId = request.RaceId;
 
-            var race = await _dbContext.Races
-                .Include(x => x.Stages)
-                .FirstOrDefaultAsync(x => x.Id == raceId);
+            var raceExists = await _dbContext.Races.AnyAsync(r => r.Id == raceId);
 
-            if (race == null)
+            if (!raceExists)
             {
                 return new()
                 {
@@ -34,7 +34,11 @@ namespace StageRaceFantasy.Server.Queries.GetRaceStages
                 };
             }
 
-            return new(_mapper.Map<GetRaceStagesDto>(race));
+            var stages = await _dbContext.RaceStages
+                .Where(s => s.RaceId == raceId)
+                .ToListAsync();
+
+            return new(_mapper.Map<List<GetRaceStageDto>>(stages));
         }
     }
 }

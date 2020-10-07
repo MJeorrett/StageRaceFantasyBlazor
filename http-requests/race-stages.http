@@ -4,11 +4,15 @@
 
 ###
 
-GET {{host}}/api/races/1/stages
+GET {{host}}/api/races/2/stages
 
 ###
 
-POST {{host}}/api/races/1/stages
+GET {{host}}/api/races/2/stages/5
+
+###
+
+POST {{host}}/api/races/2/stages
 Content-Type: application/json
 
 {
