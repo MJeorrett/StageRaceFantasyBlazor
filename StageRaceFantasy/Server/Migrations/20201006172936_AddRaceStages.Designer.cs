@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StageRaceFantasy.Server.Db;
 
 namespace StageRaceFantasy.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201006172936_AddRaceStages")]
+    partial class AddRaceStages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -95,7 +97,7 @@ namespace StageRaceFantasy.Server.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<string>("FinishLocation")
+                    b.Property<string>("EndLocation")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RaceId")
@@ -190,13 +192,11 @@ namespace StageRaceFantasy.Server.Migrations
 
             modelBuilder.Entity("StageRaceFantasy.Shared.Models.RaceStage", b =>
                 {
-                    b.HasOne("StageRaceFantasy.Shared.Models.Race", "Race")
+                    b.HasOne("StageRaceFantasy.Shared.Models.Race", null)
                         .WithMany("Stages")
                         .HasForeignKey("RaceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Race");
                 });
 
             modelBuilder.Entity("StageRaceFantasy.Shared.Models.RiderRaceEntry", b =>
