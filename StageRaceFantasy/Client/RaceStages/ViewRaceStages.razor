@@ -1,0 +1,61 @@
+﻿@page "/races/{raceId:int}/stages"
+@using StageRaceFantasy.Shared.Models
+@inject HttpClient Http
+
+@if (isLoading)
+{
+    <Loader />
+}
+else
+{
+    <MatHeadline2>@race.Name Stages</MatHeadline2>
+    <div>
+        <MatButton Link="@($"races/{raceId}/stages/create")">Create New Stage</MatButton>
+    </div>
+
+    if (stages.Length == 0)
+    {
+        <MatBody1 Style="font-weight: bolder"><em>No stages Found.</em></MatBody1>
+    }
+    else
+    {
+        <MatTable Items="@stages"
+                  FilterByColumnName="StartLocation"
+                  ShowPaging="false"
+                  PageSize="int.MaxValue"
+                  Striped="true">
+            <MatTableHeader>
+                <th>Id</th>
+                <th>Start Location</th>
+                <th>Finish Location</th>
+                <th></th>
+            </MatTableHeader>
+            <MatTableRow>
+                <td>@context.Id</td>
+                <td>@context.StartLocation</td>
+                <td>@context.FinishLocation</td>
+                @*<td>
+                    <MatIconButton Link="@($"races/{raceId}/stages/{context.Id}/edit")" Icon="edit" />
+                </td>*@
+            </MatTableRow>
+        </MatTable>
+    }
+}
+
+@code {
+    [Parameter] public int raceId { get; set; }
+
+    private bool isLoading;
+    private Race race;
+    private GetRaceStageDto[] stages;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+
+        race = await Http.GetFromJsonAsync<Race>($"api/races/{raceId}");
+        stages = await Http.GetFromJsonAsync<GetRaceStageDto[]>($"api/races/{raceId}/stages");
+
+        isLoading = false;
+    }
+}
