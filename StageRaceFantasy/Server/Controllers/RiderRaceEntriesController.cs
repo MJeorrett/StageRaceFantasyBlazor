@@ -2,10 +2,10 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using StageRaceFantasy.Server.Commands;
+using StageRaceFantasy.Application.Commands;
+using StageRaceFantasy.Application.Queries;
+using StageRaceFantasy.Domain.Entities;
 using StageRaceFantasy.Server.Controllers.Utils;
-using StageRaceFantasy.Server.Queries;
-using StageRaceFantasy.Shared.Models;
 
 namespace StageRaceFantasy.Server.Controllers
 {

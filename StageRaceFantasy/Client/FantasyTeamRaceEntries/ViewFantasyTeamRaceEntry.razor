@@ -1,7 +1,5 @@
 ﻿@page "/fantasy-teams/{teamId:int}/race-entries/{raceId:int}"
 
-@using StageRaceFantasy.Shared.Models
-
 @inject HttpClient httpClient
 
 @if (raceEntry == null || riderSelections == null)

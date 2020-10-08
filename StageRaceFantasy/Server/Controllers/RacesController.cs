@@ -3,8 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using StageRaceFantasy.Server.Db;
-using StageRaceFantasy.Shared.Models;
+using StageRaceFantasy.Application.Common;
+using StageRaceFantasy.Domain.Entities;
 
 namespace StageRaceFantasy.Server.Controllers
 {
@@ -12,9 +12,9 @@ namespace StageRaceFantasy.Server.Controllers
     [ApiController]
     public class RacesController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IApplicationDbContext _context;
 
-        public RacesController(ApplicationDbContext context)
+        public RacesController(IApplicationDbContext context)
         {
             _context = context;
         }

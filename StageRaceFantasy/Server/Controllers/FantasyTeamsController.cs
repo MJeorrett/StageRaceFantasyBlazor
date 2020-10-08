@@ -2,11 +2,10 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using StageRaceFantasy.Server.Commands;
+using StageRaceFantasy.Application.Commands;
+using StageRaceFantasy.Application.Queries;
+using StageRaceFantasy.Domain.Entities;
 using StageRaceFantasy.Server.Controllers.Utils;
-using StageRaceFantasy.Server.Db;
-using StageRaceFantasy.Server.Queries;
-using StageRaceFantasy.Shared.Models;
 
 namespace StageRaceFantasy.Server.Controllers
 {
@@ -14,12 +13,10 @@ namespace StageRaceFantasy.Server.Controllers
     [ApiController]
     public class FantasyTeamsController : ControllerBase
     {
-        private readonly ApplicationDbContext _dbContext;
         private readonly IMediator _mediator;
 
-        public FantasyTeamsController(ApplicationDbContext context, IMediator mediator)
+        public FantasyTeamsController(IMediator mediator)
         {
-            _dbContext = context;
             _mediator = mediator;
         }
 

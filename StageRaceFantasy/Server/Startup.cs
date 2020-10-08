@@ -1,12 +1,10 @@
-using AutoMapper;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using StageRaceFantasy.Server.Db;
+using StageRaceFantasy.Application;
+using StageRaceFantasy.Infrastructure;
 
 namespace StageRaceFantasy.Server
 {
@@ -23,15 +21,8 @@ namespace StageRaceFantasy.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            var connectionString = Configuration.GetConnectionString("SqlDatabase");
-
-            services.AddDbContext<ApplicationDbContext>(options =>
-            {
-                options.UseSqlServer(connectionString);
-            });
-
-            services.AddAutoMapper(typeof(Startup));
-            services.AddMediatR(typeof(Startup));
+            services.AddApplication();
+            services.AddInfrastructure(Configuration);
 
             services.AddControllersWithViews();
             services.AddRazorPages();

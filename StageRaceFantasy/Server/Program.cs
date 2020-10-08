@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using StageRaceFantasy.Server.Db;
+using StageRaceFantasy.Infrastructure.Persistence;
 using System;
 
 namespace StageRaceFantasy.Server
@@ -13,13 +14,13 @@ namespace StageRaceFantasy.Server
         {
             var host = CreateHostBuilder(args).Build();
 
-            //CreateDbIfNotExists(host);
+            EnsureDbMigrated(host);
 
             host.Run();
         }
 
         // Temporary code to make development itterations easier.
-        private static void CreateDbIfNotExists(IHost host)
+        private static void EnsureDbMigrated(IHost host)
         {
             using (var scope = host.Services.CreateScope())
             {
@@ -28,7 +29,7 @@ namespace StageRaceFantasy.Server
                 try
                 {
                     var context = services.GetRequiredService<ApplicationDbContext>();
-                    context.Database.EnsureCreated();
+                    context.Database.Migrate();
                 }
                 catch (Exception ex)
                 {
