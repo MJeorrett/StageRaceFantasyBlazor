@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Application.Commands.FanasyTeamRaceEntries
 {
-    public class AddRiderToFantasyTeamRaceEntryHandler : IApplicationCommandHandler<AddRiderToFantasyTeamRaceEntryCommand>
+    public class AddRiderToFantasyTeamRaceEntryHandler : ApplicationCommandHandler<AddRiderToFantasyTeamRaceEntryCommand>
     {
         private readonly IApplicationDbContext _dbContext;
 
@@ -17,7 +17,7 @@ namespace StageRaceFantasy.Application.Commands.FanasyTeamRaceEntries
             _dbContext = dbContext;
         }
 
-        public async Task<CommandResult> Handle(AddRiderToFantasyTeamRaceEntryCommand request, CancellationToken cancellationToken)
+        public override async Task<CommandResult> Handle(AddRiderToFantasyTeamRaceEntryCommand request, CancellationToken cancellationToken)
         {
             var teamId = request.TeamId;
             var raceId = request.RaceId;
@@ -29,19 +29,11 @@ namespace StageRaceFantasy.Application.Commands.FanasyTeamRaceEntries
 
             var riderExists = await _dbContext.Riders.AnyAsync(x => x.Id == riderId);
 
-            if (raceEntry == null || !riderExists)
-            {
-                return new()
-                {
-                    IsNotFound = true,
-                };
-            }
+            if (raceEntry == null || !riderExists) return NotFound();
 
             var existingRider = raceEntry.FantasyTeamRaceEntryRiders.FirstOrDefault(x => x.RiderId == riderId);
-            if (existingRider != null)
-            {
-                return new();
-            }
+
+            if (existingRider != null) return Success();
 
             raceEntry.FantasyTeamRaceEntryRiders.Add(new FantasyTeamRaceEntryRider()
             {
@@ -51,7 +43,7 @@ namespace StageRaceFantasy.Application.Commands.FanasyTeamRaceEntries
 
             await _dbContext.SaveChangesAsync();
 
-            return new();
+            return Success();
         }
     }
 }

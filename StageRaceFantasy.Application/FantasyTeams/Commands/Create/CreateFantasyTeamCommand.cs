@@ -10,7 +10,7 @@ namespace StageRaceFantasy.Application.FantasyTeams.Commands.Create
     {
     }
 
-    public class CreateFantasyTeamHandler : IApplicationCommandHandler<CreateFantasyTeamCommand, FantasyTeam>
+    public class CreateFantasyTeamHandler : ApplicationCommandHandler<CreateFantasyTeamCommand, FantasyTeam>
     {
         private readonly IApplicationDbContext _dbContext;
 
@@ -19,7 +19,7 @@ namespace StageRaceFantasy.Application.FantasyTeams.Commands.Create
             _dbContext = dbContext;
         }
 
-        public async Task<CommandResult<FantasyTeam>> Handle(CreateFantasyTeamCommand request, CancellationToken cancellationToken)
+        public override async Task<CommandResult<FantasyTeam>> Handle(CreateFantasyTeamCommand request, CancellationToken cancellationToken)
         {
             var fantasyTeam = new FantasyTeam()
             {
@@ -30,7 +30,7 @@ namespace StageRaceFantasy.Application.FantasyTeams.Commands.Create
 
             await _dbContext.SaveChangesAsync();
 
-            return new(fantasyTeam);
+            return Success(fantasyTeam);
         }
     }
 }

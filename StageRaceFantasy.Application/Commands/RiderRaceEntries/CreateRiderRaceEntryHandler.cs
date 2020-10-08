@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Application.Commands
 {
-    public class CreateRiderRaceEntryHandler : IApplicationCommandHandler<CreateRiderRaceEntryCommand, GetRiderRaceEntryDto>
+    public class CreateRiderRaceEntryHandler : ApplicationCommandHandler<CreateRiderRaceEntryCommand, GetRiderRaceEntryDto>
     {
         private readonly IApplicationDbContext _dbContext;
         private readonly IMapper _mapper;
@@ -20,29 +20,17 @@ namespace StageRaceFantasy.Application.Commands
             _mapper = mapper;
         }
 
-        public async Task<CommandResult<GetRiderRaceEntryDto>> Handle(CreateRiderRaceEntryCommand request, CancellationToken cancellationToken)
+        public override async Task<CommandResult<GetRiderRaceEntryDto>> Handle(CreateRiderRaceEntryCommand request, CancellationToken cancellationToken)
         {
             var raceId = request.RaceId;
             var riderId = request.RiderId;
 
-            if (RiderRaceEntryExists(raceId, riderId))
-            {
-                return new()
-                {
-                    IsBadRequest = true,
-                };
-            }
+            if (RiderRaceEntryExists(raceId, riderId)) return BadRequest();
 
             var raceExists = await _dbContext.Races.AnyAsync(x => x.Id == raceId);
             var riderExists = await _dbContext.Riders.AnyAsync(x => x.Id == riderId);
 
-            if (!raceExists || !riderExists)
-            {
-                return new()
-                {
-                    IsNotFound = true,
-                };
-            }
+            if (!raceExists || !riderExists) return NotFound();
 
             var riderRaceEntry = new RiderRaceEntry()
             {
@@ -56,7 +44,7 @@ namespace StageRaceFantasy.Application.Commands
             var getRiderRaceEntryDto = _mapper.Map<GetRiderRaceEntryDto>(riderRaceEntry);
             getRiderRaceEntryDto.IsEntered = true;
 
-            return new(getRiderRaceEntryDto);
+            return Success(getRiderRaceEntryDto);
         }
 
         private bool RiderRaceEntryExists(int raceId, int riderId)

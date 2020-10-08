@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Application.Commands
 {
-    public class UpdateFantasyTeamHandler : IApplicationCommandHandler<UpdateFantasyTeamCommand>
+    public class UpdateFantasyTeamHandler : ApplicationCommandHandler<UpdateFantasyTeamCommand>
     {
         private readonly IApplicationDbContext _dbContext;
 
@@ -14,26 +14,20 @@ namespace StageRaceFantasy.Application.Commands
             _dbContext = dbContext;
         }
 
-        public async Task<CommandResult> Handle(UpdateFantasyTeamCommand request, CancellationToken cancellationToken)
+        public override async Task<CommandResult> Handle(UpdateFantasyTeamCommand request, CancellationToken cancellationToken)
         {
             var id = request.Id;
             var newName = request.Name;
 
             var team = await _dbContext.FantasyTeams.FindAsync(id);
 
-            if (team == null)
-            {
-                return new()
-                {
-                    IsNotFound = true,
-                };
-            }
+            if (team == null) return NotFound();
 
             team.Name = newName;
 
             await _dbContext.SaveChangesAsync();
 
-            return new();
+            return Success();
         }
     }
 }

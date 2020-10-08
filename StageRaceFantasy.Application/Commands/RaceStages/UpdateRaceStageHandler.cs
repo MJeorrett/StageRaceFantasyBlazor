@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Application.Commands.RaceStages
 {
-    public class UpdateRaceStageHandler : IApplicationCommandHandler<UpdateRaceStageCommand>
+    public class UpdateRaceStageHandler : ApplicationCommandHandler<UpdateRaceStageCommand>
     {
         private readonly IApplicationDbContext _dbContext;
 
@@ -14,35 +14,23 @@ namespace StageRaceFantasy.Application.Commands.RaceStages
             _dbContext = dbContext;
         }
 
-        public async Task<CommandResult> Handle(UpdateRaceStageCommand request, CancellationToken cancellationToken)
+        public override async Task<CommandResult> Handle(UpdateRaceStageCommand request, CancellationToken cancellationToken)
         {
             var raceId = request.RaceId;
             var stageId = request.StageId;
 
             var stage = await _dbContext.RaceStages.FindAsync(stageId);
 
-            if (stage == null)
-            {
-                return new()
-                {
-                    IsNotFound = true,
-                };
-            }
+            if (stage == null) NotFound();
 
-            if (stage.RaceId != raceId)
-            {
-                return new()
-                {
-                    IsBadRequest = true,
-                };
-            }
+            if (stage.RaceId != raceId) return BadRequest();
 
             stage.FinishLocation = request.FinishLocation;
             stage.StartLocation = request.StartLocation;
 
             await _dbContext.SaveChangesAsync();
 
-            return new();
+            return Success();
         }
     }
 }
