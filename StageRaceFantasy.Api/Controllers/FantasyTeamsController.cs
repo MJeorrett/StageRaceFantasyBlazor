@@ -3,8 +3,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StageRaceFantasy.Application.Commands;
 using StageRaceFantasy.Application.FantasyTeams.Commands.Create;
+using StageRaceFantasy.Application.FantasyTeams.Queries.GetById;
 using StageRaceFantasy.Application.FantasyTeams.Queries.GetAll;
-using StageRaceFantasy.Application.Queries;
 using StageRaceFantasy.Domain.Entities;
 using StageRaceFantasy.Server.Controllers.Utils;
 
@@ -31,9 +31,9 @@ namespace StageRaceFantasy.Server.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<GetFantasyTeamDto>> GetFantasyTeam(int id)
+        public async Task<ActionResult<GetFantasyTeamVm>> GetFantasyTeam(int id)
         {
-            var query = new GetFantasyTeamQuery(id);
+            var query = new GetFantasyTeamById(id);
             var result = await _mediator.Send(query);
 
             return ResponseHelpers.BuildRawContentResponse(this, result);

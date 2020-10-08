@@ -2,24 +2,27 @@
 using Microsoft.EntityFrameworkCore;
 using StageRaceFantasy.Application.Common.Interfaces;
 using StageRaceFantasy.Application.Common.Mediatr;
-using StageRaceFantasy.Domain.Entities;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StageRaceFantasy.Application.Queries
+namespace StageRaceFantasy.Application.FantasyTeams.Queries.GetById
 {
-    public class GetFantasyTeamHandler : IApplicationQueryHandler<GetFantasyTeamQuery, GetFantasyTeamDto>
+    public record GetFantasyTeamById(int TeamId) : IApplicationQuery<GetFantasyTeamVm>
+    {
+    }
+
+    public class GetFantasyTeamByIdHandler : IApplicationQueryHandler<GetFantasyTeamById, GetFantasyTeamVm>
     {
         private readonly IApplicationDbContext _dbContext;
         private readonly IMapper _mapper;
 
-        public GetFantasyTeamHandler(IApplicationDbContext dbContext, IMapper mapper)
+        public GetFantasyTeamByIdHandler(IApplicationDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
             _mapper = mapper;
         }
 
-        public async Task<QueryResult<GetFantasyTeamDto>> Handle(GetFantasyTeamQuery request, CancellationToken cancellationToken)
+        public async Task<QueryResult<GetFantasyTeamVm>> Handle(GetFantasyTeamById request, CancellationToken cancellationToken)
         {
             var teamId = request.TeamId;
 
@@ -36,7 +39,7 @@ namespace StageRaceFantasy.Application.Queries
                 };
             }
 
-            return new(_mapper.Map<GetFantasyTeamDto>(fantasyTeam));
+            return new(_mapper.Map<GetFantasyTeamVm>(fantasyTeam));
         }
     }
 }

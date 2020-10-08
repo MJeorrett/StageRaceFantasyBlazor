@@ -1,5 +1,7 @@
 ﻿@page "/fantasy-teams/{teamId:int}"
 
+@using StageRaceFantasy.Application.FantasyTeams.Queries.GetById 
+
 @inject HttpClient httpClient
 
 @if (team == null)
@@ -56,13 +58,13 @@ else
 
 @code {
         [Parameter] public int teamId { get; set; }
-    private GetFantasyTeamDto team { get; set; }
+    private GetFantasyTeamVm team { get; set; }
     private Race[] unenteredRaces { get; set; }
     private int selectedRaceId;
 
     protected override async Task OnInitializedAsync()
     {
-        team = await httpClient.GetJsonAsync<GetFantasyTeamDto>($"api/fantasy-teams/{teamId}");
+        team = await httpClient.GetJsonAsync<GetFantasyTeamVm>($"api/fantasy-teams/{teamId}");
         var allRaces = await httpClient.GetJsonAsync<Race[]>("api/races");
 
         selectedRaceId = 0;
