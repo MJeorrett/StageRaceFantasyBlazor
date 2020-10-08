@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StageRaceFantasy.Application.Commands;
+using StageRaceFantasy.Application.FantasyTeams.Commands.Create;
 using StageRaceFantasy.Application.FantasyTeams.Queries.GetAll;
 using StageRaceFantasy.Application.Queries;
 using StageRaceFantasy.Domain.Entities;

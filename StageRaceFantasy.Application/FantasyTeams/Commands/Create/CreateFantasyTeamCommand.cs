@@ -4,8 +4,12 @@ using StageRaceFantasy.Domain.Entities;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StageRaceFantasy.Application.Commands.FantasyTeams
+namespace StageRaceFantasy.Application.FantasyTeams.Commands.Create
 {
+    public record CreateFantasyTeamCommand(string Name) : IApplicationCommand<FantasyTeam>
+    {
+    }
+
     public class CreateFantasyTeamHandler : IApplicationCommandHandler<CreateFantasyTeamCommand, FantasyTeam>
     {
         private readonly IApplicationDbContext _dbContext;
