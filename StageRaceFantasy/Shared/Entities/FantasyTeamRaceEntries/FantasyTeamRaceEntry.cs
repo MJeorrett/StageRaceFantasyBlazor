@@ -15,5 +15,10 @@ namespace StageRaceFantasy.Domain.Entities
 
         [NotMapped]
         public List<Rider> Riders => FantasyTeamRaceEntryRiders.Select(x => x.Rider).ToList();
+
+        public FantasyTeamRaceEntry()
+        {
+            FantasyTeamRaceEntryRiders = new List<FantasyTeamRaceEntryRider>();
+        }
     }
 }
