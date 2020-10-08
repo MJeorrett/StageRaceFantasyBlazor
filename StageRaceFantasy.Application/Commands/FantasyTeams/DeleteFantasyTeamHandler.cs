@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Application.Commands
 {
-    public class DeleteFantasyTeamHandler : IApplicationCommandHandler<DeleteFantasyTeamCommand>
+    public class DeleteFantasyTeamHandler : ApplicationCommandHandler<DeleteFantasyTeamCommand>
     {
         private IApplicationDbContext _dbContext;
 
@@ -14,23 +14,18 @@ namespace StageRaceFantasy.Application.Commands
             _dbContext = dbContext;
         }
 
-        public async Task<CommandResult> Handle(DeleteFantasyTeamCommand request, CancellationToken cancellationToken)
+        public override async Task<CommandResult> Handle(DeleteFantasyTeamCommand request, CancellationToken cancellationToken)
         {
             var id = request.Id;
 
             var fantasyTeam = await _dbContext.FantasyTeams.FindAsync(id);
-            if (fantasyTeam == null)
-            {
-                return new()
-                {
-                    IsNotFound = true,
-                };
-            }
+
+            if (fantasyTeam == null) return NotFound();
 
             _dbContext.FantasyTeams.Remove(fantasyTeam);
             await _dbContext.SaveChangesAsync();
 
-            return new();
+            return Success();
         }
     }
 }

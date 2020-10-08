@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Application.Commands.FanasyTeamRaceEntries
 {
-    public class CreateFantasyTeamRaceEntryHandler : IApplicationCommandHandler<CreateFantasyTeamRaceEntryCommand, GetFantasyTeamRaceEntryDto>
+    public class CreateFantasyTeamRaceEntryHandler : ApplicationCommandHandler<CreateFantasyTeamRaceEntryCommand, GetFantasyTeamRaceEntryDto>
     {
         private readonly IApplicationDbContext _dbContext;
         private readonly IMapper _mapper;
@@ -20,29 +20,17 @@ namespace StageRaceFantasy.Application.Commands.FanasyTeamRaceEntries
             _mapper = mapper;
         }
 
-        public async Task<CommandResult<GetFantasyTeamRaceEntryDto>> Handle(CreateFantasyTeamRaceEntryCommand request, CancellationToken cancellationToken)
+        public override async Task<CommandResult<GetFantasyTeamRaceEntryDto>> Handle(CreateFantasyTeamRaceEntryCommand request, CancellationToken cancellationToken)
         {
             var raceId = request.RaceId;
             var teamId = request.FantasyTeamId;
 
-            if (FantasyTeamRaceEntryExists(raceId, teamId))
-            {
-                return new()
-                {
-                    IsBadRequest = true,
-                };
-            }
+            if (FantasyTeamRaceEntryExists(raceId, teamId)) return BadRequest();
 
             var raceExists = await _dbContext.Races.AnyAsync(x => x.Id == raceId);
             var teamExists = await _dbContext.FantasyTeams.AnyAsync(x => x.Id == teamId);
 
-            if (!raceExists || !teamExists)
-            {
-                return new()
-                {
-                    IsNotFound = true,
-                };
-            }
+            if (!raceExists || !teamExists) return NotFound();
 
             var entry = new FantasyTeamRaceEntry()
             {
@@ -53,7 +41,7 @@ namespace StageRaceFantasy.Application.Commands.FanasyTeamRaceEntries
             await _dbContext.FantasyTeamRaceEntries.AddAsync(entry);
             await _dbContext.SaveChangesAsync();
 
-            return new(_mapper.Map<GetFantasyTeamRaceEntryDto>(entry));
+            return Success(_mapper.Map<GetFantasyTeamRaceEntryDto>(entry));
         }
 
         public bool FantasyTeamRaceEntryExists(int raceId, int teamId)

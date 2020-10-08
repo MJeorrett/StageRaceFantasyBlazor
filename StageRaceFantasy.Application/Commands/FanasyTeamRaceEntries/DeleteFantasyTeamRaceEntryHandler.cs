@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Application.Commands.FanasyTeamRaceEntries
 {
-    public class DeleteFantasyTeamRaceEntryHandler : IApplicationCommandHandler<DeleteFantasyTeamRaceEntryCommand>
+    public class DeleteFantasyTeamRaceEntryHandler : ApplicationCommandHandler<DeleteFantasyTeamRaceEntryCommand>
     {
         private readonly IApplicationDbContext _dbContext;
 
@@ -15,7 +15,7 @@ namespace StageRaceFantasy.Application.Commands.FanasyTeamRaceEntries
             _dbContext = dbContext;
         }
 
-        public async Task<CommandResult> Handle(DeleteFantasyTeamRaceEntryCommand request, CancellationToken cancellationToken)
+        public override async Task<CommandResult> Handle(DeleteFantasyTeamRaceEntryCommand request, CancellationToken cancellationToken)
         {
             var teamId = request.FantasyTeamId;
             var raceId = request.RaceId;
@@ -23,18 +23,12 @@ namespace StageRaceFantasy.Application.Commands.FanasyTeamRaceEntries
             var entry = await _dbContext.FantasyTeamRaceEntries
                 .FirstOrDefaultAsync(x => x.FantasyTeamId == teamId && x.RaceId == raceId);
 
-            if (entry == null)
-            {
-                return new()
-                {
-                    IsNotFound = true,
-                };
-            }
+            if (entry == null) return NotFound();
 
             _dbContext.FantasyTeamRaceEntries.Remove(entry);
             await _dbContext.SaveChangesAsync();
 
-            return new();
+            return Success();
         }
     }
 }

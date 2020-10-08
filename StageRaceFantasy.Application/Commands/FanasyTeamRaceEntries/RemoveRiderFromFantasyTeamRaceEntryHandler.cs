@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Application.Commands.FanasyTeamRaceEntries
 {
-    public class RemoveRiderFromFantasyTeamRaceEntryHandler : IApplicationCommandHandler<RemoveRiderFromFantasyTeamRaceEntryCommand>
+    public class RemoveRiderFromFantasyTeamRaceEntryHandler : ApplicationCommandHandler<RemoveRiderFromFantasyTeamRaceEntryCommand>
     {
         private readonly IApplicationDbContext _dbContext;
 
@@ -16,7 +16,7 @@ namespace StageRaceFantasy.Application.Commands.FanasyTeamRaceEntries
             _dbContext = dbContext;
         }
 
-        public async Task<CommandResult> Handle(RemoveRiderFromFantasyTeamRaceEntryCommand request, CancellationToken cancellationToken)
+        public override async Task<CommandResult> Handle(RemoveRiderFromFantasyTeamRaceEntryCommand request, CancellationToken cancellationToken)
         {
             var teamId = request.TeamId;
             var raceId = request.RaceId;
@@ -26,24 +26,16 @@ namespace StageRaceFantasy.Application.Commands.FanasyTeamRaceEntries
                 .Include(x => x.FantasyTeamRaceEntryRiders)
                 .FirstOrDefaultAsync(x => x.FantasyTeamId == teamId && x.RaceId == raceId);
 
-            if (raceEntry == null)
-            {
-                return new()
-                {
-                    IsNotFound = true,
-                };
-            }
+            if (raceEntry == null) return NotFound();
 
             var rider = raceEntry.FantasyTeamRaceEntryRiders.FirstOrDefault(x => x.RiderId == riderId);
-            if (rider == null)
-            {
-                return new();
-            }
+
+            if (rider == null) return Success();
 
             raceEntry.FantasyTeamRaceEntryRiders.Remove(rider);
             await _dbContext.SaveChangesAsync();
 
-            return new();
+            return Success();
         }
     }
 }
