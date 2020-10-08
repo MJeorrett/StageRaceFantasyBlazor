@@ -4,7 +4,7 @@ using StageRaceFantasy.Domain.Entities;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StageRaceFantasy.Application.Common
+namespace StageRaceFantasy.Application.Common.Interfaces
 {
     public interface IApplicationDbContext
     {

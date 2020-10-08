@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\StageRaceFantasy.Application\StageRaceFantasy.Application.csproj" />
     <ProjectReference Include="..\StageRaceFantasy.Domain\StageRaceFantasy.Domain.csproj" />
   </ItemGroup>
 

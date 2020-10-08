@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StageRaceFantasy.Application.Commands;
-using StageRaceFantasy.Application.Queries;
+using StageRaceFantasy.Application.Common.Mediatr;
 using System;
 
 namespace StageRaceFantasy.Server.Controllers.Utils

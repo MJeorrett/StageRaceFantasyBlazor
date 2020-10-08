@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using StageRaceFantasy.Application.Common;
+using StageRaceFantasy.Application.Common.Interfaces;
 using StageRaceFantasy.Domain.Entities;
 using System.Threading.Tasks;
 

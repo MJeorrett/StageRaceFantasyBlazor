@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using StageRaceFantasy.Application.FantasyTeams.Queries.GetAll;
 using StageRaceFantasy.Domain.Entities;
 
 namespace StageRaceFantasy.Application.AutoMapperProfiles
@@ -10,7 +11,7 @@ namespace StageRaceFantasy.Application.AutoMapperProfiles
             CreateMap<FantasyTeamRaceEntry, GetFantasyTeamDto.RaceEntry>();
             CreateMap<FantasyTeam, GetFantasyTeamDto>();
 
-            CreateMap<FantasyTeam, GetAllFantasyTeamsDto>();
+            CreateMap<FantasyTeam, FantasyTeamDto>();
         }
     }
 }
