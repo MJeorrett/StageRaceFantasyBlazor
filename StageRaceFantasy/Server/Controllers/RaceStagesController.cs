@@ -39,6 +39,22 @@ namespace StageRaceFantasy.Server.Controllers
             return ResponseHelpers.BuildRawContentResponse(this, result);
         }
 
+        [HttpPut("{stageId}")]
+        public async Task<ActionResult> UpdateRaceStage(int raceId, int stageId, UpdateRaceStageDto updateRaceStageDto)
+        {
+            var command = new UpdateRaceStageCommand()
+            {
+                RaceId = raceId,
+                StageId = stageId,
+                StartLocation = updateRaceStageDto.StartLocation,
+                FinishLocation = updateRaceStageDto.FinishLocation,
+            };
+
+            var result = await _mediator.Send(command);
+
+            return ResponseHelpers.BuildNoContentResponse(this, result);
+        }
+
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<GetRaceStageDto>> PostRiderRaceEntry(int raceId, CreateRaceStageDto createRaceStageDto)

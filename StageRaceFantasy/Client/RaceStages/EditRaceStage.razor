@@ -1,0 +1,38 @@
+﻿@page "/races/{raceId:int}/stages/{stageId:int}/edit"
+@using StageRaceFantasy.Shared.Models
+@inject HttpClient http
+@inject NavigationManager navigationManager
+
+@if (race == null)
+{
+    <Loader />
+}
+else
+{
+    <MatHeadline2>@race.Name</MatHeadline2>
+    <MatHeadline4>Edit Stage</MatHeadline4>
+
+    <RaceStageForm ButtonText="Save"
+                   stage="@stage"
+                   OnValidSubmit="@Submit" />
+    }
+
+@code {
+    [Parameter] public int raceId { get; set; }
+    [Parameter] public int stageId { get; set; }
+
+    Race race;
+    RaceStage stage = new RaceStage();
+
+    protected override async Task OnInitializedAsync()
+    {
+        race = await http.GetFromJsonAsync<Race>($"api/races/{raceId}");
+        stage = await http.GetFromJsonAsync<RaceStage>($"api/races/{raceId}/stages/{stageId}");
+    }
+
+    async Task Submit()
+    {
+        await http.PutAsJsonAsync($"api/races/{race.Id}/stages/{stageId}", stage);
+        navigationManager.NavigateTo($"races/{raceId}/stages");
+    }
+}
