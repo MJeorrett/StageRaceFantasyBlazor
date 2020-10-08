@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using StageRaceFantasy.Application.Common.Interfaces;
 using StageRaceFantasy.Application.Common.Mediatr;
@@ -25,14 +24,9 @@ namespace StageRaceFantasy.Application.FantasyTeams.Queries.GetAll
 
         public async Task<QueryResult<GetAllFantasyTeamsVm>> Handle(GetAllFantasyTeamsQuery request, CancellationToken cancellationToken)
         {
-            var fantasyTeams = new GetAllFantasyTeamsVm()
-            {
-                FantasyTeams = await _dbContext.FantasyTeams
-                    .ProjectTo<FantasyTeamDto>(_mapper.ConfigurationProvider)
-                    .ToListAsync(),
-            };
+            var fantasyTeams = await _dbContext.FantasyTeams.ToListAsync();
 
-            return new(fantasyTeams);
+            return new(_mapper.Map<GetAllFantasyTeamsVm>(fantasyTeams));
         }
     }
 }
