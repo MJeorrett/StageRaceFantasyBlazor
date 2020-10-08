@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StageRaceFantasy.Application.Commands;
+using StageRaceFantasy.Application.FantasyTeams.Queries.GetAll;
 using StageRaceFantasy.Application.Queries;
 using StageRaceFantasy.Domain.Entities;
 using StageRaceFantasy.Server.Controllers.Utils;
@@ -21,7 +22,7 @@ namespace StageRaceFantasy.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<GetAllFantasyTeamsDto>>> GetFantasyTeams()
+        public async Task<ActionResult<GetAllFantasyTeamsVm>> GetFantasyTeams()
         {
             var query = new GetAllFantasyTeamsQuery();
             var result = await _mediator.Send(query);

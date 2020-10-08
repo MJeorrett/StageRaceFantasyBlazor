@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using StageRaceFantasy.Application.Common;
+using StageRaceFantasy.Application.Common.Interfaces;
 using StageRaceFantasy.Domain.Entities;
 
 namespace StageRaceFantasy.Server.Controllers

@@ -1,4 +1,4 @@
-﻿namespace StageRaceFantasy.Application.Queries
+﻿namespace StageRaceFantasy.Application.Common.Mediatr
 {
     public record QueryResult<T>
     {

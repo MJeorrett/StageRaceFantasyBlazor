@@ -1,4 +1,6 @@
-﻿namespace StageRaceFantasy.Application.Commands.RaceStages
+﻿using StageRaceFantasy.Application.Common.Mediatr;
+
+namespace StageRaceFantasy.Application.Commands.RaceStages
 {
     public record UpdateRaceStageCommand : IApplicationCommand
     {

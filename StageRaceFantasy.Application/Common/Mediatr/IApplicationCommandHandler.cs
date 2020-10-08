@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace StageRaceFantasy.Application.Commands
+namespace StageRaceFantasy.Application.Common.Mediatr
 {
     interface IApplicationCommandHandler<TRequest, TResponse> : IRequestHandler<TRequest, CommandResult<TResponse>>
         where TRequest : IRequest<CommandResult<TResponse>>

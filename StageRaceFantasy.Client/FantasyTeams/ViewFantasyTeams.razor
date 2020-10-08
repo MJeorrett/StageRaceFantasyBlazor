@@ -1,5 +1,7 @@
 ﻿@page "/fantasy-teams"
 
+@using StageRaceFantasy.Application.FantasyTeams.Queries.GetAll
+
 @inject HttpClient httpClient
 @inject IJSRuntime js
 
@@ -8,17 +10,17 @@
     <MatButton Link="fantasy-teams/create">Create New</MatButton>
 </div>
 
-@if (fantasyTeams == null)
+@if (model == null)
 {
     <Loader />
 }
-else if (fantasyTeams.Length == 0)
+else if (model.FantasyTeams.Count == 0)
 {
     <MatBody1 Style="font-weight: bolder"><em>No Teams Found.</em></MatBody1>
 }
 else
 {
-    <MatTable Items="@fantasyTeams"
+    <MatTable Items="@model.FantasyTeams"
               FilterByColumnName="Name"
               ShowPaging="false"
               PageSize="int.MaxValue"
@@ -40,16 +42,16 @@ else
 }
 
 @code {
-    private FantasyTeam[] fantasyTeams;
+    private GetAllFantasyTeamsVm model;
 
     protected override async Task OnInitializedAsync()
     {
-        fantasyTeams = await httpClient.GetFromJsonAsync<FantasyTeam[]>("api/fantasy-teams");
+        model = await httpClient.GetFromJsonAsync<GetAllFantasyTeamsVm>("api/fantasy-teams");
     }
 
     async Task DeleteTeam(int teamId)
     {
-        var team = fantasyTeams.First(x => x.Id == teamId);
+        var team = model.FantasyTeams.First(x => x.Id == teamId);
 
         if (await js.InvokeAsync<bool>("confirm", $"Do you want to delete fantasy team {team.Name}?"))
         {
