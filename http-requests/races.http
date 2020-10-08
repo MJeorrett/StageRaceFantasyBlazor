@@ -5,6 +5,9 @@
 ###
 
 GET {{host}}/api/races
+###
+
+GET {{host}}/api/races/1
 
 ###
 

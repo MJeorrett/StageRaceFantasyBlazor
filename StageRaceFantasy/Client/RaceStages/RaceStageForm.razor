@@ -1,6 +1,4 @@
-﻿@using StageRaceFantasy.Shared.Models
-
-<EditForm Model="@stage" OnValidSubmit="@OnValidSubmit">
+﻿<EditForm Model="@stage" OnValidSubmit="@OnValidSubmit">
     <DataAnnotationsValidator />
     <p>
         <MatTextField Label="Start Location" @bind-Value="@stage.StartLocation" FullWidth="true" ValidationDisabled="true" />

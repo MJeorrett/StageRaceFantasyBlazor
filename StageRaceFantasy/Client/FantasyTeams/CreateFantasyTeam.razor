@@ -1,16 +1,13 @@
 ﻿@page "/fantasy-teams/create"
 
-@using StageRaceFantasy.Shared.Models
-
 @inject HttpClient http
 @inject NavigationManager navigationManager
 
 <h3>Create Fantasy Team</h3>
 
-<FantasyTeamForm
-      ButtonText="Create Fantasy Team"
-      team="@fantasyTeam"
-      OnValidSubmit="@Submit" />
+<FantasyTeamForm ButtonText="Create Fantasy Team"
+                 team="@fantasyTeam"
+                 OnValidSubmit="@Submit" />
 
 @code {
     FantasyTeam fantasyTeam = new FantasyTeam();

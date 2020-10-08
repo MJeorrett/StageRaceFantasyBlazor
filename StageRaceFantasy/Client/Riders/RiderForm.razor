@@ -1,6 +1,4 @@
-﻿@using StageRaceFantasy.Shared.Models
-
-<EditForm Model="@rider" OnValidSubmit="@OnValidSubmit">
+﻿<EditForm Model="@rider" OnValidSubmit="@OnValidSubmit">
     <DataAnnotationsValidator />
     <p>
         <MatTextField Label="First Name" @bind-Value="@rider.FirstName" FullWidth="true" ValidationDisabled="true" />

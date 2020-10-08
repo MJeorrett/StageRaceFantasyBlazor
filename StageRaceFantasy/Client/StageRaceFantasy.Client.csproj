@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Shared\StageRaceFantasy.Shared.csproj" />
+    <ProjectReference Include="..\Shared\StageRaceFantasy.Domain.csproj" />
   </ItemGroup>
 
 </Project>
