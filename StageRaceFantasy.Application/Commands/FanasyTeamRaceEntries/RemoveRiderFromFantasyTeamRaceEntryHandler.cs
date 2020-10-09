@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StageRaceFantasy.Application.Common.Interfaces;
-using StageRaceFantasy.Application.Common.Mediatr;
+using StageRaceFantasy.Application.Common.Requests;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;

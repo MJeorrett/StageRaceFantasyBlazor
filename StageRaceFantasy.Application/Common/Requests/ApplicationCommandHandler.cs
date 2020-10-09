@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StageRaceFantasy.Application.Common.Mediatr
+namespace StageRaceFantasy.Application.Common.Requests
 {
     public abstract class ApplicationCommandHandler<TRequest, TResponse> : IRequestHandler<TRequest, CommandResult<TResponse>>
         where TRequest : IRequest<CommandResult<TResponse>>

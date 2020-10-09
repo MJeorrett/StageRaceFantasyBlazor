@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StageRaceFantasy.Application.Common.Mediatr;
+using StageRaceFantasy.Application.Common.Requests;
 using System;
+using System.Linq;
 
 namespace StageRaceFantasy.Server.Controllers.Utils
 {
@@ -20,7 +21,7 @@ namespace StageRaceFantasy.Server.Controllers.Utils
         {
             if (commandResult.IsBadRequest)
             {
-                return controller.BadRequest();
+                return BuildBadRequestResponse(controller, commandResult);
             }
 
             if (commandResult.IsNotFound)
@@ -35,7 +36,7 @@ namespace StageRaceFantasy.Server.Controllers.Utils
         {
             if (commandResult.IsBadRequest)
             {
-                return controller.BadRequest();
+                return BuildBadRequestResponse(controller, commandResult);
             }
 
             if (commandResult.IsNotFound)
@@ -54,7 +55,7 @@ namespace StageRaceFantasy.Server.Controllers.Utils
         {
             if (commandResult.IsBadRequest)
             {
-                return controller.BadRequest();
+                return BuildBadRequestResponse(controller, commandResult);
             }
 
             if (commandResult.IsNotFound)
@@ -64,6 +65,20 @@ namespace StageRaceFantasy.Server.Controllers.Utils
 
             var routeValues = buildRouteValues();
             return controller.CreatedAtAction(actionName, routeValues, commandResult.Content);
+        }
+
+        private static ActionResult<T> BuildBadRequestResponse<T>(ControllerBase controller, CommandResult<T> commandResult)
+        {
+            return commandResult.ValidationFailures.Any() ?
+                    controller.BadRequest(commandResult.ValidationFailures) :
+                    controller.BadRequest();
+        }
+
+        private static ActionResult BuildBadRequestResponse(ControllerBase controller, CommandResult commandResult)
+        {
+            return commandResult.ValidationFailures.Any() ?
+                    controller.BadRequest(commandResult.ValidationFailures) :
+                    controller.BadRequest();
         }
     }
 }
