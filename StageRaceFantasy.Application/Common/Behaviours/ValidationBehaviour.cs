@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using StageRaceFantasy.Application.Common.Requests;
 using System;
@@ -25,25 +26,33 @@ namespace StageRaceFantasy.Application.Common.Behaviours
             CancellationToken cancellationToken,
             RequestHandlerDelegate<TResponse> next)
         {
+
             if (!_validators.Any()) return await next();
 
+            var failures = await DoValidation(request, cancellationToken);
+
+            if (failures.Any())
+            {
+                return BuildFailureResponse(failures);
+            }
+
+            return await next();
+        }
+
+        private async Task<IEnumerable<ValidationFailure>> DoValidation(TRequest request, CancellationToken cancellationToken)
+        {
             var context = new ValidationContext<TRequest>(request);
             var validationResults = await Task.WhenAll(_validators.Select(v => v.ValidateAsync(context, cancellationToken)));
             var failures = validationResults.SelectMany(r => r.Errors).Where(f => f != null).ToList();
 
-            if (failures.Count != 0)
-            {
-                var responseType = typeof(TResponse);
-                if (responseType.IsGenericType)
-                {
-                    var responseContentType = responseType.GetGenericArguments()[0];
-                    var resultType = typeof(CommandResult<>).MakeGenericType(responseContentType);
+            return failures;
+        }
 
-                    return Activator.CreateInstance(resultType, failures) as TResponse;
-                }
-            }
+        private static TResponse BuildFailureResponse(IEnumerable<ValidationFailure> failures)
+        {
+            var responseType = typeof(TResponse);
 
-            return await next();
+            return Activator.CreateInstance(responseType, failures) as TResponse;
         }
     }
 }
