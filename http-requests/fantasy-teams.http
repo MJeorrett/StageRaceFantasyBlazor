@@ -16,7 +16,7 @@ POST {{host}}/api/fantasy-teams
 Content-Type: application/json
 
 {
-  "name": ""
+  "name": "Outeos 2nd"
 }
 
 ###
