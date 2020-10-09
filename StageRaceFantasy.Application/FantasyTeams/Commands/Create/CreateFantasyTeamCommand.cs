@@ -28,7 +28,7 @@ namespace StageRaceFantasy.Application.FantasyTeams.Commands.Create
 
             _dbContext.FantasyTeams.Add(fantasyTeam);
 
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
             return Success(fantasyTeam);
         }
