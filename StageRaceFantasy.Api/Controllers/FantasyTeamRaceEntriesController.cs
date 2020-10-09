@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StageRaceFantasy.Application.Commands.FanasyTeamRaceEntries;
-using StageRaceFantasy.Application.Queries.FantasyTeamRaceEntries;
+using StageRaceFantasy.Application.FantasyTeamRaceEntries.Commands.Create;
+using StageRaceFantasy.Application.FantasyTeamRaceEntries.Commands.Delete;
+using StageRaceFantasy.Application.FantasyTeamRaceEntries.Commands.RemoveRider;
+using StageRaceFantasy.Application.FantasyTeamRaceEntries.Queries.GetAll;
+using StageRaceFantasy.Application.FantasyTeamRaceEntries.Queries.GetById;
 using StageRaceFantasy.Domain.Entities;
 using StageRaceFantasy.Server.Controllers.Utils;
 
@@ -21,7 +24,7 @@ namespace StageRaceFantasy.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<GetAllFantasyTeamRaceEntriesDto>>> GetFantasyTeamRaceEntries(int fantasyTeamId)
+        public async Task<ActionResult<GetAllFantasyTeamRaceEntriesVm>> GetFantasyTeamRaceEntries(int fantasyTeamId)
         {
             var query = new GetAllFantasyTeamRaceEntriesQuery(fantasyTeamId);
             var result = await _mediator.Send(query);
@@ -30,26 +33,22 @@ namespace StageRaceFantasy.Server.Controllers
         }
 
         [HttpGet("{raceId}")]
-        public async Task<ActionResult<GetFantasyTeamRaceEntryDto>> GetFantasyTeamRaceEntry(int fantasyTeamId, int raceId)
+        public async Task<ActionResult<GetFantasyTeamRaceEntryByIdVm>> GetFantasyTeamRaceEntry(int fantasyTeamId, int raceId)
         {
-            var query = new GetFantasyTeamRaceEntryQuery(fantasyTeamId, raceId);
+            var query = new GetFantasyTeamRaceEntryByIdQuery(fantasyTeamId, raceId);
             var result = await _mediator.Send(query);
 
             return ResponseHelpers.BuildRawContentResponse(this, result);
         }
 
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<GetFantasyTeamRaceEntryDto>> PostFantasyTeamRaceEntry(int fantasyTeamId, CreateFantasyTeamRaceEntryDto createFantasyTeamRaceEntryDto)
+        public async Task<ActionResult> PostFantasyTeamRaceEntry(int fantasyTeamId, CreateFantasyTeamRaceEntryCommand command)
         {
-            var command = new CreateFantasyTeamRaceEntryCommand(fantasyTeamId, createFantasyTeamRaceEntryDto.RaceId);
+            if (command.FantasyTeamId != fantasyTeamId) return BadRequest();
+
             var result = await _mediator.Send(command);
 
-            return ResponseHelpers.BuildCreatedAtResponse(
-                this,
-                result,
-                nameof(GetFantasyTeamRaceEntry),
-                () => new { result.Content.FantasyTeamId, result.Content.RaceId });
+            return ResponseHelpers.BuildStatusCodeResponse(this, result, 201);
         }
 
         [HttpDelete("{raceId}")]

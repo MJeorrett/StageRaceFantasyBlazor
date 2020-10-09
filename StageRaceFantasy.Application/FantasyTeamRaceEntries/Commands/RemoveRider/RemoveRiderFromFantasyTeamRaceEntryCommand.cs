@@ -5,8 +5,13 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StageRaceFantasy.Application.Commands.FanasyTeamRaceEntries
+namespace StageRaceFantasy.Application.FantasyTeamRaceEntries.Commands.RemoveRider
 {
+    public record RemoveRiderFromFantasyTeamRaceEntryCommand(int TeamId, int RaceId, int RiderId)
+        : IApplicationCommand
+    {
+    }
+
     public class RemoveRiderFromFantasyTeamRaceEntryHandler : ApplicationRequestHandler<RemoveRiderFromFantasyTeamRaceEntryCommand>
     {
         private readonly IApplicationDbContext _dbContext;
@@ -16,7 +21,8 @@ namespace StageRaceFantasy.Application.Commands.FanasyTeamRaceEntries
             _dbContext = dbContext;
         }
 
-        public override async Task<ApplicationRequestResult> Handle(RemoveRiderFromFantasyTeamRaceEntryCommand request, CancellationToken cancellationToken)
+        public override async Task<ApplicationRequestResult> Handle(RemoveRiderFromFantasyTeamRaceEntryCommand request,
+                                                                    CancellationToken cancellationToken)
         {
             var teamId = request.TeamId;
             var raceId = request.RaceId;
@@ -24,7 +30,9 @@ namespace StageRaceFantasy.Application.Commands.FanasyTeamRaceEntries
 
             var raceEntry = await _dbContext.FantasyTeamRaceEntries
                 .Include(x => x.FantasyTeamRaceEntryRiders)
-                .FirstOrDefaultAsync(x => x.FantasyTeamId == teamId && x.RaceId == raceId);
+                .FirstOrDefaultAsync(
+                    x => x.FantasyTeamId == teamId && x.RaceId == raceId,
+                    cancellationToken);
 
             if (raceEntry == null) return NotFound();
 
@@ -33,7 +41,7 @@ namespace StageRaceFantasy.Application.Commands.FanasyTeamRaceEntries
             if (rider == null) return Success();
 
             raceEntry.FantasyTeamRaceEntryRiders.Remove(rider);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
             return Success();
         }

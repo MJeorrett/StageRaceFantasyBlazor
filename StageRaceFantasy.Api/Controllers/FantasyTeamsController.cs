@@ -40,7 +40,6 @@ namespace StageRaceFantasy.Server.Controllers
             return ResponseHelpers.BuildRawContentResponse(this, result);
         }
 
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutFantasyTeam(int id, UpdateFantasyTeamCommand command)
         {
@@ -52,11 +51,9 @@ namespace StageRaceFantasy.Server.Controllers
             return ResponseHelpers.BuildNoContentResponse(this, result);
         }
 
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<FantasyTeam>> PostFantasyTeam(CreateFantasyTeamDto createFantasyTeamDto)
+        public async Task<ActionResult<FantasyTeam>> PostFantasyTeam(CreateFantasyTeamCommand command)
         {
-            var command = new CreateFantasyTeamCommand(createFantasyTeamDto.Name);
             var result = await _mediator.Send(command);
 
             return ResponseHelpers.BuildCreatedAtResponse(
