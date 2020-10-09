@@ -1,5 +1,7 @@
 ﻿@page "/races/{raceId:int}/entries"
 
+@using StageRaceFantasy.Application.RiderRaceEntries.Commands.Create
+
 @inject HttpClient httpClient
 @inject IJSRuntime js
 
@@ -80,6 +82,7 @@ else
         var addRaceEntryDto = new CreateRiderRaceEntryDto()
         {
             RiderId = riderId,
+            RaceId = raceId,
         };
 
         await httpClient.PostAsJsonAsync($"api/races/{raceId}/entries", addRaceEntryDto);
