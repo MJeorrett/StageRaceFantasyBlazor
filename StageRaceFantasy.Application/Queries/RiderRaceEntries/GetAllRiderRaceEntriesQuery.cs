@@ -1,4 +1,4 @@
-﻿using StageRaceFantasy.Application.Common.Mediatr;
+﻿using StageRaceFantasy.Application.Common.Requests;
 using StageRaceFantasy.Domain.Entities;
 using System.Collections.Generic;
 

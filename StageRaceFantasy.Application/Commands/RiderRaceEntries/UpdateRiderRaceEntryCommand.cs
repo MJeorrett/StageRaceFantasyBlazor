@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using StageRaceFantasy.Application.Common.Mediatr;
+using StageRaceFantasy.Application.Common.Requests;
 using StageRaceFantasy.Domain.Entities;
 
 namespace StageRaceFantasy.Application.Commands

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using StageRaceFantasy.Application.Common.Interfaces;
-using StageRaceFantasy.Application.Common.Mediatr;
+using StageRaceFantasy.Application.Common.Requests;
 using System.Threading;
 using System.Threading.Tasks;
 

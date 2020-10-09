@@ -1,4 +1,4 @@
-﻿using StageRaceFantasy.Application.Common.Mediatr;
+﻿using StageRaceFantasy.Application.Common.Requests;
 
 namespace StageRaceFantasy.Application.Commands
 {
