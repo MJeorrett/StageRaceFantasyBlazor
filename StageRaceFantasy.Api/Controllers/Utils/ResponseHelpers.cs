@@ -9,6 +9,11 @@ namespace StageRaceFantasy.Server.Controllers.Utils
     {
         public static ActionResult<T> BuildRawContentResponse<T>(ControllerBase controller, QueryResult<T> queryResult)
         {
+            if (queryResult.IsBadRequest)
+            {
+                return BuildBadRequestResponse(controller, queryResult);
+            }
+
             if (queryResult.IsNotFound)
             {
                 return controller.NotFound();
@@ -78,6 +83,13 @@ namespace StageRaceFantasy.Server.Controllers.Utils
         {
             return commandResult.ValidationFailures.Any() ?
                     controller.BadRequest(commandResult.ValidationFailures) :
+                    controller.BadRequest();
+        }
+
+        private static ActionResult<T> BuildBadRequestResponse<T>(ControllerBase controller, QueryResult<T> queryResult)
+        {
+            return queryResult.ValidationFailures.Any() ?
+                    controller.BadRequest(queryResult.ValidationFailures) :
                     controller.BadRequest();
         }
     }
