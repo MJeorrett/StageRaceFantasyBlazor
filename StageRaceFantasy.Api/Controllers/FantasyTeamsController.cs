@@ -1,13 +1,13 @@
 ﻿using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using StageRaceFantasy.Application.Commands;
 using StageRaceFantasy.Application.FantasyTeams.Commands.Create;
 using StageRaceFantasy.Application.FantasyTeams.Queries.GetById;
 using StageRaceFantasy.Application.FantasyTeams.Queries.GetAll;
 using StageRaceFantasy.Domain.Entities;
 using StageRaceFantasy.Server.Controllers.Utils;
 using StageRaceFantasy.Application.FantasyTeams.Commands.Delete;
+using StageRaceFantasy.Application.FantasyTeams.Commands.Update;
 
 namespace StageRaceFantasy.Server.Controllers
 {
@@ -42,9 +42,11 @@ namespace StageRaceFantasy.Server.Controllers
 
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutFantasyTeam(int id, UpdateFantasyTeamDto updateFantasyTeamDto)
+        public async Task<IActionResult> PutFantasyTeam(int id, UpdateFantasyTeamCommand command)
         {
-            var query = new UpdateFantasyTeamCommand(id, updateFantasyTeamDto.Name);
+            if (command.Id != id) return BadRequest();
+
+            var query = new UpdateFantasyTeamCommand(id, command.Name);
             var result = await _mediator.Send(query);
 
             return ResponseHelpers.BuildNoContentResponse(this, result);
