@@ -7,8 +7,8 @@ namespace StageRaceFantasy.Application.RaceStages.Commands.Update
 {
     public record UpdateRaceStageCommand : IApplicationCommand
     {
+        public int Id { get; init; }
         public int RaceId { get; init; }
-        public int StageId { get; init; }
         public string StartLocation { get; init; }
         public string FinishLocation { get; init; }
     }
@@ -25,7 +25,7 @@ namespace StageRaceFantasy.Application.RaceStages.Commands.Update
         public override async Task<ApplicationRequestResult> Handle(UpdateRaceStageCommand request, CancellationToken cancellationToken)
         {
             var raceId = request.RaceId;
-            var stageId = request.StageId;
+            var stageId = request.Id;
 
             var stage = await _dbContext.RaceStages.FindAsync(new object[] { stageId }, cancellationToken);
 

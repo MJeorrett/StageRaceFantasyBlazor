@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace StageRaceFantasy.Application.FantasyTeams.Queries.GetById
 {
-    public record GetFantasyTeamVm : IMapFrom<FantasyTeam>
+    public record GetFantasyTeamByIdVm : IMapFrom<FantasyTeam>
     {
         public int Id { get; init; }
         public string Name { get; init; }

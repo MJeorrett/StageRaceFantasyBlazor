@@ -2,11 +2,10 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using StageRaceFantasy.Application.Queries.GetRaceStages;
-using StageRaceFantasy.Application.Queries.RaceStages;
 using StageRaceFantasy.Application.RaceStages.Commands.Create;
 using StageRaceFantasy.Application.RaceStages.Commands.Update;
-using StageRaceFantasy.Domain.Entities;
+using StageRaceFantasy.Application.RaceStages.Queries.GetAll;
+using StageRaceFantasy.Application.RaceStages.Queries.GetById;
 using StageRaceFantasy.Server.Controllers.Utils;
 
 namespace StageRaceFantasy.Server.Controllers
@@ -23,18 +22,18 @@ namespace StageRaceFantasy.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<GetRaceStageDto>>> GetRaceStages(int raceId)
+        public async Task<ActionResult<GetAllRaceStagesVm>> GetRaceStages(int raceId)
         {
-            var query = new GetRaceStagesQuery(raceId);
+            var query = new GetAllRaceStagesQuery(raceId);
             var result = await _mediator.Send(query);
 
             return ResponseHelpers.BuildRawContentResponse(this, result);
         }
 
         [HttpGet("{stageId}")]
-        public async Task<ActionResult<GetRaceStageDto>> GetRaceStage(int raceId, int stageId)
+        public async Task<ActionResult<GetRaceStageByIdVm>> GetRaceStage(int raceId, int stageId)
         {
-            var query = new GetRaceStageQuery(raceId, stageId);
+            var query = new GetRaceStageByIdQuery(raceId, stageId);
             var result = await _mediator.Send(query);
 
             return ResponseHelpers.BuildRawContentResponse(this, result);
@@ -43,7 +42,7 @@ namespace StageRaceFantasy.Server.Controllers
         [HttpPut("{stageId}")]
         public async Task<ActionResult> UpdateRaceStage(int raceId, int stageId, UpdateRaceStageCommand command)
         {
-            if (command.RaceId != raceId || command.StageId != stageId) return BadRequest();
+            if (command.RaceId != raceId || command.Id != stageId) return BadRequest();
 
             var result = await _mediator.Send(command);
 
@@ -51,7 +50,7 @@ namespace StageRaceFantasy.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<GetRaceStageDto>> PostRaceStage(int raceId, CreateRaceStageCommand command)
+        public async Task<ActionResult<GetRaceStageByIdVm>> PostRaceStage(int raceId, CreateRaceStageCommand command)
         {
             if (command.RaceId != raceId) return BadRequest();
 

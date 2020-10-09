@@ -1,5 +1,7 @@
 ﻿@page "/races/{raceId:int}/stages"
 
+@using StageRaceFantasy.Application.RaceStages.Queries.GetAll 
+
 @inject HttpClient Http
 
 @if (isLoading)
@@ -13,13 +15,13 @@ else
         <MatButton Link="@($"races/{raceId}/stages/create")">Create New Stage</MatButton>
     </div>
 
-    if (stages.Length == 0)
+    if (vm.RaceStages.Count == 0)
     {
         <MatBody1 Style="font-weight: bolder"><em>No stages Found.</em></MatBody1>
     }
     else
     {
-        <MatTable Items="@stages"
+        <MatTable Items="@vm.RaceStages"
                   FilterByColumnName="StartLocation"
                   ShowPaging="false"
                   PageSize="int.MaxValue"
@@ -47,14 +49,14 @@ else
 
     private bool isLoading;
     private Race race;
-    private GetRaceStageDto[] stages;
+    private GetAllRaceStagesVm vm;
 
     protected override async Task OnInitializedAsync()
     {
         isLoading = true;
 
         race = await Http.GetFromJsonAsync<Race>($"api/races/{raceId}");
-        stages = await Http.GetFromJsonAsync<GetRaceStageDto[]>($"api/races/{raceId}/stages");
+        vm = await Http.GetFromJsonAsync<GetAllRaceStagesVm>($"api/races/{raceId}/stages");
 
         isLoading = false;
     }

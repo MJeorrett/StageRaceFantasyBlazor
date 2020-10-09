@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using StageRaceFantasy.Application.Common.Interfaces;
 using StageRaceFantasy.Application.Common.Requests;
@@ -11,7 +12,7 @@ namespace StageRaceFantasy.Application.FantasyTeams.Queries.GetAll
     {
     }
 
-    public class GetAllFantasyTeamsHandler : IApplicationQueryHandler<GetAllFantasyTeamsQuery, GetAllFantasyTeamsVm>
+    public class GetAllFantasyTeamsHandler : ApplicationRequestHandler<GetAllFantasyTeamsQuery, GetAllFantasyTeamsVm>
     {
         private readonly IApplicationDbContext _dbContext;
         private readonly IMapper _mapper;
@@ -22,11 +23,16 @@ namespace StageRaceFantasy.Application.FantasyTeams.Queries.GetAll
             _mapper = mapper;
         }
 
-        public async Task<ApplicationRequestResult<GetAllFantasyTeamsVm>> Handle(GetAllFantasyTeamsQuery request, CancellationToken cancellationToken)
+        public override async Task<ApplicationRequestResult<GetAllFantasyTeamsVm>> Handle(GetAllFantasyTeamsQuery request, CancellationToken cancellationToken)
         {
-            var fantasyTeams = await _dbContext.FantasyTeams.ToListAsync();
+            var fantasyTeamDtos = await _dbContext.FantasyTeams
+                .ProjectTo<FantasyTeamDto>(_mapper.ConfigurationProvider)
+                .ToListAsync(cancellationToken);
 
-            return new(_mapper.Map<GetAllFantasyTeamsVm>(fantasyTeams));
+            return Success(new GetAllFantasyTeamsVm()
+            {
+                FantasyTeams = fantasyTeamDtos,
+            });
         }
     }
 }

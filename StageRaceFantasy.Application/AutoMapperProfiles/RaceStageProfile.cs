@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using StageRaceFantasy.Application.RaceStages.Queries.GetById;
 using StageRaceFantasy.Domain.Entities;
 
 namespace StageRaceFantasy.Application.AutoMapperProfiles
@@ -7,7 +8,7 @@ namespace StageRaceFantasy.Application.AutoMapperProfiles
     {
         public RaceStageProfile()
         {
-            CreateMap<RaceStage, GetRaceStageDto>();
+            CreateMap<RaceStage, GetRaceStageByIdVm>();
         }
     }
 }
