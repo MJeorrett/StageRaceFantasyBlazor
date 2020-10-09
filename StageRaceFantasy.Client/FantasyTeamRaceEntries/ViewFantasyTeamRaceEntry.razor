@@ -1,14 +1,17 @@
 ﻿@page "/fantasy-teams/{teamId:int}/race-entries/{raceId:int}"
 
+@using StageRaceFantasy.Application.FantasyTeamRaceEntries.Queries.GetById
+@using StageRaceFantasy.Application.RiderRaceEntries.Queries.GetAll
+
 @inject HttpClient httpClient
 
-@if (raceEntry == null || riderSelections == null)
+@if (vm == null || riderSelections == null)
 {
     <Loader />
 }
 else
 {
-    <MatHeadline2>@raceEntry.RaceName</MatHeadline2>
+    <MatHeadline2>@vm.RaceName</MatHeadline2>
 
     <MatHeadline4>Rider Selections</MatHeadline4>
 
@@ -65,7 +68,7 @@ else
 
 @code {
 
-    record RiderSelectionRow(int Index, GetFantasyTeamRaceEntryDto.Rider Rider)
+    record RiderSelectionRow(int Index, RiderDto Rider)
     {
         public RiderSelectionRow(int index)
             : this(index, null)
@@ -77,25 +80,25 @@ else
     [Parameter] public int teamId { get; set; }
     [Parameter] public int raceId { get; set; }
 
-    private GetFantasyTeamRaceEntryDto raceEntry;
+    private GetFantasyTeamRaceEntryByIdVm vm;
     private List<RiderSelectionRow> riderSelections;
-    private GetRiderRaceEntryDto[] availableRiders;
+    private RiderRaceEntryDto[] availableRiders;
     private int selectedRiderId;
 
     protected override async Task OnInitializedAsync()
     {
         selectedRiderId = 0;
         riderSelections = null;
-        raceEntry = await httpClient.GetJsonAsync<GetFantasyTeamRaceEntryDto>($"api/fantasy-teams/{teamId}/race-entries/{raceId}");
-        var allEnteredRiders = await httpClient.GetJsonAsync<GetRiderRaceEntryDto[]>($"api/races/{raceId}/entries");
+        vm = await httpClient.GetJsonAsync<GetFantasyTeamRaceEntryByIdVm>($"api/fantasy-teams/{teamId}/race-entries/{raceId}");
+        var allEnteredRiders = await httpClient.GetJsonAsync<GetAllRiderRaceEntriesVm>($"api/races/{raceId}/entries");
 
-        availableRiders = allEnteredRiders.Where(x => !raceEntry.Riders.Any(r => r.Id == x.RiderId)).ToArray();
+        availableRiders = allEnteredRiders.Entries.Where(x => !vm.Riders.Any(r => r.Id == x.RiderId)).ToArray();
 
-        riderSelections = raceEntry.Riders
+        riderSelections = vm.Riders
             .Select((x, i) => new RiderSelectionRow(i + 1, x))
             .ToList();
 
-        for (int i = riderSelections.Count(); i < raceEntry.FantasyTeamSize; i++)
+        for (int i = riderSelections.Count(); i < vm.FantasyTeamSize; i++)
         {
             riderSelections.Add(new(i + 1));
         }

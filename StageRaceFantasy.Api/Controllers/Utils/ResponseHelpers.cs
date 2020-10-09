@@ -41,7 +41,7 @@ namespace StageRaceFantasy.Server.Controllers.Utils
             return controller.CreatedAtAction(actionName, routeValues, requestResult.Content);
         }
 
-        public static ActionResult BuildStatusCodeResult(ControllerBase controller,
+        public static ActionResult BuildStatusCodeResponse(ControllerBase controller,
                                                          ApplicationRequestResult requestResult,
                                                          int statusCode)
         {

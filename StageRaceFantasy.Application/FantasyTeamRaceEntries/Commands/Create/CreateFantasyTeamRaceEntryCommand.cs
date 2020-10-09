@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using StageRaceFantasy.Application.Common.Interfaces;
 using StageRaceFantasy.Application.Common.Requests;
 using StageRaceFantasy.Domain.Entities;
@@ -7,20 +6,25 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StageRaceFantasy.Application.Commands.FanasyTeamRaceEntries
+namespace StageRaceFantasy.Application.FantasyTeamRaceEntries.Commands.Create
 {
-    public class CreateFantasyTeamRaceEntryHandler : ApplicationRequestHandler<CreateFantasyTeamRaceEntryCommand, GetFantasyTeamRaceEntryDto>
+    public record CreateFantasyTeamRaceEntryCommand(int FantasyTeamId, int RaceId)
+        : IApplicationCommand
+    {
+    }
+
+    public class CreateFantasyTeamRaceEntryHandler : ApplicationRequestHandler<CreateFantasyTeamRaceEntryCommand>
     {
         private readonly IApplicationDbContext _dbContext;
-        private readonly IMapper _mapper;
 
-        public CreateFantasyTeamRaceEntryHandler(IApplicationDbContext dbContext, IMapper mapper)
+        public CreateFantasyTeamRaceEntryHandler(IApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
-            _mapper = mapper;
         }
 
-        public override async Task<ApplicationRequestResult<GetFantasyTeamRaceEntryDto>> Handle(CreateFantasyTeamRaceEntryCommand request, CancellationToken cancellationToken)
+        public override async Task<ApplicationRequestResult> Handle(
+            CreateFantasyTeamRaceEntryCommand request,
+            CancellationToken cancellationToken)
         {
             var raceId = request.RaceId;
             var teamId = request.FantasyTeamId;
@@ -38,10 +42,10 @@ namespace StageRaceFantasy.Application.Commands.FanasyTeamRaceEntries
                 FantasyTeamId = teamId,
             };
 
-            await _dbContext.FantasyTeamRaceEntries.AddAsync(entry);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.FantasyTeamRaceEntries.AddAsync(entry, cancellationToken);
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return Success(_mapper.Map<GetFantasyTeamRaceEntryDto>(entry));
+            return Success();
         }
 
         public bool FantasyTeamRaceEntryExists(int raceId, int teamId)

@@ -46,7 +46,7 @@ namespace StageRaceFantasy.Server.Controllers
 
             var result = await _mediator.Send(command);
 
-            return ResponseHelpers.BuildStatusCodeResult(this, result, 201);
+            return ResponseHelpers.BuildStatusCodeResponse(this, result, 201);
         }
 
         [HttpDelete("{riderId}")]

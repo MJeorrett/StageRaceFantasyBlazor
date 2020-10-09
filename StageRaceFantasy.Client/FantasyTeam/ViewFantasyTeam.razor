@@ -1,6 +1,7 @@
 ﻿@page "/fantasy-teams/{teamId:int}"
 
-@using StageRaceFantasy.Application.FantasyTeams.Queries.GetById 
+@using StageRaceFantasy.Application.FantasyTeams.Queries.GetById
+@using StageRaceFantasy.Application.FantasyTeamRaceEntries.Commands.Create
 
 @inject HttpClient httpClient
 
@@ -73,10 +74,7 @@ else
 
     private async Task EnterRace()
     {
-        var raceEntry = new CreateFantasyTeamRaceEntryDto()
-        {
-            RaceId = selectedRaceId,
-        };
+        var raceEntry = new CreateFantasyTeamRaceEntryCommand(teamId, selectedRaceId);
 
         await httpClient.PostAsJsonAsync($"api/fantasy-teams/{teamId}/race-entries", raceEntry);
 

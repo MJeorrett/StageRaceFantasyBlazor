@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Application.Commands.FanasyTeamRaceEntries
 {
+    public record AddRiderToFantasyTeamRaceEntryCommand(int TeamId, int RaceId, int RiderId)
+        : IApplicationCommand
+    {
+    }
+
     public class AddRiderToFantasyTeamRaceEntryHandler : ApplicationRequestHandler<AddRiderToFantasyTeamRaceEntryCommand>
     {
         private readonly IApplicationDbContext _dbContext;
@@ -17,7 +22,8 @@ namespace StageRaceFantasy.Application.Commands.FanasyTeamRaceEntries
             _dbContext = dbContext;
         }
 
-        public override async Task<ApplicationRequestResult> Handle(AddRiderToFantasyTeamRaceEntryCommand request, CancellationToken cancellationToken)
+        public override async Task<ApplicationRequestResult> Handle(AddRiderToFantasyTeamRaceEntryCommand request,
+                                                                    CancellationToken cancellationToken)
         {
             var teamId = request.TeamId;
             var raceId = request.RaceId;
@@ -25,9 +31,12 @@ namespace StageRaceFantasy.Application.Commands.FanasyTeamRaceEntries
 
             var raceEntry = await _dbContext.FantasyTeamRaceEntries
                 .Include(x => x.FantasyTeamRaceEntryRiders)
-                .FirstOrDefaultAsync(x => x.FantasyTeamId == teamId && x.RaceId == raceId);
+                .FirstOrDefaultAsync(
+                    x => x.FantasyTeamId == teamId && x.RaceId == raceId,
+                    cancellationToken);
 
-            var riderExists = await _dbContext.Riders.AnyAsync(x => x.Id == riderId);
+            var riderExists = await _dbContext.Riders
+                .AnyAsync(x => x.Id == riderId, cancellationToken);
 
             if (raceEntry == null || !riderExists) return NotFound();
 
@@ -41,7 +50,7 @@ namespace StageRaceFantasy.Application.Commands.FanasyTeamRaceEntries
                 RiderId = riderId,
             });
 
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
             return Success();
         }

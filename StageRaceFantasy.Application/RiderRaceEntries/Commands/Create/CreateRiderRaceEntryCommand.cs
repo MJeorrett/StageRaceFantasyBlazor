@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using StageRaceFantasy.Application.Common.Interfaces;
 using StageRaceFantasy.Application.Common.Requests;
 using StageRaceFantasy.Domain.Entities;
@@ -17,12 +16,10 @@ namespace StageRaceFantasy.Application.RiderRaceEntries.Commands.Create
     public class CreateRiderRaceEntryHandler : ApplicationRequestHandler<CreateRiderRaceEntryCommand>
     {
         private readonly IApplicationDbContext _dbContext;
-        private readonly IMapper _mapper;
 
-        public CreateRiderRaceEntryHandler(IApplicationDbContext dbContext, IMapper mapper)
+        public CreateRiderRaceEntryHandler(IApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
-            _mapper = mapper;
         }
 
         public override async Task<ApplicationRequestResult> Handle(
