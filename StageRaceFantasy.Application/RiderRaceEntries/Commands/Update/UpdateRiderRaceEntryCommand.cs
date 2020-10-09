@@ -1,10 +1,16 @@
-﻿using StageRaceFantasy.Application.Common.Interfaces;
+﻿using MediatR;
+using StageRaceFantasy.Application.Common.Interfaces;
 using StageRaceFantasy.Application.Common.Requests;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StageRaceFantasy.Application.Commands
+namespace StageRaceFantasy.Application.RiderRaceEntries.Commands.Update
 {
+    public record UpdateRiderRaceEntryCommand(int RaceId, int RiderId, int BibNumber, int StarValue)
+        : IRequest<ApplicationRequestResult>
+    {
+    }
+
     public class UpdateRiderRaceEntryHandler : ApplicationCommandHandler<UpdateRiderRaceEntryCommand>
     {
         private readonly IApplicationDbContext _dbContext;
@@ -19,12 +25,13 @@ namespace StageRaceFantasy.Application.Commands
             var raceId = request.RaceId;
             var riderId = request.RiderId;
 
-            var riderRaceEntry = await _dbContext.RiderRaceEntries.FindAsync(raceId, riderId);
+            var riderRaceEntry = await _dbContext.RiderRaceEntries
+                .FindAsync(new object[] { raceId, riderId }, cancellationToken: cancellationToken);
 
             if (riderRaceEntry == null) return NotFound();
 
-            riderRaceEntry.BibNumber = request.dto.BibNumber;
-            riderRaceEntry.StarValue = request.dto.StarValue;
+            riderRaceEntry.BibNumber = request.BibNumber;
+            riderRaceEntry.StarValue = request.StarValue;
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 

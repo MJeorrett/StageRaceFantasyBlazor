@@ -2,12 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using StageRaceFantasy.Application.Common.Interfaces;
 using StageRaceFantasy.Application.Common.Requests;
-using StageRaceFantasy.Application.RiderRaceEntries.Commands.Create;
 using StageRaceFantasy.Domain.Entities;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StageRaceFantasy.Application.Commands
+namespace StageRaceFantasy.Application.RiderRaceEntries.Commands.Create
 {
     public class CreateRiderRaceEntryCommand :
         CreateRiderRaceEntryDto,

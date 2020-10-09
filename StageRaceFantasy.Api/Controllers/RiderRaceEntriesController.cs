@@ -2,9 +2,10 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using StageRaceFantasy.Application.Commands;
 using StageRaceFantasy.Application.Queries;
 using StageRaceFantasy.Application.RiderRaceEntries.Commands.Create;
+using StageRaceFantasy.Application.RiderRaceEntries.Commands.Delete;
+using StageRaceFantasy.Application.RiderRaceEntries.Commands.Update;
 using StageRaceFantasy.Domain.Entities;
 using StageRaceFantasy.Server.Controllers.Utils;
 
@@ -40,15 +41,15 @@ namespace StageRaceFantasy.Server.Controllers
         }
 
         [HttpPut("{riderId}")]
-        public async Task<IActionResult> PutRiderRaceEntry(int raceId, int riderId, UpdateRiderRaceEntryDto updateRiderRaceEntryDto)
+        public async Task<IActionResult> PutRiderRaceEntry(int raceId, int riderId, UpdateRiderRaceEntryCommand command)
         {
-            var command = new UpdateRiderRaceEntryCommand(raceId, riderId, updateRiderRaceEntryDto);
+            if (command.RaceId != raceId || command.RiderId != riderId) return BadRequest();
+
             var result = await _mediator.Send(command);
 
             return ResponseHelpers.BuildNoContentResponse(this, result);
         }
 
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<CreateRiderRaceEntryDto>> PostRiderRaceEntry(int raceId, CreateRiderRaceEntryCommand command)
         {
