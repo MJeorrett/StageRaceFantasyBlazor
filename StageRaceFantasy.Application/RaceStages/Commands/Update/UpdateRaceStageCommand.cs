@@ -3,8 +3,16 @@ using StageRaceFantasy.Application.Common.Requests;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StageRaceFantasy.Application.Commands.RaceStages
+namespace StageRaceFantasy.Application.RaceStages.Commands.Update
 {
+    public record UpdateRaceStageCommand : IApplicationCommand
+    {
+        public int RaceId { get; init; }
+        public int StageId { get; init; }
+        public string StartLocation { get; init; }
+        public string FinishLocation { get; init; }
+    }
+
     public class UpdateRaceStageHandler : ApplicationCommandHandler<UpdateRaceStageCommand>
     {
         private readonly IApplicationDbContext _dbContext;
@@ -19,7 +27,7 @@ namespace StageRaceFantasy.Application.Commands.RaceStages
             var raceId = request.RaceId;
             var stageId = request.StageId;
 
-            var stage = await _dbContext.RaceStages.FindAsync(stageId);
+            var stage = await _dbContext.RaceStages.FindAsync(new object[] { stageId }, cancellationToken);
 
             if (stage == null) NotFound();
 
@@ -28,7 +36,7 @@ namespace StageRaceFantasy.Application.Commands.RaceStages
             stage.FinishLocation = request.FinishLocation;
             stage.StartLocation = request.StartLocation;
 
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
             return Success();
         }

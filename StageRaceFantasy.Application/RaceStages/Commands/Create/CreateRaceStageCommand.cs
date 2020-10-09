@@ -5,8 +5,15 @@ using StageRaceFantasy.Domain.Entities;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StageRaceFantasy.Application.Commands.RaceStages
+namespace StageRaceFantasy.Application.RaceStages.Commands.Create
 {
+    public record CreateRaceStageCommand : IApplicationCommand<GetRaceStageDto>
+    {
+        public int RaceId { get; init; }
+        public string StartLocation { get; init; }
+        public string FinishLocation { get; init; }
+    }
+
     public class CreateRaceStageHandler : ApplicationCommandHandler<CreateRaceStageCommand, GetRaceStageDto>
     {
         private readonly IApplicationDbContext _dbContext;
@@ -22,7 +29,7 @@ namespace StageRaceFantasy.Application.Commands.RaceStages
         {
             var raceId = request.RaceId;
 
-            var race = await _dbContext.Races.FindAsync(raceId);
+            var race = await _dbContext.Races.FindAsync(new object[] { raceId }, cancellationToken: cancellationToken);
 
             if (race == null) return NotFound();
 
@@ -34,7 +41,7 @@ namespace StageRaceFantasy.Application.Commands.RaceStages
             };
 
             await _dbContext.RaceStages.AddAsync(raceStage);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
             return Success(_mapper.Map<GetRaceStageDto>(raceStage));
         }
