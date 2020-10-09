@@ -22,7 +22,7 @@ namespace StageRaceFantasy.Application.Queries
             _mapper = mapper;
         }
 
-        public async Task<QueryResult<List<GetRiderRaceEntryDto>>> Handle(GetAllRiderRaceEntriesQuery request, CancellationToken cancellationToken)
+        public async Task<ApplicationRequestResult<List<GetRiderRaceEntryDto>>> Handle(GetAllRiderRaceEntriesQuery request, CancellationToken cancellationToken)
         {
             var raceId = request.RaceId;
 

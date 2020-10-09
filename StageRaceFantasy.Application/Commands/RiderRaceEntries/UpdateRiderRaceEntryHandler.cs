@@ -14,7 +14,7 @@ namespace StageRaceFantasy.Application.Commands
             _dbContext = dbContext;
         }
 
-        public override async Task<CommandResult> Handle(UpdateRiderRaceEntryCommand request, CancellationToken cancellationToken)
+        public override async Task<ApplicationRequestResult> Handle(UpdateRiderRaceEntryCommand request, CancellationToken cancellationToken)
         {
             var raceId = request.RaceId;
             var riderId = request.RiderId;

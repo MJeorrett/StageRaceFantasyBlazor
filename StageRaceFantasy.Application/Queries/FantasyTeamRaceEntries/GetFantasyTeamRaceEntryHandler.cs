@@ -19,7 +19,7 @@ namespace StageRaceFantasy.Application.Queries.FantasyTeamRaceEntries
             _mapper = mapper;
         }
 
-        public async Task<QueryResult<GetFantasyTeamRaceEntryDto>> Handle(GetFantasyTeamRaceEntryQuery request, CancellationToken cancellationToken)
+        public async Task<ApplicationRequestResult<GetFantasyTeamRaceEntryDto>> Handle(GetFantasyTeamRaceEntryQuery request, CancellationToken cancellationToken)
         {
             var teamId = request.FantasyTeamId;
             var raceId = request.RaceId;

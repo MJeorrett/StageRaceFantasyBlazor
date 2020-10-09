@@ -3,93 +3,95 @@ using System.Collections.Generic;
 
 namespace StageRaceFantasy.Application.Common.Requests
 {
-    public record CommandResult<T>
+    public record ApplicationRequestResult<T>
     {
         public T Content { get; init; }
         public bool IsBadRequest { get; init; }
         public bool IsNotFound { get; init; }
         public IEnumerable<ValidationFailure> ValidationFailures { get; init; }
 
-        public CommandResult()
+        public ApplicationRequestResult()
         {
             ValidationFailures = new List<ValidationFailure>();
         }
 
-        public CommandResult(T content) : this()
+        public ApplicationRequestResult(T content) : this()
         {
             Content = content;
         }
 
-        public CommandResult(IEnumerable<ValidationFailure> validationFailures)
+        public ApplicationRequestResult(IEnumerable<ValidationFailure> validationFailures)
         {
             IsBadRequest = true;
             ValidationFailures = validationFailures;
         }
     }
 
-    public record CommandResult
+
+
+    public record ApplicationRequestResult
     {
         public bool IsBadRequest { get; init; }
         public bool IsNotFound { get; init; }
         public IEnumerable<ValidationFailure> ValidationFailures { get; init; }
 
-        public CommandResult()
+        public ApplicationRequestResult()
         {
             ValidationFailures = new List<ValidationFailure>();
         }
 
-        public CommandResult(IEnumerable<ValidationFailure> validationFailures)
+        public ApplicationRequestResult(IEnumerable<ValidationFailure> validationFailures)
         {
             IsBadRequest = true;
             ValidationFailures = validationFailures;
         }
 
-        public static CommandResult<T> Success<T>(T content)
+        public static ApplicationRequestResult<T> Success<T>(T content)
         {
-            return new CommandResult<T>(content);
+            return new ApplicationRequestResult<T>(content);
         }
 
-        public static CommandResult Success()
+        public static ApplicationRequestResult Success()
         {
-            return new CommandResult();
+            return new ApplicationRequestResult();
         }
 
-        public static CommandResult<T> BadRequest<T>(IEnumerable<ValidationFailure> validationFailures)
+        public static ApplicationRequestResult<T> BadRequest<T>(IEnumerable<ValidationFailure> validationFailures)
         {
-            return new CommandResult<T>()
+            return new ApplicationRequestResult<T>()
             {
                 IsBadRequest = true,
                 ValidationFailures = validationFailures,
             };
         }
 
-        public static CommandResult<T> BadRequest<T>()
+        public static ApplicationRequestResult<T> BadRequest<T>()
         {
-            return new CommandResult<T>()
+            return new ApplicationRequestResult<T>()
             {
                 IsBadRequest = true,
             };
         }
 
-        public static CommandResult BadRequest()
+        public static ApplicationRequestResult BadRequest()
         {
-            return new CommandResult()
+            return new ApplicationRequestResult()
             {
                 IsBadRequest = true,
             };
         }
 
-        public static CommandResult<T> NotFound<T>()
+        public static ApplicationRequestResult<T> NotFound<T>()
         {
-            return new CommandResult<T>()
+            return new ApplicationRequestResult<T>()
             {
                 IsNotFound = true,
             };
         }
 
-        public static CommandResult NotFound()
+        public static ApplicationRequestResult NotFound()
         {
-            return new CommandResult()
+            return new ApplicationRequestResult()
             {
                 IsNotFound = true,
             };

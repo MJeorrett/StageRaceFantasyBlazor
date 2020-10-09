@@ -22,7 +22,7 @@ namespace StageRaceFantasy.Application.FantasyTeams.Queries.GetById
             _mapper = mapper;
         }
 
-        public async Task<QueryResult<GetFantasyTeamVm>> Handle(GetFantasyTeamByIdQuery request, CancellationToken cancellationToken)
+        public async Task<ApplicationRequestResult<GetFantasyTeamVm>> Handle(GetFantasyTeamByIdQuery request, CancellationToken cancellationToken)
         {
             var teamId = request.TeamId;
 

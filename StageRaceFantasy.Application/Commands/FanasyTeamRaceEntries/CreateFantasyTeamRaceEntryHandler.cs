@@ -20,7 +20,7 @@ namespace StageRaceFantasy.Application.Commands.FanasyTeamRaceEntries
             _mapper = mapper;
         }
 
-        public override async Task<CommandResult<GetFantasyTeamRaceEntryDto>> Handle(CreateFantasyTeamRaceEntryCommand request, CancellationToken cancellationToken)
+        public override async Task<ApplicationRequestResult<GetFantasyTeamRaceEntryDto>> Handle(CreateFantasyTeamRaceEntryCommand request, CancellationToken cancellationToken)
         {
             var raceId = request.RaceId;
             var teamId = request.FantasyTeamId;

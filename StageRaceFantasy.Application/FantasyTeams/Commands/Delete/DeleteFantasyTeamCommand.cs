@@ -18,7 +18,7 @@ namespace StageRaceFantasy.Application.FantasyTeams.Commands.Delete
             _dbContext = dbContext;
         }
 
-        public override async Task<CommandResult> Handle(DeleteFantasyTeamCommand request, CancellationToken cancellationToken)
+        public override async Task<ApplicationRequestResult> Handle(DeleteFantasyTeamCommand request, CancellationToken cancellationToken)
         {
             var id = request.Id;
 
