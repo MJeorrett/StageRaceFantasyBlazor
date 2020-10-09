@@ -7,7 +7,7 @@ namespace StageRaceFantasy.Application.FantasyTeams.Commands.Update
     {
         public UpdateFantasyTeamCommandValidator()
         {
-            RuleFor(c => c.Name).FantasyTeamName();
+            RuleFor(c => c.Name).FantasyTeamNameRules();
         }
     }
 }

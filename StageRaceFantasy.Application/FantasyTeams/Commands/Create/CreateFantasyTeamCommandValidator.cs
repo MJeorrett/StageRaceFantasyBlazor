@@ -7,7 +7,7 @@ namespace StageRaceFantasy.Application.FantasyTeams.Commands.Create
     {
         public CreateFantasyTeamCommandValidator()
         {
-            RuleFor(c => c.Name).FantasyTeamName();
+            RuleFor(c => c.Name).FantasyTeamNameRules();
         }
     }
 }
