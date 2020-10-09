@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using StageRaceFantasy.Application.ValidationRules;
 
 namespace StageRaceFantasy.Application.FantasyTeams.Commands.Create
 {
@@ -6,9 +7,7 @@ namespace StageRaceFantasy.Application.FantasyTeams.Commands.Create
     {
         public CreateFantasyTeamCommandValidator()
         {
-            RuleFor(ft => ft.Name)
-                .NotEmpty()
-                .MaximumLength(200);
+            RuleFor(c => c.Name).FantasyTeamName();
         }
     }
 }

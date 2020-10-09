@@ -1,11 +1,14 @@
 ﻿using StageRaceFantasy.Application.Common.Interfaces;
 using StageRaceFantasy.Application.Common.Requests;
-using StageRaceFantasy.Application.FantasyTeams.Commands.Update;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StageRaceFantasy.Application.Commands
+namespace StageRaceFantasy.Application.FantasyTeams.Commands.Update
 {
+    public record UpdateFantasyTeamCommand(int Id, string Name) : IApplicationCommand
+    {
+    }
+
     public class UpdateFantasyTeamHandler : ApplicationCommandHandler<UpdateFantasyTeamCommand>
     {
         private readonly IApplicationDbContext _dbContext;
@@ -20,13 +23,13 @@ namespace StageRaceFantasy.Application.Commands
             var id = request.Id;
             var newName = request.Name;
 
-            var team = await _dbContext.FantasyTeams.FindAsync(id);
+            var team = await _dbContext.FantasyTeams.FindAsync(new object[] { id }, cancellationToken: cancellationToken);
 
             if (team == null) return NotFound();
 
             team.Name = newName;
 
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
             return Success();
         }

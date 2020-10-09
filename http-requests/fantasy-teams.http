@@ -8,7 +8,7 @@ GET {{host}}/api/fantasy-teams
 
 ###
 
-GET {{host}}/api/fantasy-teams/1
+GET {{host}}/api/fantasy-teams/-1
 
 ###
 
@@ -16,8 +16,19 @@ POST {{host}}/api/fantasy-teams
 Content-Type: application/json
 
 {
-  "name": "Catriona's Wheel Suckers"
+  "name": ""
 }
+
 ###
 
-DELETE {{host}}/api/fantasy-teams/1
+PUT {{host}}/api/fantasy-teams/7
+Content-Type: application/json
+
+{
+  "id": 7,
+  "name": "Creasote"
+}
+
+###
+
+DELETE {{host}}/api/fantasy-teams/6
