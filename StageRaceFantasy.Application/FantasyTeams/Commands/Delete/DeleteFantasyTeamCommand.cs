@@ -3,8 +3,12 @@ using StageRaceFantasy.Application.Common.Requests;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StageRaceFantasy.Application.Commands
+namespace StageRaceFantasy.Application.FantasyTeams.Commands.Delete
 {
+    public record DeleteFantasyTeamCommand(int Id) : IApplicationCommand
+    {
+    }
+
     public class DeleteFantasyTeamHandler : ApplicationCommandHandler<DeleteFantasyTeamCommand>
     {
         private IApplicationDbContext _dbContext;

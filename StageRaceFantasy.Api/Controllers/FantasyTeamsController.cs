@@ -7,6 +7,7 @@ using StageRaceFantasy.Application.FantasyTeams.Queries.GetById;
 using StageRaceFantasy.Application.FantasyTeams.Queries.GetAll;
 using StageRaceFantasy.Domain.Entities;
 using StageRaceFantasy.Server.Controllers.Utils;
+using StageRaceFantasy.Application.FantasyTeams.Commands.Delete;
 
 namespace StageRaceFantasy.Server.Controllers
 {
@@ -33,7 +34,7 @@ namespace StageRaceFantasy.Server.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<GetFantasyTeamVm>> GetFantasyTeam(int id)
         {
-            var query = new GetFantasyTeamById(id);
+            var query = new GetFantasyTeamByIdQuery(id);
             var result = await _mediator.Send(query);
 
             return ResponseHelpers.BuildRawContentResponse(this, result);
