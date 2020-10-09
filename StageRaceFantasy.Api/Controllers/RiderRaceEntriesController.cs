@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StageRaceFantasy.Application.Commands;
 using StageRaceFantasy.Application.Queries;
+using StageRaceFantasy.Application.RiderRaceEntries.Commands.Create;
 using StageRaceFantasy.Domain.Entities;
 using StageRaceFantasy.Server.Controllers.Utils;
 
@@ -49,11 +50,9 @@ namespace StageRaceFantasy.Server.Controllers
 
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<GetRiderRaceEntryDto>> PostRiderRaceEntry(int raceId, CreateRiderRaceEntryDto createRiderRaceEntryDto)
+        public async Task<ActionResult<CreateRiderRaceEntryDto>> PostRiderRaceEntry(int raceId, CreateRiderRaceEntryCommand command)
         {
-            var command = new CreateRiderRaceEntryCommand(
-                raceId,
-                createRiderRaceEntryDto.RiderId);
+            if (command.RaceId != raceId) return BadRequest();
 
             var result = await _mediator.Send(command);
 
