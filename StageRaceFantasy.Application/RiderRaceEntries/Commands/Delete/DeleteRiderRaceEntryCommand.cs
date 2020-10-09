@@ -3,8 +3,13 @@ using StageRaceFantasy.Application.Common.Requests;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StageRaceFantasy.Application.Commands
+namespace StageRaceFantasy.Application.RiderRaceEntries.Commands.Delete
 {
+    public record DeleteRiderRaceEntryCommand(int RaceId, int RiderId) :
+        IApplicationCommand
+    {
+    }
+
     public class DeleteRiderRaceEntryHandler : ApplicationCommandHandler<DeleteRiderRaceEntryCommand>
     {
         private readonly IApplicationDbContext _dbContext;
@@ -19,12 +24,13 @@ namespace StageRaceFantasy.Application.Commands
             var raceId = request.RaceId;
             var riderId = request.RiderId;
 
-            var riderRaceEntry = await _dbContext.RiderRaceEntries.FindAsync(raceId, riderId);
+            var riderRaceEntry = await _dbContext.RiderRaceEntries
+                .FindAsync(new object[] { raceId, riderId }, cancellationToken: cancellationToken);
 
             if (riderRaceEntry == null) return NotFound();
 
             _dbContext.RiderRaceEntries.Remove(riderRaceEntry);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
             return Success();
         }

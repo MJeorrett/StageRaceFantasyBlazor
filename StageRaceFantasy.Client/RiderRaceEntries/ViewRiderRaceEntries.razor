@@ -1,6 +1,7 @@
 ﻿@page "/races/{raceId:int}/entries"
 
 @using StageRaceFantasy.Application.RiderRaceEntries.Commands.Create
+@using StageRaceFantasy.Application.RiderRaceEntries.Commands.Update
 
 @inject HttpClient httpClient
 @inject IJSRuntime js
@@ -39,15 +40,15 @@ else
                 <td>@context.RiderLastName</td>
                 <td>
                     @if (context.IsEntered)
-                    {
+                            {
                         <MatTextField Value="@context.BibNumber" ValueChanged="@((int newBibNumber) => context.BibNumber = newBibNumber)" OnFocusOut=@(() => UpdateRaceEntry(context.RiderId))></MatTextField>
-                    }
+                            }
                 </td>
                 <td>
                     @if (context.IsEntered)
-                    {
+                            {
                         <MatTextField Value="@context.StarValue" ValueChanged="@((int newStarValue) => context.StarValue = newStarValue)" OnFocusOut=@(() => UpdateRaceEntry(context.RiderId))></MatTextField>
-                    }
+                            }
                 </td>
                 <td>
                     <MatCheckbox Value="@context.IsEntered" ValueChanged="@((bool newIsEntered) => newIsEntered ? EnterRider(context.RiderId) : WithdrawRider(context.RiderId))" />
@@ -117,11 +118,11 @@ else
         {
             var raceEntry = raceEntries.FirstOrDefault(x => x.RiderId == modifiedRiderId);
 
-            var update = new UpdateRiderRaceEntryDto()
-            {
-                BibNumber = raceEntry.BibNumber,
-                StarValue = raceEntry.StarValue,
-            };
+            var update = new UpdateRiderRaceEntryCommand(
+                raceEntry.RaceId,
+                raceEntry.RiderId,
+                raceEntry.BibNumber,
+                raceEntry.StarValue);
 
             await httpClient.PutAsJsonAsync($"api/races/{raceId}/entries/{modifiedRiderId}", update);
         }
