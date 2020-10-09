@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Application.Commands.FanasyTeamRaceEntries
 {
-    public class AddRiderToFantasyTeamRaceEntryHandler : ApplicationCommandHandler<AddRiderToFantasyTeamRaceEntryCommand>
+    public class AddRiderToFantasyTeamRaceEntryHandler : ApplicationRequestHandler<AddRiderToFantasyTeamRaceEntryCommand>
     {
         private readonly IApplicationDbContext _dbContext;
 

@@ -9,7 +9,7 @@ namespace StageRaceFantasy.Application.FantasyTeams.Commands.Update
     {
     }
 
-    public class UpdateFantasyTeamHandler : ApplicationCommandHandler<UpdateFantasyTeamCommand>
+    public class UpdateFantasyTeamHandler : ApplicationRequestHandler<UpdateFantasyTeamCommand>
     {
         private readonly IApplicationDbContext _dbContext;
 

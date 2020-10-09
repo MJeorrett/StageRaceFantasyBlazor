@@ -9,7 +9,7 @@ namespace StageRaceFantasy.Application.FantasyTeams.Commands.Delete
     {
     }
 
-    public class DeleteFantasyTeamHandler : ApplicationCommandHandler<DeleteFantasyTeamCommand>
+    public class DeleteFantasyTeamHandler : ApplicationRequestHandler<DeleteFantasyTeamCommand>
     {
         private IApplicationDbContext _dbContext;
 

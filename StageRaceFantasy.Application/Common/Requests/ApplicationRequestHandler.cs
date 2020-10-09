@@ -25,7 +25,7 @@ namespace StageRaceFantasy.Application.Common.Requests
         }
     }
 
-    public abstract class ApplicationCommandHandler<TRequest> : IRequestHandler<TRequest, ApplicationRequestResult>
+    public abstract class ApplicationRequestHandler<TRequest> : IRequestHandler<TRequest, ApplicationRequestResult>
         where TRequest : IRequest<ApplicationRequestResult>
     {
         public abstract Task<ApplicationRequestResult> Handle(TRequest request, CancellationToken cancellationToken);

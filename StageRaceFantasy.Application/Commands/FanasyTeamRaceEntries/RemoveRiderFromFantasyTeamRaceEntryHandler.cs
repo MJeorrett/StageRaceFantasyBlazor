@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Application.Commands.FanasyTeamRaceEntries
 {
-    public class RemoveRiderFromFantasyTeamRaceEntryHandler : ApplicationCommandHandler<RemoveRiderFromFantasyTeamRaceEntryCommand>
+    public class RemoveRiderFromFantasyTeamRaceEntryHandler : ApplicationRequestHandler<RemoveRiderFromFantasyTeamRaceEntryCommand>
     {
         private readonly IApplicationDbContext _dbContext;
 

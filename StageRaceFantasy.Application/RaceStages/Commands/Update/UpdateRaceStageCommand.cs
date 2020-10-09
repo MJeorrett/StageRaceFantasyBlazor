@@ -13,7 +13,7 @@ namespace StageRaceFantasy.Application.RaceStages.Commands.Update
         public string FinishLocation { get; init; }
     }
 
-    public class UpdateRaceStageHandler : ApplicationCommandHandler<UpdateRaceStageCommand>
+    public class UpdateRaceStageHandler : ApplicationRequestHandler<UpdateRaceStageCommand>
     {
         private readonly IApplicationDbContext _dbContext;
 
