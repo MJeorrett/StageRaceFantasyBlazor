@@ -32,7 +32,7 @@ namespace StageRaceFantasy.Server.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<GetFantasyTeamVm>> GetFantasyTeam(int id)
+        public async Task<ActionResult<GetFantasyTeamByIdVm>> GetFantasyTeam(int id)
         {
             var query = new GetFantasyTeamByIdQuery(id);
             var result = await _mediator.Send(query);

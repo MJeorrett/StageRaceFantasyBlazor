@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Application.Common.Requests
 {
-    public abstract class ApplicationCommandHandler<TRequest, TResponse> : IRequestHandler<TRequest, ApplicationRequestResult<TResponse>>
+    public abstract class ApplicationRequestHandler<TRequest, TResponse> : IRequestHandler<TRequest, ApplicationRequestResult<TResponse>>
         where TRequest : IRequest<ApplicationRequestResult<TResponse>>
     {
         public abstract Task<ApplicationRequestResult<TResponse>> Handle(TRequest request, CancellationToken cancellationToken);

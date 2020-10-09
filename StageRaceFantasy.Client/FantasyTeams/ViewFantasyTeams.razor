@@ -10,17 +10,17 @@
     <MatButton Link="fantasy-teams/create">Create New</MatButton>
 </div>
 
-@if (model == null)
+@if (vm == null)
 {
     <Loader />
 }
-else if (model.FantasyTeams.Count == 0)
+else if (vm.FantasyTeams.Count == 0)
 {
     <MatBody1 Style="font-weight: bolder"><em>No Teams Found.</em></MatBody1>
 }
 else
 {
-    <MatTable Items="@model.FantasyTeams"
+    <MatTable Items="@vm.FantasyTeams"
               FilterByColumnName="Name"
               ShowPaging="false"
               PageSize="int.MaxValue"
@@ -42,16 +42,16 @@ else
 }
 
 @code {
-    private GetAllFantasyTeamsVm model;
+    private GetAllFantasyTeamsVm vm;
 
     protected override async Task OnInitializedAsync()
     {
-        model = await httpClient.GetFromJsonAsync<GetAllFantasyTeamsVm>("api/fantasy-teams");
+        vm = await httpClient.GetFromJsonAsync<GetAllFantasyTeamsVm>("api/fantasy-teams");
     }
 
     async Task DeleteTeam(int teamId)
     {
-        var team = model.FantasyTeams.First(x => x.Id == teamId);
+        var team = vm.FantasyTeams.First(x => x.Id == teamId);
 
         if (await js.InvokeAsync<bool>("confirm", $"Do you want to delete fantasy team {team.Name}?"))
         {

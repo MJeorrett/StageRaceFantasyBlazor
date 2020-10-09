@@ -10,7 +10,7 @@ namespace StageRaceFantasy.Application.FantasyTeams.Commands.Create
     {
     }
 
-    public class CreateFantasyTeamHandler : ApplicationCommandHandler<CreateFantasyTeamCommand, FantasyTeam>
+    public class CreateFantasyTeamHandler : ApplicationRequestHandler<CreateFantasyTeamCommand, FantasyTeam>
     {
         private readonly IApplicationDbContext _dbContext;
 

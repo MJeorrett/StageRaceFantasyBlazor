@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Application.Commands
 {
-    public class CreateRiderRaceEntryHandler : ApplicationCommandHandler<CreateRiderRaceEntryCommand, GetRiderRaceEntryDto>
+    public class CreateRiderRaceEntryHandler : ApplicationRequestHandler<CreateRiderRaceEntryCommand, GetRiderRaceEntryDto>
     {
         private readonly IApplicationDbContext _dbContext;
         private readonly IMapper _mapper;

@@ -4,13 +4,13 @@
 
 @inject HttpClient httpClient
 
-@if (team == null)
+@if (vm == null)
 {
     <Loader />
 }
 else
 {
-    <MatHeadline2>@team.Name</MatHeadline2>
+    <MatHeadline2>@vm.Name</MatHeadline2>
 
     if (unenteredRaces.Length == 0)
     {
@@ -28,7 +28,7 @@ else
         <MatButton OnClick="@EnterRace" Disabled="@(selectedRaceId == 0)">Enter</MatButton>
     }
 
-    if (team.RaceEntries.Count() == 0)
+    if (vm.RaceEntries.Count() == 0)
     {
         <MatBody1>You have not entered any races yet.</MatBody1>
     }
@@ -36,7 +36,7 @@ else
     {
         <MatHeadline3>Entered Races</MatHeadline3>
 
-        <MatTable Items="@team.RaceEntries"
+        <MatTable Items="@vm.RaceEntries"
               PageSize="int.MaxValue"
               ShowPaging="false"
               Striped="true">
@@ -57,18 +57,18 @@ else
 }
 
 @code {
-        [Parameter] public int teamId { get; set; }
-    private GetFantasyTeamVm team { get; set; }
+    [Parameter] public int teamId { get; set; }
+    private GetFantasyTeamByIdVm vm { get; set; }
     private Race[] unenteredRaces { get; set; }
     private int selectedRaceId;
 
     protected override async Task OnInitializedAsync()
     {
-        team = await httpClient.GetJsonAsync<GetFantasyTeamVm>($"api/fantasy-teams/{teamId}");
+        vm = await httpClient.GetJsonAsync<GetFantasyTeamByIdVm>($"api/fantasy-teams/{teamId}");
         var allRaces = await httpClient.GetJsonAsync<Race[]>("api/races");
 
         selectedRaceId = 0;
-        unenteredRaces = allRaces.Where(race => !team.RaceEntries.Any(x => x.RaceId == race.Id)).ToArray();
+        unenteredRaces = allRaces.Where(race => !vm.RaceEntries.Any(x => x.RaceId == race.Id)).ToArray();
     }
 
     private async Task EnterRace()

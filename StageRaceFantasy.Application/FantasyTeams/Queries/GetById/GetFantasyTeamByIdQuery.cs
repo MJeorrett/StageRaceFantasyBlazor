@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Application.FantasyTeams.Queries.GetById
 {
-    public record GetFantasyTeamByIdQuery(int TeamId) : IApplicationQuery<GetFantasyTeamVm>
+    public record GetFantasyTeamByIdQuery(int TeamId) : IApplicationQuery<GetFantasyTeamByIdVm>
     {
     }
 
-    public class GetFantasyTeamByIdHandler : IApplicationQueryHandler<GetFantasyTeamByIdQuery, GetFantasyTeamVm>
+    public class GetFantasyTeamByIdHandler : IApplicationQueryHandler<GetFantasyTeamByIdQuery, GetFantasyTeamByIdVm>
     {
         private readonly IApplicationDbContext _dbContext;
         private readonly IMapper _mapper;
@@ -22,7 +22,7 @@ namespace StageRaceFantasy.Application.FantasyTeams.Queries.GetById
             _mapper = mapper;
         }
 
-        public async Task<ApplicationRequestResult<GetFantasyTeamVm>> Handle(GetFantasyTeamByIdQuery request, CancellationToken cancellationToken)
+        public async Task<ApplicationRequestResult<GetFantasyTeamByIdVm>> Handle(GetFantasyTeamByIdQuery request, CancellationToken cancellationToken)
         {
             var teamId = request.TeamId;
 
@@ -39,7 +39,7 @@ namespace StageRaceFantasy.Application.FantasyTeams.Queries.GetById
                 };
             }
 
-            return new(_mapper.Map<GetFantasyTeamVm>(fantasyTeam));
+            return new(_mapper.Map<GetFantasyTeamByIdVm>(fantasyTeam));
         }
     }
 }
