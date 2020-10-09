@@ -1,12 +1,13 @@
 ﻿@page "/races/{raceId:int}/entries"
 
 @using StageRaceFantasy.Application.RiderRaceEntries.Commands.Create
+@using StageRaceFantasy.Application.RiderRaceEntries.Queries.GetAll
 @using StageRaceFantasy.Application.RiderRaceEntries.Commands.Update
 
 @inject HttpClient httpClient
 @inject IJSRuntime js
 
-@if (race == null || raceEntries == null)
+@if (race == null || vm == null)
 {
     <MatBody1 Style="font-weight: bolder"><em>Loading...</em></MatBody1>
 }
@@ -15,13 +16,13 @@ else
     <MatHeadline2>@race.Name</MatHeadline2>
     <MatHeadline4>Race Entries</MatHeadline4>
 
-    if (raceEntries.Length == 0)
+    if (vm.Entries.Count == 0)
     {
         <p>No riders found.</p>
     }
     else
     {
-        <MatTable Items="@raceEntries"
+        <MatTable Items="@vm.Entries"
                   FilterByColumnName="RiderLastName"
                   ShowPaging="false"
                   PageSize="int.MaxValue"
@@ -64,20 +65,20 @@ else
     [Parameter] public int raceId { get; set; }
 
     private Race race;
-    private GetRiderRaceEntryDto[] raceEntries;
+    private GetAllRiderRaceEntriesVm vm;
     private List<int> modifiedRiderIds;
     private bool disableSave;
 
     protected override async Task OnInitializedAsync()
     {
         race = await httpClient.GetFromJsonAsync<Race>($"api/races/{raceId}");
-        raceEntries = await httpClient.GetFromJsonAsync<GetRiderRaceEntryDto[]>($"api/races/{raceId}/entries");
+        vm = await httpClient.GetFromJsonAsync<GetAllRiderRaceEntriesVm>($"api/races/{raceId}/entries");
         modifiedRiderIds = new List<int>();
     }
 
     async Task EnterRider(int riderId)
     {
-        var raceEntry = raceEntries.First(x => x.RiderId == riderId);
+        var raceEntry = vm.Entries.First(x => x.RiderId == riderId);
         raceEntry.IsEntered = true;
 
         var addRaceEntryDto = new CreateRiderRaceEntryDto()
@@ -92,7 +93,7 @@ else
 
     async Task WithdrawRider(int riderId)
     {
-        var raceEntry = raceEntries.First(x => x.RiderId == riderId);
+        var raceEntry = vm.Entries.First(x => x.RiderId == riderId);
         raceEntry.IsEntered = false;
 
         await httpClient.DeleteAsync($"api/races/{raceId}/entries/{riderId}");
@@ -103,7 +104,7 @@ else
 
     void UpdateRaceEntry(int riderId)
     {
-        var raceEntry = raceEntries.First(x => x.RiderId == riderId);
+        var raceEntry = vm.Entries.First(x => x.RiderId == riderId);
 
         if (modifiedRiderIds.Contains(riderId)) return;
 
@@ -116,7 +117,7 @@ else
 
         foreach (int modifiedRiderId in modifiedRiderIds)
         {
-            var raceEntry = raceEntries.FirstOrDefault(x => x.RiderId == modifiedRiderId);
+            var raceEntry = vm.Entries.FirstOrDefault(x => x.RiderId == modifiedRiderId);
 
             var update = new UpdateRiderRaceEntryCommand(
                 raceEntry.RaceId,

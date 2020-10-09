@@ -11,7 +11,7 @@ namespace StageRaceFantasy.Application.RiderRaceEntries.Commands.Update
     {
     }
 
-    public class UpdateRiderRaceEntryHandler : ApplicationCommandHandler<UpdateRiderRaceEntryCommand>
+    public class UpdateRiderRaceEntryHandler : ApplicationRequestHandler<UpdateRiderRaceEntryCommand>
     {
         private readonly IApplicationDbContext _dbContext;
 

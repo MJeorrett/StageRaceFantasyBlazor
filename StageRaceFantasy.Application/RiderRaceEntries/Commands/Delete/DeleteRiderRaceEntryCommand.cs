@@ -10,7 +10,7 @@ namespace StageRaceFantasy.Application.RiderRaceEntries.Commands.Delete
     {
     }
 
-    public class DeleteRiderRaceEntryHandler : ApplicationCommandHandler<DeleteRiderRaceEntryCommand>
+    public class DeleteRiderRaceEntryHandler : ApplicationRequestHandler<DeleteRiderRaceEntryCommand>
     {
         private readonly IApplicationDbContext _dbContext;
 

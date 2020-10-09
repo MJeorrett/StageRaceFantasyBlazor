@@ -10,11 +10,11 @@ namespace StageRaceFantasy.Application.RiderRaceEntries.Commands.Create
 {
     public class CreateRiderRaceEntryCommand :
         CreateRiderRaceEntryDto,
-        IApplicationCommand<CreateRiderRaceEntryDto>
+        IApplicationCommand
     {
     }
 
-    public class CreateRiderRaceEntryHandler : ApplicationRequestHandler<CreateRiderRaceEntryCommand, CreateRiderRaceEntryDto>
+    public class CreateRiderRaceEntryHandler : ApplicationRequestHandler<CreateRiderRaceEntryCommand>
     {
         private readonly IApplicationDbContext _dbContext;
         private readonly IMapper _mapper;
@@ -25,7 +25,7 @@ namespace StageRaceFantasy.Application.RiderRaceEntries.Commands.Create
             _mapper = mapper;
         }
 
-        public override async Task<ApplicationRequestResult<CreateRiderRaceEntryDto>> Handle(
+        public override async Task<ApplicationRequestResult> Handle(
             CreateRiderRaceEntryCommand request,
             CancellationToken cancellationToken)
         {
@@ -51,9 +51,7 @@ namespace StageRaceFantasy.Application.RiderRaceEntries.Commands.Create
             await _dbContext.RiderRaceEntries.AddAsync(riderRaceEntry, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            var getRiderRaceEntryDto = _mapper.Map<CreateRiderRaceEntryDto>(riderRaceEntry);
-
-            return Success(getRiderRaceEntryDto);
+            return Success();
         }
     }
 }
