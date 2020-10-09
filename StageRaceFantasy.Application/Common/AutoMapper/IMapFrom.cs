@@ -6,4 +6,9 @@ namespace StageRaceFantasy.Application.Common.AutoMapper
     {
         void Mapping(Profile profile) => profile.CreateMap(typeof(T), GetType());
     }
+
+    public interface IMapFrom
+    {
+        void Mapping(Profile profile);
+    }
 }
