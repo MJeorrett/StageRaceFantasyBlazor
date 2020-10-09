@@ -22,11 +22,15 @@ else
     [Parameter] public int raceId { get; set; }
 
     Race race;
-    RaceStage stage = new RaceStage();
+    RaceStage stage;
 
     protected async override Task OnInitializedAsync()
     {
         race = await http.GetFromJsonAsync<Race>($"api/races/{raceId}");
+        stage = new RaceStage()
+        {
+            RaceId = raceId,
+        };
     }
 
     async Task Submit()

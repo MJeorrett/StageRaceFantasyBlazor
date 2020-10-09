@@ -2,9 +2,10 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using StageRaceFantasy.Application.Commands.RaceStages;
 using StageRaceFantasy.Application.Queries.GetRaceStages;
 using StageRaceFantasy.Application.Queries.RaceStages;
+using StageRaceFantasy.Application.RaceStages.Commands.Create;
+using StageRaceFantasy.Application.RaceStages.Commands.Update;
 using StageRaceFantasy.Domain.Entities;
 using StageRaceFantasy.Server.Controllers.Utils;
 
@@ -40,29 +41,19 @@ namespace StageRaceFantasy.Server.Controllers
         }
 
         [HttpPut("{stageId}")]
-        public async Task<ActionResult> UpdateRaceStage(int raceId, int stageId, UpdateRaceStageDto updateRaceStageDto)
+        public async Task<ActionResult> UpdateRaceStage(int raceId, int stageId, UpdateRaceStageCommand command)
         {
-            var command = new UpdateRaceStageCommand()
-            {
-                RaceId = raceId,
-                StageId = stageId,
-                StartLocation = updateRaceStageDto.StartLocation,
-                FinishLocation = updateRaceStageDto.FinishLocation,
-            };
+            if (command.RaceId != raceId || command.StageId != stageId) return BadRequest();
 
             var result = await _mediator.Send(command);
 
             return ResponseHelpers.BuildNoContentResponse(this, result);
         }
 
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<GetRaceStageDto>> PostRiderRaceEntry(int raceId, CreateRaceStageDto createRaceStageDto)
+        public async Task<ActionResult<GetRaceStageDto>> PostRaceStage(int raceId, CreateRaceStageCommand command)
         {
-            var command = new CreateRaceStageCommand(
-                raceId,
-                createRaceStageDto.StartLocation,
-                createRaceStageDto.FinishLocation);
+            if (command.RaceId != raceId) return BadRequest();
 
             var result = await _mediator.Send(command);
 
