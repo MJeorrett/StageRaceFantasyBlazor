@@ -7,22 +7,7 @@ namespace StageRaceFantasy.Server.Controllers.Utils
 {
     public static class ResponseHelpers
     {
-        public static ActionResult<T> BuildRawContentResponse<T>(ControllerBase controller, QueryResult<T> queryResult)
-        {
-            if (queryResult.IsBadRequest)
-            {
-                return BuildBadRequestResponse(controller, queryResult);
-            }
-
-            if (queryResult.IsNotFound)
-            {
-                return controller.NotFound();
-            }
-
-            return queryResult.Content;
-        }
-
-        public static ActionResult<T> BuildRawContentResponse<T>(ControllerBase controller, CommandResult<T> commandResult)
+        public static ActionResult<T> BuildRawContentResponse<T>(ControllerBase controller, ApplicationRequestResult<T> commandResult)
         {
             if (commandResult.IsBadRequest)
             {
@@ -37,7 +22,7 @@ namespace StageRaceFantasy.Server.Controllers.Utils
             return commandResult.Content;
         }
 
-        public static ActionResult BuildNoContentResponse(ControllerBase controller, CommandResult commandResult)
+        public static ActionResult BuildNoContentResponse(ControllerBase controller, ApplicationRequestResult commandResult)
         {
             if (commandResult.IsBadRequest)
             {
@@ -54,7 +39,7 @@ namespace StageRaceFantasy.Server.Controllers.Utils
 
         public static ActionResult<T> BuildCreatedAtResponse<T>(
             ControllerBase controller,
-            CommandResult<T> commandResult,
+            ApplicationRequestResult<T> commandResult,
             string actionName,
             Func<object> buildRouteValues)
         {
@@ -72,24 +57,17 @@ namespace StageRaceFantasy.Server.Controllers.Utils
             return controller.CreatedAtAction(actionName, routeValues, commandResult.Content);
         }
 
-        private static ActionResult<T> BuildBadRequestResponse<T>(ControllerBase controller, CommandResult<T> commandResult)
+        private static ActionResult<T> BuildBadRequestResponse<T>(ControllerBase controller, ApplicationRequestResult<T> commandResult)
         {
             return commandResult.ValidationFailures.Any() ?
                     controller.BadRequest(commandResult.ValidationFailures) :
                     controller.BadRequest();
         }
 
-        private static ActionResult BuildBadRequestResponse(ControllerBase controller, CommandResult commandResult)
+        private static ActionResult BuildBadRequestResponse(ControllerBase controller, ApplicationRequestResult commandResult)
         {
             return commandResult.ValidationFailures.Any() ?
                     controller.BadRequest(commandResult.ValidationFailures) :
-                    controller.BadRequest();
-        }
-
-        private static ActionResult<T> BuildBadRequestResponse<T>(ControllerBase controller, QueryResult<T> queryResult)
-        {
-            return queryResult.ValidationFailures.Any() ?
-                    controller.BadRequest(queryResult.ValidationFailures) :
                     controller.BadRequest();
         }
     }

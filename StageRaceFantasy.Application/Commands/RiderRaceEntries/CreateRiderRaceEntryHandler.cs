@@ -20,7 +20,7 @@ namespace StageRaceFantasy.Application.Commands
             _mapper = mapper;
         }
 
-        public override async Task<CommandResult<GetRiderRaceEntryDto>> Handle(CreateRiderRaceEntryCommand request, CancellationToken cancellationToken)
+        public override async Task<ApplicationRequestResult<GetRiderRaceEntryDto>> Handle(CreateRiderRaceEntryCommand request, CancellationToken cancellationToken)
         {
             var raceId = request.RaceId;
             var riderId = request.RiderId;

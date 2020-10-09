@@ -19,7 +19,7 @@ namespace StageRaceFantasy.Application.FantasyTeams.Commands.Create
             _dbContext = dbContext;
         }
 
-        public override async Task<CommandResult<FantasyTeam>> Handle(CreateFantasyTeamCommand request, CancellationToken cancellationToken)
+        public override async Task<ApplicationRequestResult<FantasyTeam>> Handle(CreateFantasyTeamCommand request, CancellationToken cancellationToken)
         {
             var fantasyTeam = new FantasyTeam()
             {

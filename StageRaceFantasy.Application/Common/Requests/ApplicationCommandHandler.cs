@@ -4,45 +4,45 @@ using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Application.Common.Requests
 {
-    public abstract class ApplicationCommandHandler<TRequest, TResponse> : IRequestHandler<TRequest, CommandResult<TResponse>>
-        where TRequest : IRequest<CommandResult<TResponse>>
+    public abstract class ApplicationCommandHandler<TRequest, TResponse> : IRequestHandler<TRequest, ApplicationRequestResult<TResponse>>
+        where TRequest : IRequest<ApplicationRequestResult<TResponse>>
     {
-        public abstract Task<CommandResult<TResponse>> Handle(TRequest request, CancellationToken cancellationToken);
+        public abstract Task<ApplicationRequestResult<TResponse>> Handle(TRequest request, CancellationToken cancellationToken);
 
-        protected CommandResult<TResponse> Success(TResponse response)
+        protected ApplicationRequestResult<TResponse> Success(TResponse response)
         {
-            return CommandResult.Success(response);
+            return ApplicationRequestResult.Success(response);
         }
 
-        protected CommandResult<TResponse> BadRequest()
+        protected ApplicationRequestResult<TResponse> BadRequest()
         {
-            return CommandResult.BadRequest<TResponse>();
+            return ApplicationRequestResult.BadRequest<TResponse>();
         }
 
-        protected CommandResult<TResponse> NotFound()
+        protected ApplicationRequestResult<TResponse> NotFound()
         {
-            return CommandResult.NotFound<TResponse>();
+            return ApplicationRequestResult.NotFound<TResponse>();
         }
     }
 
-    public abstract class ApplicationCommandHandler<TRequest> : IRequestHandler<TRequest, CommandResult>
-        where TRequest : IRequest<CommandResult>
+    public abstract class ApplicationCommandHandler<TRequest> : IRequestHandler<TRequest, ApplicationRequestResult>
+        where TRequest : IRequest<ApplicationRequestResult>
     {
-        public abstract Task<CommandResult> Handle(TRequest request, CancellationToken cancellationToken);
+        public abstract Task<ApplicationRequestResult> Handle(TRequest request, CancellationToken cancellationToken);
 
-        protected CommandResult Success()
+        protected ApplicationRequestResult Success()
         {
-            return CommandResult.Success();
+            return ApplicationRequestResult.Success();
         }
 
-        protected CommandResult BadRequest()
+        protected ApplicationRequestResult BadRequest()
         {
-            return CommandResult.BadRequest();
+            return ApplicationRequestResult.BadRequest();
         }
 
-        protected CommandResult NotFound()
+        protected ApplicationRequestResult NotFound()
         {
-            return CommandResult.NotFound();
+            return ApplicationRequestResult.NotFound();
         }
     }
 }

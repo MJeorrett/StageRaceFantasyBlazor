@@ -22,7 +22,7 @@ namespace StageRaceFantasy.Application.FantasyTeams.Queries.GetAll
             _mapper = mapper;
         }
 
-        public async Task<QueryResult<GetAllFantasyTeamsVm>> Handle(GetAllFantasyTeamsQuery request, CancellationToken cancellationToken)
+        public async Task<ApplicationRequestResult<GetAllFantasyTeamsVm>> Handle(GetAllFantasyTeamsQuery request, CancellationToken cancellationToken)
         {
             var fantasyTeams = await _dbContext.FantasyTeams.ToListAsync();
 
