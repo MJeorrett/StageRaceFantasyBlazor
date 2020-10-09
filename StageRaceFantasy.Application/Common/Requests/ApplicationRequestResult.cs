@@ -20,6 +20,7 @@ namespace StageRaceFantasy.Application.Common.Requests
             Content = content;
         }
 
+        // This constructor is required by ValidationBehaviour which uses reflection.
         public ApplicationRequestResult(IEnumerable<ValidationFailure> validationFailures)
         {
             IsBadRequest = true;
@@ -40,6 +41,7 @@ namespace StageRaceFantasy.Application.Common.Requests
             ValidationFailures = new List<ValidationFailure>();
         }
 
+        // This constructor is required by ValidationBehaviour which uses reflection.
         public ApplicationRequestResult(IEnumerable<ValidationFailure> validationFailures)
         {
             IsBadRequest = true;
