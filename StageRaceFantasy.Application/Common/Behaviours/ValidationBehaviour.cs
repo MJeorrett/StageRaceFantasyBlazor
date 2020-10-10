@@ -39,16 +39,20 @@ namespace StageRaceFantasy.Application.Common.Behaviours
             return await next();
         }
 
-        private async Task<IEnumerable<ValidationFailure>> DoValidation(TRequest request, CancellationToken cancellationToken)
+        private async Task<Dictionary<string, string[]>> DoValidation(TRequest request, CancellationToken cancellationToken)
         {
             var context = new ValidationContext<TRequest>(request);
             var validationResults = await Task.WhenAll(_validators.Select(v => v.ValidateAsync(context, cancellationToken)));
-            var failures = validationResults.SelectMany(r => r.Errors).Where(f => f != null).ToList();
+            var failures = validationResults
+                .SelectMany(r => r.Errors)
+                .Where(f => f != null)
+                .GroupBy(f => f.PropertyName, f => f.ErrorMessage)
+                .ToDictionary(failureGroup => failureGroup.Key, failureGroup => failureGroup.ToArray());
 
             return failures;
         }
 
-        private static TResponse BuildFailureResponse(IEnumerable<ValidationFailure> failures)
+        private static TResponse BuildFailureResponse(Dictionary<string, string[]> failures)
         {
             var responseType = typeof(TResponse);
 

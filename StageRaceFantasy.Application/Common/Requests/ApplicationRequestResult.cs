@@ -8,11 +8,11 @@ namespace StageRaceFantasy.Application.Common.Requests
         public T Content { get; init; }
         public bool IsBadRequest { get; init; }
         public bool IsNotFound { get; init; }
-        public IEnumerable<ValidationFailure> ValidationFailures { get; init; }
+        public Dictionary<string, string[]> ValidationFailures { get; init; }
 
         public ApplicationRequestResult()
         {
-            ValidationFailures = new List<ValidationFailure>();
+            ValidationFailures = new Dictionary<string, string[]>();
         }
 
         public ApplicationRequestResult(T content) : this()
@@ -21,7 +21,7 @@ namespace StageRaceFantasy.Application.Common.Requests
         }
 
         // This constructor is required by ValidationBehaviour which uses reflection.
-        public ApplicationRequestResult(IEnumerable<ValidationFailure> validationFailures)
+        public ApplicationRequestResult(Dictionary<string, string[]> validationFailures)
         {
             IsBadRequest = true;
             ValidationFailures = validationFailures;
@@ -34,15 +34,15 @@ namespace StageRaceFantasy.Application.Common.Requests
     {
         public bool IsBadRequest { get; init; }
         public bool IsNotFound { get; init; }
-        public IEnumerable<ValidationFailure> ValidationFailures { get; init; }
+        public Dictionary<string, string[]> ValidationFailures { get; init; }
 
         public ApplicationRequestResult()
         {
-            ValidationFailures = new List<ValidationFailure>();
+            ValidationFailures = new Dictionary<string, string[]>();
         }
 
         // This constructor is required by ValidationBehaviour which uses reflection.
-        public ApplicationRequestResult(IEnumerable<ValidationFailure> validationFailures)
+        public ApplicationRequestResult(Dictionary<string, string[]> validationFailures)
         {
             IsBadRequest = true;
             ValidationFailures = validationFailures;
@@ -58,7 +58,7 @@ namespace StageRaceFantasy.Application.Common.Requests
             return new ApplicationRequestResult();
         }
 
-        public static ApplicationRequestResult<T> BadRequest<T>(IEnumerable<ValidationFailure> validationFailures)
+        public static ApplicationRequestResult<T> BadRequest<T>(Dictionary<string, string[]> validationFailures)
         {
             return new ApplicationRequestResult<T>()
             {
