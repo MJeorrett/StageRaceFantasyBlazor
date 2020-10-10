@@ -64,6 +64,16 @@ namespace StageRaceFantasy.Application.IntegrationTests
             await _checkpoint.Reset(_configuration.GetConnectionString("SqlDatabase"));
         }
 
+        public static async Task<TEntity> FindAsync<TEntity>(int id)
+            where TEntity : class
+        {
+            using var scope = _scopeFactory.CreateScope();
+
+            var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
+
+            return await context.FindAsync<TEntity>(id);
+        }
+
         public static async Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request)
         {
             using var scope = _scopeFactory.CreateScope();

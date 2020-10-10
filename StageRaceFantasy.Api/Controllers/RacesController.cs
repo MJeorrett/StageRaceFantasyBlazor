@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StageRaceFantasy.Application.Common.Interfaces;
+using StageRaceFantasy.Application.Races.Commands.Create;
 using StageRaceFantasy.Domain.Entities;
+using StageRaceFantasy.Server.Controllers.Utils;
 
 namespace StageRaceFantasy.Server.Controllers
 {
@@ -13,10 +16,12 @@ namespace StageRaceFantasy.Server.Controllers
     public class RacesController : ControllerBase
     {
         private readonly IApplicationDbContext _context;
+        private readonly IMediator _mediator;
 
-        public RacesController(IApplicationDbContext context)
+        public RacesController(IApplicationDbContext context, IMediator mediator)
         {
             _context = context;
+            _mediator = mediator;
         }
 
         // GET: api/Races
@@ -76,12 +81,15 @@ namespace StageRaceFantasy.Server.Controllers
         // POST: api/Races
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Race>> PostRace(Race race)
+        public async Task<ActionResult<int>> PostRace(CreateRaceCommand race)
         {
-            _context.Races.Add(race);
-            await _context.SaveChangesAsync();
+            var result = await _mediator.Send(race);
 
-            return CreatedAtAction("GetRace", new { id = race.Id }, race);
+            return ResponseHelpers.BuildCreatedAtResponse(
+                this,
+                result,
+                nameof(GetRace),
+                () => new { id = result.Content });
         }
 
         // DELETE: api/Races/5
