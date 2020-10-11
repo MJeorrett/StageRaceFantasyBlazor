@@ -19,7 +19,7 @@ The entry point project is StageRaceFantasy.Api.  In Visual Studio:
 - This starts debugging and should automatically open the application in a browser.
 
 #### A note on the Database
-The project uses a local `(localdb)\\MSSQLLocalDB` database server and the database is created and migrated when you start the project.  If you are not using Visual Studio or this does not work then open up [appsettings.Development.json](.\StageRaceFantasy.Api\appsettings.Development.json) and update `ConnectionStrings.SqlDatabase` to point at an SQL Server that you have availale.
+The project uses a local `(localdb)\\MSSQLLocalDB` database server and the database is created and migrated when you start the project.  If you are not using Visual Studio or this does not work then open up _\StageRaceFantasy.Api\appsettings.Development.json_ and update `ConnectionStrings.SqlDatabase` to point at an SQL Server that you have availale.
 
 
 ## References
