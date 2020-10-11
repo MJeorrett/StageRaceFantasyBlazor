@@ -1,0 +1,12 @@
+﻿using StageRaceFantasy.Application.Common.AutoMapper;
+using StageRaceFantasy.Domain.Entities;
+
+namespace StageRaceFantasy.Application.Races.Queries.GetById
+{
+    public record GetRaceByIdVm : IMapFrom<Race>
+    {
+        public int Id { get; init; }
+        public string Name { get; init; }
+        public int FantasyTeamSize { get; init; }
+    }
+}

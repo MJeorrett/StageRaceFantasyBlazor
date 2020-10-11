@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using StageRaceFantasy.Domain.Common;
+using System.Collections.Generic;
 
 namespace StageRaceFantasy.Domain.Entities
 {
-    public class Race
+    public class Race : IEntity
     {
         public int Id { get; set; }
         public string Name { get; set; }

@@ -18,9 +18,9 @@ namespace StageRaceFantasy.Application.IntegrationTests.RaceStages.Commands
             var result = await SendAsync(command);
 
             result.IsBadRequest.Should().BeTrue();
-            result.ValidationFailures.Should().ContainNotEmptyValidationErrorForProperty(nameof(CreateRaceStageCommand.RaceId));
-            result.ValidationFailures.Should().ContainNotEmptyValidationErrorForProperty(nameof(CreateRaceStageCommand.StartLocation));
-            result.ValidationFailures.Should().ContainNotEmptyValidationErrorForProperty(nameof(CreateRaceStageCommand.FinishLocation));
+            result.ValidationFailures.Should().ContainNotEmptyErrorForProperty(nameof(CreateRaceStageCommand.RaceId));
+            result.ValidationFailures.Should().ContainNotEmptyErrorForProperty(nameof(CreateRaceStageCommand.StartLocation));
+            result.ValidationFailures.Should().ContainNotEmptyErrorForProperty(nameof(CreateRaceStageCommand.FinishLocation));
         }
         
         [Test]

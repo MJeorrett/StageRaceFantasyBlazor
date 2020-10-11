@@ -1,5 +1,7 @@
 ﻿@page "/races"
 
+@using StageRaceFantasy.Application.Races.Queries.GetAll
+
 @inject HttpClient Http
 
 <MatHeadline2>Races</MatHeadline2>
@@ -7,17 +9,17 @@
     <MatButton Link="races/create">Create New</MatButton>
 </div>
 
-@if (races == null)
+@if (vm == null)
 {
     <Loader />
 }
-else if (races.Length == 0)
+else if (vm.Races.Count == 0)
 {
     <MatBody1 Style="font-weight: bolder"><em>No Races Found.</em></MatBody1>
 }
 else
 {
-    <MatTable Items="@races"
+    <MatTable Items="@vm.Races"
               FilterByColumnName="Name"
               ShowPaging="false"
               PageSize="int.MaxValue"
@@ -42,10 +44,10 @@ else
 }
 
 @code {
-    private Race[] races;
+    private GetAllRacesVm vm;
 
     protected override async Task OnInitializedAsync()
     {
-        races = await Http.GetFromJsonAsync<Race[]>("api/races");
+        vm = await Http.GetFromJsonAsync<GetAllRacesVm>("api/races");
     }
 }

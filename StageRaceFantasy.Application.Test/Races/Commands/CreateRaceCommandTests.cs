@@ -19,7 +19,7 @@ namespace StageRaceFantasy.Application.IntegrationTests.Races.Commands
             var result = await SendAsync(command);
 
             result.IsBadRequest.Should().BeTrue();
-            result.ValidationFailures.Should().ContainNotEmptyValidationErrorForProperty(nameof(CreateRaceCommand.Name));
+            result.ValidationFailures.Should().ContainNotEmptyErrorForProperty(nameof(CreateRaceCommand.Name));
         }
 
         [Test]

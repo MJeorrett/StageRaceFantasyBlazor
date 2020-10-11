@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
 using Respawn;
+using StageRaceFantasy.Domain.Common;
 using StageRaceFantasy.Infrastructure.Persistence;
 using StageRaceFantasy.Server;
 using System.IO;
@@ -72,6 +73,19 @@ namespace StageRaceFantasy.Application.IntegrationTests
             var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
 
             return await context.FindAsync<TEntity>(id);
+        }
+        public static async Task<int> AddAsync<TEntity>(TEntity entity)
+            where TEntity : class, IEntity
+        {
+            using var scope = _scopeFactory.CreateScope();
+
+            var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
+
+            context.Add(entity);
+
+            await context.SaveChangesAsync();
+
+            return entity.Id;
         }
 
         public static async Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request)

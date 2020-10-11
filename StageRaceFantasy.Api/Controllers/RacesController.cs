@@ -3,10 +3,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using StageRaceFantasy.Application.Common.Interfaces;
 using StageRaceFantasy.Application.Races.Commands.Create;
-using StageRaceFantasy.Domain.Entities;
+using StageRaceFantasy.Application.Races.Commands.Delete;
+using StageRaceFantasy.Application.Races.Commands.Update;
+using StageRaceFantasy.Application.Races.Queries.GetAll;
+using StageRaceFantasy.Application.Races.Queries.GetById;
 using StageRaceFantasy.Server.Controllers.Utils;
 
 namespace StageRaceFantasy.Server.Controllers
@@ -24,62 +26,39 @@ namespace StageRaceFantasy.Server.Controllers
             _mediator = mediator;
         }
 
-        // GET: api/Races
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Race>>> GetRaces()
+        public async Task<ActionResult<GetAllRacesVm>> GetRaces()
         {
-            return await _context.Races
-                .OrderBy(x => x.Name)
-                .ToListAsync();
+            var query = new GetAllRacesQuery();
+
+            var result = await _mediator.Send(query);
+
+            return ResponseHelpers.BuildRawContentResponse(this, result);
         }
 
-        // GET: api/Races/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Race>> GetRace(int id)
+        public async Task<ActionResult<GetRaceByIdVm>> GetRace(int id)
         {
-            var race = await _context.Races.FindAsync(id);
+            var query = new GetRaceByIdQuery(id);
 
-            if (race == null)
-            {
-                return NotFound();
-            }
+            var result = await _mediator.Send(query);
 
-            return race;
+            return ResponseHelpers.BuildRawContentResponse(this, result);
         }
 
-        // PUT: api/Races/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRace(int id, Race race)
+        public async Task<IActionResult> PutRace(int id, UpdateRaceCommand command)
         {
-            if (id != race.Id)
+            if (id != command.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(race).State = EntityState.Modified;
+            var result = await _mediator.Send(command);
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!RaceExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return ResponseHelpers.BuildNoContentResponse(this, result);
         }
 
-        // POST: api/Races
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<int>> PostRace(CreateRaceCommand race)
         {
@@ -92,25 +71,14 @@ namespace StageRaceFantasy.Server.Controllers
                 () => new { id = result.Content });
         }
 
-        // DELETE: api/Races/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRace(int id)
         {
-            var race = await _context.Races.FindAsync(id);
-            if (race == null)
-            {
-                return NotFound();
-            }
+            var command = new DeleteRaceCommand(id);
 
-            _context.Races.Remove(race);
-            await _context.SaveChangesAsync();
+            var result = await _mediator.Send(command);
 
-            return NoContent();
-        }
-
-        private bool RaceExists(int id)
-        {
-            return _context.Races.Any(e => e.Id == id);
+            return ResponseHelpers.BuildNoContentResponse(this, result);
         }
     }
 }

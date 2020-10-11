@@ -24,7 +24,7 @@ namespace StageRaceFantasy.Application.IntegrationTests.Assertions
         }
 
         // TODO: Unit test this.
-        public AndConstraint<ValidationErrorDictionaryAssertions> ContainPartialValidationErrorForProperty(string propertyName, string partialErrorMessage)
+        public AndConstraint<ValidationErrorDictionaryAssertions> ContainPartialErrorForProperty(string propertyName, string partialErrorMessage)
         {
             Execute.Assertion
                 .ForCondition(!string.IsNullOrEmpty(propertyName) && !string.IsNullOrEmpty(partialErrorMessage))
@@ -42,9 +42,9 @@ namespace StageRaceFantasy.Application.IntegrationTests.Assertions
 
 
         // TODO: Unit test this.
-        public AndConstraint<ValidationErrorDictionaryAssertions> ContainNotEmptyValidationErrorForProperty(string propertyName)
+        public AndConstraint<ValidationErrorDictionaryAssertions> ContainNotEmptyErrorForProperty(string propertyName)
         {
-            return ContainPartialValidationErrorForProperty(propertyName, ValidationMessageFragments.NotEmpty);
+            return ContainPartialErrorForProperty(propertyName, ValidationMessageFragments.NotEmpty);
         }
     }
 }
