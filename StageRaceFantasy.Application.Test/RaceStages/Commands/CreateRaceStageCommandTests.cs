@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using StageRaceFantasy.Application.RaceStages.Commands.Create;
 using System.Threading.Tasks;
+using StageRaceFantasy.Application.IntegrationTests.Assertions;
 
 namespace StageRaceFantasy.Application.IntegrationTests.RaceStages.Commands
 {
@@ -17,9 +18,9 @@ namespace StageRaceFantasy.Application.IntegrationTests.RaceStages.Commands
             var result = await SendAsync(command);
 
             result.IsBadRequest.Should().BeTrue();
-            result.ValidationFailures[nameof(CreateRaceStageCommand.RaceId)].Should().Contain(x => x.Contains(ValidationMessageFragments.NotEmpty));
-            result.ValidationFailures[nameof(CreateRaceStageCommand.StartLocation)].Should().Contain(x => x.Contains(ValidationMessageFragments.NotEmpty));
-            result.ValidationFailures[nameof(CreateRaceStageCommand.FinishLocation)].Should().Contain(x => x.Contains(ValidationMessageFragments.NotEmpty));
+            result.ValidationFailures.Should().ContainNotEmptyValidationErrorForProperty(nameof(CreateRaceStageCommand.RaceId));
+            result.ValidationFailures.Should().ContainNotEmptyValidationErrorForProperty(nameof(CreateRaceStageCommand.StartLocation));
+            result.ValidationFailures.Should().ContainNotEmptyValidationErrorForProperty(nameof(CreateRaceStageCommand.FinishLocation));
         }
         
         [Test]
