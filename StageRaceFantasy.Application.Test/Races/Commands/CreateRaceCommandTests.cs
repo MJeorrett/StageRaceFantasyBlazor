@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
 using StageRaceFantasy.Application.Races.Commands.Create;
+using StageRaceFantasy.Application.IntegrationTests.Assertions;
 using StageRaceFantasy.Domain.Entities;
 using System.Threading.Tasks;
 
@@ -18,7 +19,7 @@ namespace StageRaceFantasy.Application.IntegrationTests.Races.Commands
             var result = await SendAsync(command);
 
             result.IsBadRequest.Should().BeTrue();
-            result.ValidationFailures[nameof(CreateRaceCommand.Name)].Should().Contain(x => x.Contains(ValidationMessageFragments.NotEmpty));
+            result.ValidationFailures.Should().ContainNotEmptyValidationErrorForProperty(nameof(CreateRaceCommand.Name));
         }
 
         [Test]
