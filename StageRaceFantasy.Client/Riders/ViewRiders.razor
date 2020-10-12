@@ -1,5 +1,7 @@
 ﻿@page "/riders"
 
+@using StageRaceFantasy.Application.Riders.Queries.GetAll 
+
 @inject HttpClient httpClient
 @inject IJSRuntime js
 
@@ -8,17 +10,17 @@
     <MatButton Link="riders/create">Create New</MatButton>
 </div>
 
-@if (riders == null)
+@if (vm == null)
 {
     <Loader />
 }
-else if (riders.Length == 0)
+else if (vm.Riders.Count == 0)
 {
     <MatBody1 Style="font-weight: bolder"><em>No Riders Found.</em></MatBody1>
 }
 else
 {
-    <MatTable Items="@riders"
+    <MatTable Items="@vm.Riders"
               FilterByColumnName="LastName"
               ShowPaging="false"
               PageSize="int.MaxValue"
@@ -41,16 +43,16 @@ else
 }
 
 @code {
-    private Rider[] riders;
+    private GetAllRidersVm vm;
 
     protected override async Task OnInitializedAsync()
     {
-        riders = await httpClient.GetFromJsonAsync<Rider[]>("api/riders");
+        vm = await httpClient.GetFromJsonAsync<GetAllRidersVm>("api/riders");
     }
 
     async Task DeleteRider(int riderId)
     {
-        var rider = riders.First(x => x.Id == riderId);
+        var rider = vm.Riders.First(x => x.Id == riderId);
 
         if (await js.InvokeAsync<bool>("confirm", $"Do you want to delete rider {rider.FirstName} {rider.LastName}?"))
         {

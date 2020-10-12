@@ -41,11 +41,6 @@ namespace StageRaceFantasy.Infrastructure.Persistence
                 .HasForeignKey(x => x.RiderId);
         }
 
-        public async Task<int> SaveChangesAsync()
-        {
-            return await base.SaveChangesAsync();
-        }
-
         public override EntityEntry<T> Entry<T>(T entity) where T : class
         {
             return base.Entry<T>(entity);

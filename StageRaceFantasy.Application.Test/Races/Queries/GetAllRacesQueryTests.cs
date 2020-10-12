@@ -13,16 +13,13 @@ namespace StageRaceFantasy.Application.IntegrationTests.Races.Queries
         [Test]
         public async Task ShouldReturnAllRaces()
         {
-            var race1Id = await AddAsync(new Race() { Name = "Tour de France 2019" });
-            var race2Id = await AddAsync(new Race() { Name = "Tour de France 2020" });
+            await AddAsync(new Race() { Name = "B race" });
+            await AddAsync(new Race() { Name = "C race" });
+            await AddAsync(new Race() { Name = "A race" });
 
             var result = await SendAsync(new GetAllRacesQuery());
 
-            result.Content.Races.Should().HaveCount(2);
-            result.Content.Races[0].Id.Should().Be(race1Id);
-            result.Content.Races[0].Name.Should().Be("Tour de France 2019");
-            result.Content.Races[1].Id.Should().Be(race2Id);
-            result.Content.Races[1].Name.Should().Be("Tour de France 2020");
+            result.Content.Races.Should().HaveCount(3);
         }
     }
 }

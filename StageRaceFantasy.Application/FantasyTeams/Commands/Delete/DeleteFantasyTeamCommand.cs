@@ -27,7 +27,7 @@ namespace StageRaceFantasy.Application.FantasyTeams.Commands.Delete
             if (fantasyTeam == null) return NotFound();
 
             _dbContext.FantasyTeams.Remove(fantasyTeam);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
             return Success();
         }

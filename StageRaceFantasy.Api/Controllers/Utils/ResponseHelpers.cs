@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace StageRaceFantasy.Server.Controllers.Utils
 {
+    // TODO: Unit test these.
     public static class ResponseHelpers
     {
         public static ActionResult<T> BuildRawContentResponse<T>(ControllerBase controller, ApplicationRequestResult<T> requestResult)

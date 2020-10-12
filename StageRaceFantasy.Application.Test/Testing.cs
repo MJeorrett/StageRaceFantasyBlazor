@@ -10,6 +10,7 @@ using StageRaceFantasy.Domain.Common;
 using StageRaceFantasy.Infrastructure.Persistence;
 using StageRaceFantasy.Server;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Application.IntegrationTests
@@ -74,6 +75,7 @@ namespace StageRaceFantasy.Application.IntegrationTests
 
             return await context.FindAsync<TEntity>(id);
         }
+
         public static async Task<int> AddAsync<TEntity>(TEntity entity)
             where TEntity : class, IEntity
         {
@@ -83,7 +85,7 @@ namespace StageRaceFantasy.Application.IntegrationTests
 
             context.Add(entity);
 
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(CancellationToken.None);
 
             return entity.Id;
         }

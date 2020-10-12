@@ -1,10 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StageRaceFantasy.Application.Common.Interfaces;
+using StageRaceFantasy.Application.Riders.Commands.Create;
+using StageRaceFantasy.Application.Riders.Commands.Delete;
+using StageRaceFantasy.Application.Riders.Queries.GetAll;
 using StageRaceFantasy.Domain.Entities;
+using StageRaceFantasy.Server.Controllers.Utils;
 
 namespace StageRaceFantasy.Server.Controllers
 {
@@ -13,22 +19,24 @@ namespace StageRaceFantasy.Server.Controllers
     public class RidersController : ControllerBase
     {
         private readonly IApplicationDbContext _context;
+        private readonly IMediator _mediator;
 
-        public RidersController(IApplicationDbContext context)
+        public RidersController(IApplicationDbContext context, IMediator mediator)
         {
             _context = context;
+            _mediator = mediator;
         }
 
         // GET: api/Riders
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Rider>>> GetRiders()
+        public async Task<ActionResult<GetAllRidersVm>> GetRiders()
         {
-            return await _context.Riders
-                .OrderBy(x => x.LastName)
-                .ToListAsync();
+            var command = new GetAllRidersQuery();
+            var result = await _mediator.Send(command);
+
+            return ResponseHelpers.BuildRawContentResponse(this, result);
         }
 
-        // GET: api/Riders/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Rider>> GetRider(int id)
         {
@@ -42,62 +50,26 @@ namespace StageRaceFantasy.Server.Controllers
             return rider;
         }
 
-        // PUT: api/Riders/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutRider(int id, Rider rider)
-        {
-            if (id != rider.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(rider).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!RiderExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Riders
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Rider>> PostRider(Rider rider)
+        public async Task<ActionResult<int>> PostRider(CreateRiderCommand command)
         {
-            _context.Riders.Add(rider);
-            await _context.SaveChangesAsync();
+            var result = await _mediator.Send(command);
 
-            return CreatedAtAction("GetRider", new { id = rider.Id }, rider);
+            return ResponseHelpers.BuildCreatedAtResponse(
+                this,
+                result,
+                nameof(GetRider),
+                () => new { id = result.Content });
         }
 
-        // DELETE: api/Riders/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRider(int id)
         {
-            var rider = await _context.Riders.FindAsync(id);
-            if (rider == null)
-            {
-                return NotFound();
-            }
+            var command = new DeleteRiderCommand(id);
 
-            _context.Riders.Remove(rider);
-            await _context.SaveChangesAsync();
+            var result = await _mediator.Send(command);
 
-            return NoContent();
+            return ResponseHelpers.BuildNoContentResponse(this, result);
         }
 
         private bool RiderExists(int id)
