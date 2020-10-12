@@ -9,6 +9,7 @@ As well as solving the problem, I wanted to explore a few new things:
 - [C# 9](https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-9) - The latest itteration of the C# language that has some cool features around immutability such as `records` that I wanted to try out.
 - Jason Taylor's [Clean Architecture Template](https://github.com/jasontaylordev/CleanArchitecture) - I watched a few videos including [this one](https://www.youtube.com/watch?v=dK4Yb6-LxAk&t=2706s) by Jason and he had some really interesting ideas that I was eager to try.
 - Jason Taylor's [Clean Testing example](https://github.com/jasontaylordev/CleanTesting) - After watching [this](https://www.youtube.com/watch?v=2UJ7mAtFuio) video I was really interested in his idea of "sub-cutanous" testing.
+- [Material Blazor](https://www.matblazor.com/) - Material UI has been my go to UI framework for a while, I have used the React implementation a fair bit and so wanted to see how far along the Blazor implementation is.
 
 ## Running it
 This project uses some bleeding edge stuff such as [net5.0](https://devblogs.microsoft.com/dotnet/introducing-net-5/) and C# 9.  I have created the project using Visual Studio 2019 preview which should give you an F5 experience.  If you don't have Visual Studio, you can probably just download the net5.0 sdk and run it from the command line.
