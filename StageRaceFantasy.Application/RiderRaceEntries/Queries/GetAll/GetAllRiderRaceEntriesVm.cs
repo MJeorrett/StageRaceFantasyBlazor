@@ -22,12 +22,8 @@ namespace StageRaceFantasy.Application.RiderRaceEntries.Queries.GetAll
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<RiderRaceEntry, RiderRaceEntryDto>();
-
-            profile.CreateMap<Rider, RiderRaceEntryDto>()
-                .ForMember(dest => dest.RiderId, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.RiderFirstName, opt => opt.MapFrom(src => src.FirstName))
-                .ForMember(dest => dest.RiderLastName, opt => opt.MapFrom(src => src.LastName));
+            profile.CreateMap<RiderRaceEntry, RiderRaceEntryDto>()
+                .ForMember(dest => dest.IsEntered, opt => opt.Ignore());
         }
     }
 }

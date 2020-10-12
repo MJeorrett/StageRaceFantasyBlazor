@@ -48,6 +48,12 @@ namespace StageRaceFantasy.Application.RiderRaceEntries.Queries.GetAll
             var notEnteredRiders = await _dbContext.Riders
                 .Where(x => !enteredRiderIds.Contains(x.Id))
                 .OrderBy(x => x.LastName)
+                .Select(x => new RiderRaceEntryDto()
+                {
+                    RiderId = x.Id,
+                    RiderFirstName = x.FirstName,
+                    RiderLastName = x.LastName,
+                })
                 .ProjectTo<RiderRaceEntryDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
 
