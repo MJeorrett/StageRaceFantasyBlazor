@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Application.Riders.Queries.GetById
 {
-    public record GetRiderByIdQuery(int RiderId) : IApplicationQuery<GetRiderByIdVm>
+    public record GetRiderByIdQuery(int RiderId) : IApplicationRequest<GetRiderByIdVm>
     {
     }
 

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Application.FantasyTeams.Queries.GetAll
 {
-    public class GetAllFantasyTeamsQuery : IApplicationQuery<GetAllFantasyTeamsVm>
+    public class GetAllFantasyTeamsQuery : IApplicationRequest<GetAllFantasyTeamsVm>
     {
     }
 

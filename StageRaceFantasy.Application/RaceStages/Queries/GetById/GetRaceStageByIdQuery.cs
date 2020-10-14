@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace StageRaceFantasy.Application.RaceStages.Queries.GetById
 {
     public record GetRaceStageByIdQuery(int RaceId, int StageId)
-        : IApplicationQuery<GetRaceStageByIdVm>
+        : IApplicationRequest<GetRaceStageByIdVm>
     {
     }
 

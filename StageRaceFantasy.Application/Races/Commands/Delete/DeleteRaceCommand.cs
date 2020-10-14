@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Application.Races.Commands.Delete
 {
-    public record DeleteRaceCommand(int Id) : IApplicationCommand
+    public record DeleteRaceCommand(int Id) : IApplicationRequest
     {
     }
 

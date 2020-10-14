@@ -11,9 +11,10 @@ using System.Threading.Tasks;
 namespace StageRaceFantasy.Application.FantasyTeamRaceEntries.Queries.GetAll
 {
     public record GetAllFantasyTeamRaceEntriesQuery(int TeamId)
-        : IApplicationQuery<GetAllFantasyTeamRaceEntriesVm>
+        : IApplicationRequest<GetAllFantasyTeamRaceEntriesVm>
     {
     }
+
     public class GetAllFantasyTeamRaceEntriesHandler : ApplicationRequestHandler<GetAllFantasyTeamRaceEntriesQuery, GetAllFantasyTeamRaceEntriesVm>
     {
         private readonly IApplicationDbContext _dbContext;

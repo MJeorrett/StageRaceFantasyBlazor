@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Application.RaceStages.Commands.Create
 {
-    public record CreateRaceStageCommand : IApplicationCommand<GetRaceStageByIdVm>
+    public record CreateRaceStageCommand : IApplicationRequest<GetRaceStageByIdVm>
     {
         public int RaceId { get; init; }
         public string StartLocation { get; init; }

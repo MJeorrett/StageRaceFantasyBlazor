@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace StageRaceFantasy.Application.FantasyTeamRaceEntries.Queries.GetById
 {
     public record GetFantasyTeamRaceEntryByIdQuery(int FantasyTeamId, int RaceId)
-        : IApplicationQuery<GetFantasyTeamRaceEntryByIdVm>
+        : IApplicationRequest<GetFantasyTeamRaceEntryByIdVm>
     {
     }
 

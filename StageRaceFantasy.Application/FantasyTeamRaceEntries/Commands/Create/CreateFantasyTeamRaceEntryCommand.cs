@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace StageRaceFantasy.Application.FantasyTeamRaceEntries.Commands.Create
 {
     public record CreateFantasyTeamRaceEntryCommand(int FantasyTeamId, int RaceId)
-        : IApplicationCommand
+        : IApplicationRequest
     {
     }
 

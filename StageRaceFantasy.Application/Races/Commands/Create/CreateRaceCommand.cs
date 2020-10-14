@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Application.Races.Commands.Create
 {
-    public record CreateRaceCommand : IApplicationCommand<int>
+    public record CreateRaceCommand : IApplicationRequest<int>
     {
         public string Name { get; init; }
     }

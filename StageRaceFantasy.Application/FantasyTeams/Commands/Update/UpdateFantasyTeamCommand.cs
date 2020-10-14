@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Application.FantasyTeams.Commands.Update
 {
-    public record UpdateFantasyTeamCommand(int Id, string Name) : IApplicationCommand
+    public record UpdateFantasyTeamCommand(int Id, string Name) : IApplicationRequest
     {
     }
 

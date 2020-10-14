@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace StageRaceFantasy.Application.FantasyTeamRaceEntries.Commands.RemoveRider
 {
     public record RemoveRiderFromFantasyTeamRaceEntryCommand(int TeamId, int RaceId, int RiderId)
-        : IApplicationCommand
+        : IApplicationRequest
     {
     }
 

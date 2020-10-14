@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Application.FantasyTeams.Commands.Create
 {
-    public record CreateFantasyTeamCommand(string Name) : IApplicationCommand<FantasyTeam>
+    public record CreateFantasyTeamCommand(string Name) : IApplicationRequest<FantasyTeam>
     {
     }
 

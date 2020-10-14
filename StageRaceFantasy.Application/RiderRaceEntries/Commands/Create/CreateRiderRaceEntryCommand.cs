@@ -9,7 +9,7 @@ namespace StageRaceFantasy.Application.RiderRaceEntries.Commands.Create
 {
     public class CreateRiderRaceEntryCommand :
         CreateRiderRaceEntryDto,
-        IApplicationCommand
+        IApplicationRequest
     {
     }
 

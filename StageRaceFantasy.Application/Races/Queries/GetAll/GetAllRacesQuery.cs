@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace StageRaceFantasy.Application.Races.Queries.GetAll
 {
-    public record GetAllRacesQuery : IApplicationQuery<GetAllRacesVm>
+    public record GetAllRacesQuery : IApplicationRequest<GetAllRacesVm>
     {
     }
 

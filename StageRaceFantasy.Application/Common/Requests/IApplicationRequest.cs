@@ -1,6 +1,12 @@
-﻿namespace StageRaceFantasy.Application.Common.Requests
+﻿using MediatR;
+
+namespace StageRaceFantasy.Application.Common.Requests
 {
-    public interface IApplicationRequest
+    public interface IApplicationRequest<T> : IRequest<ApplicationRequestResult<T>>
+    {
+    }
+
+    public interface IApplicationRequest : IRequest<ApplicationRequestResult>
     {
     }
 }
