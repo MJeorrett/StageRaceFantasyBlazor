@@ -54,7 +54,6 @@ namespace StageRaceFantasy.Application.RiderRaceEntries.Queries.GetAll
                     RiderFirstName = x.FirstName,
                     RiderLastName = x.LastName,
                 })
-                .ProjectTo<RiderRaceEntryDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
 
 
