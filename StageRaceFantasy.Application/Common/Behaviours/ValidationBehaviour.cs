@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 namespace StageRaceFantasy.Application.Common.Behaviours
 {
     public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : IApplicationRequest
         where TResponse : class
     {
         private readonly IEnumerable<IValidator<TRequest>> _validators;
