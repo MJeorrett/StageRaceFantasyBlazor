@@ -11,7 +11,7 @@ namespace StageRaceFantasy.Application.FantasyTeams.Queries.GetById
     {
     }
 
-    public class GetFantasyTeamByIdHandler : IApplicationQueryHandler<GetFantasyTeamByIdQuery, GetFantasyTeamByIdVm>
+    public class GetFantasyTeamByIdHandler : ApplicationRequestHandler<GetFantasyTeamByIdQuery, GetFantasyTeamByIdVm>
     {
         private readonly IApplicationDbContext _dbContext;
         private readonly IMapper _mapper;
@@ -22,7 +22,7 @@ namespace StageRaceFantasy.Application.FantasyTeams.Queries.GetById
             _mapper = mapper;
         }
 
-        public async Task<ApplicationRequestResult<GetFantasyTeamByIdVm>> Handle(GetFantasyTeamByIdQuery request, CancellationToken cancellationToken)
+        public override async Task<ApplicationRequestResult<GetFantasyTeamByIdVm>> Handle(GetFantasyTeamByIdQuery request, CancellationToken cancellationToken)
         {
             var teamId = request.TeamId;
 
