@@ -2,15 +2,11 @@
 using NUnit.Framework;
 using StageRaceFantasy.Application.Races.Commands.Create;
 using StageRaceFantasy.Application.Races.Commands.Update;
-using StageRaceFantasy.Application.IntegrationTests.Assertions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using StageRaceFantasy.IntegrationTests.Assertions;
 using System.Threading.Tasks;
 using StageRaceFantasy.Domain.Entities;
 
-namespace StageRaceFantasy.Application.IntegrationTests.Races.Commands
+namespace StageRaceFantasy.IntegrationTests.Races.Commands
 {
     using static Testing;
 

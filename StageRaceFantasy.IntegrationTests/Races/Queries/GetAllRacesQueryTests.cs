@@ -4,7 +4,7 @@ using StageRaceFantasy.Application.Races.Queries.GetAll;
 using StageRaceFantasy.Domain.Entities;
 using System.Threading.Tasks;
 
-namespace StageRaceFantasy.Application.IntegrationTests.Races.Queries
+namespace StageRaceFantasy.IntegrationTests.Races.Queries
 {
     using static Testing;
 

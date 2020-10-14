@@ -2,9 +2,9 @@
 using NUnit.Framework;
 using StageRaceFantasy.Application.RaceStages.Commands.Create;
 using System.Threading.Tasks;
-using StageRaceFantasy.Application.IntegrationTests.Assertions;
+using StageRaceFantasy.IntegrationTests.Assertions;
 
-namespace StageRaceFantasy.Application.IntegrationTests.RaceStages.Commands
+namespace StageRaceFantasy.IntegrationTests.RaceStages.Commands
 {
     using static Testing;
 

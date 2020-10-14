@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using System.Threading.Tasks;
 
-namespace StageRaceFantasy.Application.IntegrationTests
+namespace StageRaceFantasy.IntegrationTests
 {
     using static Testing;
 

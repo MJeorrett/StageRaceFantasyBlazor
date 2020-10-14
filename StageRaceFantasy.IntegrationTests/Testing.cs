@@ -13,7 +13,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StageRaceFantasy.Application.IntegrationTests
+namespace StageRaceFantasy.IntegrationTests
 {
     [SetUpFixture]
     public class Testing

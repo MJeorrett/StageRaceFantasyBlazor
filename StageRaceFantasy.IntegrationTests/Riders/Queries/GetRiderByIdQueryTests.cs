@@ -3,7 +3,7 @@ using NUnit.Framework;
 using StageRaceFantasy.Application.Riders.Queries.GetById;
 using System.Threading.Tasks;
 
-namespace StageRaceFantasy.Application.IntegrationTests.Riders.Queries
+namespace StageRaceFantasy.IntegrationTests.Riders.Queries
 {
     using static Testing;
 

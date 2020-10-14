@@ -3,7 +3,7 @@ using FluentAssertions.Execution;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace StageRaceFantasy.Application.IntegrationTests.Assertions
+namespace StageRaceFantasy.IntegrationTests.Assertions
 {
     public static class ValidationErrorDictionaryExtensions
     {

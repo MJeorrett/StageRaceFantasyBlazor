@@ -5,7 +5,7 @@ using StageRaceFantasy.Application.Races.Commands.Delete;
 using StageRaceFantasy.Domain.Entities;
 using System.Threading.Tasks;
 
-namespace StageRaceFantasy.Application.IntegrationTests.Races.Commands
+namespace StageRaceFantasy.IntegrationTests.Races.Commands
 {
     using static Testing;
 
