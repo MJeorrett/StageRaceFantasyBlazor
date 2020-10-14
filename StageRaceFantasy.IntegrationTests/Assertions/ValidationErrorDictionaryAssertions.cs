@@ -26,11 +26,11 @@ namespace StageRaceFantasy.IntegrationTests.Assertions
         public AndConstraint<ValidationErrorDictionaryAssertions> ContainPartialErrorForProperty(string propertyName, string partialErrorMessage)
         {
             Execute.Assertion
-                .ForCondition(!string.IsNullOrEmpty(propertyName) && !string.IsNullOrEmpty(partialErrorMessage))
+                .ForCondition(propertyName != null && partialErrorMessage != null)
                 .FailWith($"You must provide {nameof(propertyName)} and {nameof(partialErrorMessage)}.")
                 .Then
                 .ForCondition(_subject.ContainsKey(propertyName))
-                .FailWith("Expected there to be an error for key {0}.", propertyName)
+                .FailWith("Expected there to be an error for key {0}.\nBut didn't find among error keys {1}.", propertyName, _subject.Keys.ToList())
                 .Then
                 .ForCondition(_subject[propertyName].Any(x => x.Contains(partialErrorMessage)))
                 .FailWith("Expected error for property {0} to contain {1}.", propertyName, partialErrorMessage);

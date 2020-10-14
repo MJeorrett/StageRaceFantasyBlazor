@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace StageRaceFantasy.IntegrationTests
 {
     [SetUpFixture]
-    public class Testing
+    public partial class Testing
     {
         private static IConfigurationRoot _configuration;
         private static IServiceScopeFactory _scopeFactory;

@@ -29,8 +29,6 @@ namespace StageRaceFantasy.Application.FantasyTeamRaceEntries.Commands.Create
             var raceId = request.RaceId;
             var teamId = request.FantasyTeamId;
 
-            if (FantasyTeamRaceEntryExists(raceId, teamId)) return BadRequest();
-
             var raceExists = await _dbContext.Races.AnyAsync(x => x.Id == raceId);
             var teamExists = await _dbContext.FantasyTeams.AnyAsync(x => x.Id == teamId);
 
@@ -46,12 +44,6 @@ namespace StageRaceFantasy.Application.FantasyTeamRaceEntries.Commands.Create
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return Success();
-        }
-
-        public bool FantasyTeamRaceEntryExists(int raceId, int teamId)
-        {
-            return _dbContext.FantasyTeamRaceEntries
-                .Any(x => x.RaceId == raceId && x.FantasyTeamId == teamId);
         }
     }
 }
