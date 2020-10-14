@@ -14,11 +14,6 @@ namespace StageRaceFantasy.Application.Common.Requests
             return ApplicationRequestResult.Success(response);
         }
 
-        protected ApplicationRequestResult<TResponse> BadRequest()
-        {
-            return ApplicationRequestResult.BadRequest<TResponse>();
-        }
-
         protected ApplicationRequestResult<TResponse> NotFound()
         {
             return ApplicationRequestResult.NotFound<TResponse>();
